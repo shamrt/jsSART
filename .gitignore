@@ -1,0 +1,15 @@
+# Project-generated
+min/
+data/**/*.csv
+
+# NPM
+node_modules
+
+# Codekit
+*.codekit
+
+# Python
+env/
+__pycache__
+.cache
+*.pyc

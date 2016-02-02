@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <link href="../../jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    <link href="../css/experiment.css" rel="stylesheet" type="text/css"></link>
+  </head>
+  <body>
+    <div class="container">
+      <div class="container-inner">
+        <div id="jspsych-target"></div>
+      </div>
+    </div>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="../../jsPsych/jspsych.js"></script>
+  <script src="../../jsPsych/plugins/jspsych-text.js"></script>
+  <script src="../../jsPsych/plugins/jspsych-single-stim.js"></script>
+  <script type="text/javascript">
+  var experiment = [];
+
+  var welcome_block = {
+    type: "text",
+    text: "Welcome to the experiment. Press any key to begin."
+  };
+  experiment.push(welcome_block);
+
+  var instructions_block = {
+    type: "text",
+    text: "<p>In this experiment, a circle will appear in the center " +
+        "of the screen.</p><p>If the circle is <strong>blue</strong>, " +
+        "press the letter F on the keyboard as fast as you can.</p>" +
+        "<p>If the circle is <strong>orange</strong>, do not press " +
+        "any key.</p>" +
+        "<div class='left center-content'><img src='../img/blue.png'></img>" +
+        "<p class='small'><strong>Press the F key</strong></p></div>" +
+        "<div class='right center-content'><img src='../img/orange.png'></img>" +
+        "<p class='small'><strong>Do not press a key</strong></p></div>" +
+        "<p>Press any key to begin.</p>",
+    timing_post_trial: 2000
+  };
+  experiment.push(instructions_block);
+
+  var test_stimuli = [
+    {image: '../img/blue.png', data: { response: 'go' }},
+    {image: '../img/orange.png', data: {response: 'no-go'}}
+  ];
+  var all_trials = jsPsych.randomization.repeat(test_stimuli, 2, true);
+  var post_trial_gap = function() {
+    return Math.floor( Math.random() * 1500 ) + 750;
+  }
+  var test_block = {
+    type: "single-stim",
+    stimuli: all_trials.image,
+    data: all_trials.data,
+    choices: ['F'],
+    timing_response: post_trial_gap
+  };
+  experiment.push(test_block);
+
+  // debrief
+  function getAverageResponseTime() {
+    var trials = jsPsych.data.getTrialsOfType('single-stim');
+
+    var sum_rt = 0;
+    var valid_trial_count = 0;
+    for (var i = 0; i < trials.length; i++) {
+      if (trials[i].response == 'go' && trials[i].rt > -1) {
+        sum_rt += trials[i].rt;
+        valid_trial_count++;
+      }
+    }
+    return Math.floor(sum_rt / valid_trial_count);
+  }
+
+  var debrief_block = {
+    type: "text",
+    text: function() {
+      return "<p>Your average response time was <strong>" +
+      getAverageResponseTime() + "ms</strong>. Press " +
+      "any key to complete the experiment. Thank you!</p>";
+    }
+  };
+  experiment.push(debrief_block);
+
+  // initialize experiment
+  jsPsych.init({
+    experiment_structure: experiment,
+    display_element: $('#jspsych-target'),
+    on_finish: function() {
+      $.ajax({
+        type: "POST",
+        url: "/experiment-data",
+        data: JSON.stringify(jsPsych.data.getData()),
+        contentType: "application/json"
+      })
+      .done(function() {
+        window.location.href = "finish";
+      })
+      .fail(function() {
+        alert("A problem occurred while writing to the database. Please contact the researcher for more information.")
+        window.location.href = "/";
+      });
+    }
+  });
+  </script>
+</html>

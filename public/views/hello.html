@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <title>My experiment</title>
+        <link href="jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="jsPsych/jspsych.js"></script>
+    <script src="jsPsych/plugins/jspsych-text.js"></script>
+    <script>
+
+    var hello_trial = {
+        type: 'text',
+        text: 'Hello world!'
+    }
+
+    jsPsych.init({
+        experiment_structure: [ hello_trial ]
+    })
+
+    </script>
+</html>

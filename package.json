@@ -1,0 +1,17 @@
+{
+  "name": "jsPASAT",
+  "version": "0.1.0",
+  "description": "A customizable Sustained Attention to Response Task (SART) measure built with jsPsych and deployable to Heroku",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shane Martin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "ejs": "^2.3.3",
+    "express": "^4.13.3",
+    "fast-csv": "^0.6.0"
+  }
+}

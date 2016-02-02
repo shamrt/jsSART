@@ -1,0 +1,52 @@
+/*
+Things specific to this tutorial,
+including how to centralize your stimuli
+using a parent and child class!
+*/
+
+body {
+    text-align: center;
+}
+
+p {
+    max-width: 48em;
+}
+
+code {
+    background: #ddd;
+    padding: 0 0.3em;
+}
+code.typed {
+    background: #999;
+    color: #eee;
+}
+
+.container {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    width: 75%;
+    height: 100%;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+.container-inner {
+    display: table-cell;
+    vertical-align: middle;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.jspsych-categorize-stimulus {
+    vertical-align: middle
+}
+
+#jspsych-feedback .correct {
+    color: #2a953b;
+}
+#jspsych-feedback .incorrect {
+    color: #c13f3f;
+}
