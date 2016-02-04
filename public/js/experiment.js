@@ -67,8 +67,8 @@ jsPsych.data.addProperties({
 
 
 jsPsych.init({
-  experiment_structure: experiment,
   display_element: $('#jspsych-target'),
+  timeline: experiment,
   on_finish: function() {
     var url = 'follow_up?pid=' + participant_id;
     postDataToDb(jsPsych.data.getData(), participant_id, url);

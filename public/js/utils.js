@@ -5,25 +5,17 @@
 // Reuseable stimuli
 // ------------------------
 
-// NOTE: Prompt sound used in this file is courtesy SoundBible.com - http://soundbible.com/1252-Bleep.html
-var beep = new Howl({
-  urls: ['../audio/bleep.mp3', '../audio/bleep.ogg'],
-  volume: 0.5
-});
-var play_beep = "<script>beep.play()</script>";
-
 // HTML for text plugin
-var continue_html = "<p>Press the <code>enter</code> key to continue.</p>";
+var spacebar_html = "<code>&lt;SPACEBAR&gt;</code>";
+var continue_html = "<p>Press the " + spacebar_html + " to continue.</p>";
 
 // fixation stimulus
-var fixation_cross = "<h1>+</h1>";
+var fixation_cross = "+";
 var fixation_trial = {
   type: 'single-stim',
-  stimuli: [fixation_cross + play_beep],
-  is_html: true,
+  stimuli: [fixation_cross],
   timing_response: jsPASAT.TIMING_STIM_DISPLAY,
-  timing_post_trial: jsPASAT.TIMING_POST_STIM,
-  choices: 'none'
+  timing_post_trial: jsPASAT.TIMING_POST_STIM
 };
 
 
@@ -59,7 +51,7 @@ function createTextBlock(text_html) {
   return {
     type: "text",
     text: text_html + continue_html,
-    cont_key: 13
+    cont_key: [32, 13]
   };
 }
 
@@ -67,23 +59,20 @@ function createTextBlock(text_html) {
 // add results data to the last trial
 function addTrialResults(added_data) {
   added_data = added_data || {};
-  var expected,
-      response,
-      correct,
-      current_trial = jsPsych.data.getLastTrialData(),
-      current_index = current_trial.trial_index;
+  var expected, response, correct;
+  var current_trial = jsPsych.data.getLastTrialData();
+  var current_index = current_trial.trial_index - 1;
 
   // nothing expected on first trial
   if (current_index !== 0) {
-    var previous_index = current_index - 1,
-        current_value = current_trial.block_stimuli[current_index],
-        previous_value = current_trial.block_stimuli[previous_index];
+    var current_value = current_trial.block_stimuli[current_index];
+    var previous_value = current_trial.block_stimuli[current_index - 1];
 
     // expected (correct) response for the last trial
     expected = current_value + previous_value;
 
     // response given in the last trial
-    var key_presses = eval(current_trial.key_press);
+    var key_presses = JSON.parse(current_trial.key_press);
     var digit_presses = [];
     for (var i = 0; i < key_presses.length; i++) {
       var key_press = key_presses[i];
@@ -114,10 +103,10 @@ function addTrialResults(added_data) {
 
 
 // display trial feedback, based on response judgement
-function displayTrialFeedback(trial_data) {
-  if (typeof trial_data.correct !== "undefined") {
-    var feedback_text = trial_data.correct ? "Correct!" : "Incorrect";
-    var feedback_class = trial_data.correct ? "correct" : "incorrect";
+function displayTrialFeedback(data) {
+  if (typeof data.correct !== "undefined") {
+    var feedback_text = data.correct ? "Correct!" : "Incorrect";
+    var feedback_class = data.correct ? "correct" : "incorrect";
     var feedback_html = '<h3 class="'+feedback_class+'">'+feedback_text+'</h3>';
 
     // show feedback
@@ -127,6 +116,17 @@ function displayTrialFeedback(trial_data) {
       $('#jspsych-feedback').empty();
     }, 800);
   }
+}
+
+
+// create a formatted list of trial stimuli for a block
+function formatBlockStimuli(trials) {
+  var stimuli = [];
+  for (var i = 0; i < trials.length; i++) {
+    var trial_stimuli = {stimuli: ["<h1>" + trials[i] + "</h1>"]};
+    stimuli.push(trial_stimuli);
+  }
+  return stimuli;
 }
 
 
@@ -140,7 +140,7 @@ function createPasatBlock(stimuli, options) {
   var block = {
     type: "multi-stim-multi-response",
 
-    stimuli: formatBlockStimuli(stimuli),
+    timeline: formatBlockStimuli(stimuli),
     is_html: true,
     choices: [digit_keycodes, digit_keycodes],
 
@@ -188,19 +188,6 @@ function generatePasatExperimentChunk(stimuli, options) {
     timeline: [notice, fixation_trial, pasat_block, survey]
   };
   return chunk;
-}
-
-
-// create a formatted list of trial stimuli for a block
-function formatBlockStimuli(trials) {
-  var stimuli = [];
-  for (var i = 0; i < trials.length; i++) {
-    var trial_stimuli = [];
-    trial_html = "<h1>" + trials[i] + "</h1>" + play_beep;
-    trial_stimuli.push(trial_html);
-    stimuli.push(trial_stimuli);
-  }
-  return stimuli;
 }
 
 
@@ -339,4 +326,3 @@ function postDataToDb(data, filename, redirect) {
     alert("A problem occurred while writing to the database. We cannot continue. Please contact the researcher for more information.");
   });
 }
-  

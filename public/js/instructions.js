@@ -25,8 +25,8 @@ var instructions_block = {
 instructions.push(instructions_block);
 
 jsPsych.init({
-  experiment_structure: instructions,
   display_element: $('#jspsych-target'),
+  timeline: instructions,
   on_finish: function() {
     var url = 'practice?pid=' + participant_id;
     window.location = url;

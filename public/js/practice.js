@@ -102,8 +102,8 @@ jsPsych.data.addProperties({
 
 
 jsPsych.init({
-  experiment_structure: practice,
   display_element: $('#jspsych-target'),
+  timeline: practice,
   on_finish: function() {
     var url_params = {pid: participant_id},
         url_path = 'experiment';

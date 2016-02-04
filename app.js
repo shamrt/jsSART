@@ -80,6 +80,7 @@ app.post('/experiment-data', function(request, response) {
       "correct", "response", "expected"
     ],
     file_path = ["data", request.body.pathname, request.body.filename + ".csv"].join('/');
+  // devise data file path
   file_path = [
     __dirname,
     "data",

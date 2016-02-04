@@ -16,6 +16,7 @@
   <script src="../../jsPsych/jspsych.js"></script>
   <script src="../../jsPsych/plugins/jspsych-text.js"></script>
   <script src="../../jsPsych/plugins/jspsych-single-stim.js"></script>
+  <script src="../js/underscore.js"></script>
   <script type="text/javascript">
   var experiment = [];
 
@@ -41,18 +42,18 @@
   };
   experiment.push(instructions_block);
 
-  var test_stimuli = [
-    {image: '../img/blue.png', data: { response: 'go' }},
-    {image: '../img/orange.png', data: {response: 'no-go'}}
-  ];
-  var all_trials = jsPsych.randomization.repeat(test_stimuli, 2, true);
   var post_trial_gap = function() {
     return Math.floor( Math.random() * 1500 ) + 750;
   }
+  var test_stimuli = [
+    {stimulus: '../img/blue.png', data: { response: 'go' }},
+    {stimulus: '../img/orange.png', data: { response: 'no-go' }}
+  ];
+
+  var all_trials = jsPsych.randomization.repeat(test_stimuli, 2, true);
   var test_block = {
     type: "single-stim",
-    stimuli: all_trials.image,
-    data: all_trials.data,
+    timeline: test_stimuli,
     choices: ['F'],
     timing_response: post_trial_gap
   };
@@ -85,7 +86,7 @@
 
   // initialize experiment
   jsPsych.init({
-    experiment_structure: experiment,
+    timeline: experiment,
     display_element: $('#jspsych-target'),
     on_finish: function() {
       $.ajax({
