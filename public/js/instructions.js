@@ -8,17 +8,19 @@ var
 var instructions_block = {
   type: "instructions",
   pages: [
-    "<p>This is a <strong>working memory task</strong>. In this working memory task, you will be presented with a series of single or double digit numbers on the computer screen.</p>",
+    "<p>Welcome!</p> " +
+    "<p>In this study you will be presented with a single digit (1-9) in varying sizes in the middle of the screen for a short duration. The digit is then followed by a crossed circle.</p>",
 
-    "<p>These numbers will be presented at the rate of one every 4 seconds. After you see the first two numbers, add them up, and enter the correct number on the computer keyboard.</p>",
+    "<p>Your task is to either:</p> " +
+    "<ol>" +
+      "<li>press the " + spacebar_html + " when you see any digit other than <code>3</code>; or,</li>" +
+      "<li>don’t do anything (press no key) when you see the digit <code>3</code>, and just wait for the next digit to be shown.</li>" +
+    "<ol>",
 
-    "<p>When you see the next number, add it to the one you saw on the computer screen right before it. Continue to add the next number to each preceding one.</p>",
+    "<p>It’s important to be accurate and fast in this study.</p>" +
+    "<p>Use the index finger of your dominant hand when responding (e.g. if you are left-handed, use your left index finger to press the " + spacebar_html + ").</p>",
 
-    "<p>Remember, you are not being asked to give a running total, but rather the sum of the last two numbers that were shown on the computer screen.</p>",
-
-    "<p>For example, if the first two numbers were <code>5</code> and <code>7</code>, you would type <code class='typed'>12</code>.</p> <p>If the next number was <code>3</code>, you would type <code class='typed'>10</code> because you would add <code>7</code> from the previous screen and <code>3</code>, the most recent number presented.</p> <p>Then if the next number was <code>2</code>, you would type <code class='typed'>5</code> because you would add <code>3</code> from the previous screen and <code>2</code>, the most recent number presented.</p>",
-
-    "<p>This is a challenging task. If you lose your place, just jump right back in. Watch for two numbers in a row and add them up and keep going.</p> <p>At several points in the task you will pause briefly to report your experience and then continue with the task.</p> <p>First lets just practice adding up the numbers as they are presented.</p>",
+    "<p>We will now continue to some practice trials.</p>"
   ],
   show_clickable_nav: true
 };

@@ -6,19 +6,29 @@ using a parent and child class!
 
 body {
     text-align: center;
+    background-color: #111;
+    color: #f1f1f1;
 }
 
 p {
     max-width: 48em;
 }
 
+ol {
+    text-align: left;
+}
+
 code {
-    background: #ddd;
+    background: #666;
     padding: 0 0.3em;
 }
 code.typed {
-    background: #999;
+    background: #444;
     color: #eee;
+}
+
+input, textarea {
+    padding: 0.5em;
 }
 
 .container {
