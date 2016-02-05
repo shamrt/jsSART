@@ -1,5 +1,5 @@
 /**
- * Practice view blocks for jsPASAT
+ * Practice view blocks for jsSART
  */
 var
  practice = [],
@@ -12,7 +12,7 @@ practice.push(practice_block_1_notice);
 
 
 // practice block 1
-var practice_block_1 = createPasatBlock(jsPASAT.PRACTICE_BLOCK_1_STIMULI, {
+var practice_block_1 = createPasatBlock(jsSART.PRACTICE_BLOCK_1_STIMULI, {
   give_feedback: true
 });
 practice.push(fixation_trial);
@@ -20,7 +20,7 @@ practice.push(practice_block_1);
 
 
 // practice block 2 instructions
-var practice_num_items = jsPASAT.PRACTICE_BLOCK_2_STIMULI.length,
+var practice_num_items = jsSART.PRACTICE_BLOCK_2_STIMULI.length,
     practice_min_correct = Math.ceil((practice_num_items - 1) / 4);
 
 var practice_block_2_instructions = {
@@ -28,7 +28,7 @@ var practice_block_2_instructions = {
   pages: [
     "<p>OK, you should be getting the hang of it.</p> <p>Before continuing, let the experimenter know if you have any questions.</p>",
 
-    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (jsPASAT.TIMING_POST_STIM / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers; try your best to get as many problems right as possible.</p> <p>If you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again! We want to be sure that you understand the task that is ahead of you.</p>"
+    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (jsSART.TIMING_POST_STIM / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers; try your best to get as many problems right as possible.</p> <p>If you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again! We want to be sure that you understand the task that is ahead of you.</p>"
   ],
   show_clickable_nav: true,
   allow_backward: false
@@ -43,7 +43,7 @@ var practice_block_2_attempts = 0,
     skip_experiment = false;
 var practice_block_2_notice_text = "<p>OK, let's practice the task once more, just as it will be in the experiment...</p>",
     practice_block_2_notice = createTextBlock(practice_block_2_notice_text),
-    practice_block_2 = createPasatBlock(jsPASAT.PRACTICE_BLOCK_2_STIMULI);
+    practice_block_2 = createPasatBlock(jsSART.PRACTICE_BLOCK_2_STIMULI);
 
 var practice_2_chunk = {
   chunk_type: 'while',
@@ -62,7 +62,7 @@ var practice_2_chunk = {
       // end the practice loop
       return false;
     } else if (practice_block_2_attempts >=
-        jsPASAT.PRACTICE_BLOCK_2_MAX_ATTEMPTS) {
+        jsSART.PRACTICE_BLOCK_2_MAX_ATTEMPTS) {
       // skip the experiment in order to go straight to demographics
       skip_experiment = true;
       return false;

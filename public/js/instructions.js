@@ -1,5 +1,5 @@
 /**
- * Instructions view block for jsPASAT
+ * Instructions view block for jsSART
  */
 var
   instructions = [],

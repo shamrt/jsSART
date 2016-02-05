@@ -1,8 +1,8 @@
 /**
- * Settings configuration for jsPASAT
+ * Settings configuration for jsSART
  */
 
-var jsPASAT = {
+var jsSART = {
 
   // Condition
   // --------------------------------

@@ -1,5 +1,5 @@
 /**
- * Follow-up question blocks for jsPASAT
+ * Follow-up question blocks for jsSART
  */
 var
   follow_up = [],
@@ -127,7 +127,7 @@ var demographics_5_questions = [
   },
   {
     questions: ["On a scale of 1–7, how much do you like math?"],
-    options: jsPASAT.LIKERT_SCALE_1,
+    options: jsSART.LIKERT_SCALE_1,
   },
   {
     questions: ["Have you been previously diagnosed with ADD or AD/HD?"],
@@ -247,28 +247,28 @@ var retrospective_survey_timeline = [
   {
     questions: ["On this <strong>sustained attention task</strong>, what was " +
                 "your <u><strong>total amount of mental effort</strong></u>?"],
-    options: [jsPASAT.LIKERT_SCALE_1]
+    options: [jsSART.LIKERT_SCALE_1]
   },
   {
     questions: ["On this <strong>sustained attention task</strong>, what was " +
                 "your total amount of <u><strong>discomfort or " +
                 "distress</strong></u>?"],
-    options: [jsPASAT.LIKERT_SCALE_1]
+    options: [jsSART.LIKERT_SCALE_1]
   },
   {
     questions: ["How much did you <u><strong>enjoy</u></strong> doing this " +
                 "<strong>sustained attention task</strong>?"],
-    options: [jsPASAT.LIKERT_SCALE_1]
+    options: [jsSART.LIKERT_SCALE_1]
   },
   {
     questions: ["How well did you <u><strong>perform</u></strong> on the " +
                 "<strong>sustained attention task</strong>?"],
-    options: [jsPASAT.LIKERT_SCALE_2]
+    options: [jsSART.LIKERT_SCALE_2]
   },
   {
     questions: ["How much <u><strong>mental fatigue</u></strong> did you " +
                 "have during the <strong>sustained attention task</strong>?"],
-    options: [jsPASAT.LIKERT_SCALE_1]
+    options: [jsSART.LIKERT_SCALE_1]
   },
   {
     questions: ["How <u><strong>satisfied</u></strong> are you with your " +

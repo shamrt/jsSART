@@ -1,5 +1,5 @@
 /**
- * Common utility values and functions for jsPASAT
+ * Common utility values and functions for jsSART
  */
 
 // Reuseable stimuli
@@ -14,8 +14,8 @@ var fixation_cross_path = "../img/fixation_cross.png";
 var fixation_trial = {
   type: 'single-stim',
   stimuli: [fixation_cross],
-  timing_response: jsPASAT.TIMING_STIM_DISPLAY,
-  timing_post_trial: jsPASAT.TIMING_POST_STIM
+  timing_response: jsSART.TIMING_STIM_DISPLAY,
+  timing_post_trial: jsSART.TIMING_POST_STIM
 };
 
 
@@ -144,8 +144,8 @@ function createPasatBlock(stimuli, options) {
     is_html: true,
     choices: [digit_keycodes, digit_keycodes],
 
-    timing_stim: [jsPASAT.TIMING_STIM_DISPLAY],
-    timing_response: jsPASAT.TIMING_POST_STIM,
+    timing_stim: [jsSART.TIMING_STIM_DISPLAY],
+    timing_response: jsSART.TIMING_POST_STIM,
     response_ends_trial: false,
 
     data: {block_stimuli: stimuli},
@@ -171,14 +171,14 @@ function generatePasatExperimentChunk(stimuli, options) {
   var notice = createTextBlock("When you're ready to continue, a trial block will begin.");
 
   var pasat_block = createPasatBlock(stimuli, options),
-      survey_questions = jsPASAT.POST_BLOCK_QUESTIONS,
+      survey_questions = jsSART.POST_BLOCK_QUESTIONS,
       // make all questions required
       required = _.map(survey_questions, function(){ return true; });
 
   var survey = {
       type: 'survey-multi-choice',
       questions: [survey_questions],
-      options: [[jsPASAT.LIKERT_SCALE_1, jsPASAT.LIKERT_SCALE_1]],
+      options: [[jsSART.LIKERT_SCALE_1, jsSART.LIKERT_SCALE_1]],
       required: [required],
       horizontal: true
   };
@@ -193,7 +193,7 @@ function generatePasatExperimentChunk(stimuli, options) {
 
 // generate random condition
 function generateCondition() {
-  return _.random(1, jsPASAT.BLOCKS_PER_CONDITION.length);
+  return _.random(1, jsSART.BLOCKS_PER_CONDITION.length);
 }
 
 
@@ -201,7 +201,7 @@ function generateCondition() {
 // return list of block difficulty and block stimuli
 function generateRandomBlockTypes(condition, outer_block_type) {
   outer_block_type = (typeof outer_block_type === "undefined") ? 'medium' : outer_block_type;
-  var blocks_in_condition = jsPASAT.BLOCKS_PER_CONDITION[condition - 1];
+  var blocks_in_condition = jsSART.BLOCKS_PER_CONDITION[condition - 1];
 
   // calculate number of middle medium blocks
   // Note: is equal to number of blocks in a given condition, minus 2 'medium'
@@ -254,7 +254,7 @@ function generatePasatBlockStimuli(block_types) {
 // return list of trial values
 function generateStimuli(difficulty, num_trials) {
   difficulty = (typeof difficulty === "undefined") ? 'medium' : difficulty;
-  num_trials = (typeof num_trials === "undefined") ? jsPASAT.TRIALS_PER_BLOCK : num_trials;
+  num_trials = (typeof num_trials === "undefined") ? jsSART.TRIALS_PER_BLOCK : num_trials;
 
   var stimuli;
   var i = 1;
