@@ -13,7 +13,7 @@ var continue_html = "<p>Press the " + spacebar_html + " to continue.</p>";
 var fixation_cross_path = "../img/fixation_cross.png";
 var fixation_trial = {
   type: 'single-stim',
-  stimuli: [fixation_cross],
+  stimuli: [],
   timing_response: jsSART.TIMING_STIM_DISPLAY,
   timing_post_trial: jsSART.TIMING_POST_STIM
 };
