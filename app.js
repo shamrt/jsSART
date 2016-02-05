@@ -68,6 +68,11 @@ app.get('/finish', function(request, response) {
     response.render('finished.html');
 });
 
+// unit tests
+app.get('/tests', function(request, response) {
+    response.render('tests.html');
+});
+
 // experiment data route
 app.post('/experiment-data', function(request, response) {
   var
