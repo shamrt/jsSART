@@ -120,10 +120,17 @@ function displayTrialFeedback(data) {
 
 
 // create a formatted list of trial stimuli for a block
-function formatBlockStimuli(trials) {
+function formatBlockStimuli(trials, font_size) {
+  // make smallest font size by default
+  font_size = font_size || jsSART.STIMULI_FONT_SIZES[0];
+
   var stimuli = [];
   for (var i = 0; i < trials.length; i++) {
-    var trial_stimuli = {stimuli: ["<h1>" + trials[i] + "</h1>"]};
+    var trial_stimuli = {
+      stimuli: [
+        "<div style='font-size:" + font_size + "'>" + trials[i] + "</div>"
+      ]
+    };
     stimuli.push(trial_stimuli);
   }
   return stimuli;

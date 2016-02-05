@@ -9,6 +9,11 @@ var jsSART = {
   // Sets the number of blocks in
   'BLOCKS_PER_CONDITION': [5, 6, 7, 8, 9],
 
+  // Stimuli
+  // --------------------------------
+  // Font sizes
+  'STIMULI_FONT_SIZES': [48, 72, 94, 100, 120],
+
   // Pace of PASAT trial presentation
   // --------------------------------
   'TIMING_STIM_DISPLAY': 1000,
