@@ -10,7 +10,7 @@ var spacebar_html = "<code>&lt;SPACEBAR&gt;</code>";
 var continue_html = "<p>Press the " + spacebar_html + " to continue.</p>";
 
 // fixation stimulus
-var fixation_cross = "+";
+var fixation_cross_path = "../img/fixation_cross.png";
 var fixation_trial = {
   type: 'single-stim',
   stimuli: [fixation_cross],
