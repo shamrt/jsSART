@@ -47,8 +47,8 @@ experiment.push(experiment_notice);
 // generate the experiment blocks
 var condition = generateCondition();
 var block_types = (jsSART.BLOCK_TYPE_ORDER === null) ? generateRandomBlockTypes(condition) : jsSART.BLOCK_TYPE_ORDER;
-var pasat_blocks = generatePasatBlockStimuli(block_types);
-experiment = experiment.concat(pasat_blocks.formatted_stimuli);
+var blocks = generateSartBlockStimuli(block_types);
+experiment = experiment.concat(blocks.formatted_stimuli);
 
 
 // end notice

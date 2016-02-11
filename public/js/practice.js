@@ -12,7 +12,7 @@ practice.push(practice_block_1_notice);
 
 
 // practice block 1
-var practice_block_1 = createPasatBlock(jsSART.PRACTICE_BLOCK_1_STIMULI, {
+var practice_block_1 = createSartBlock(jsSART.PRACTICE_BLOCK_1_STIMULI, {
   give_feedback: true
 });
 practice.push(fixation_trial);
@@ -43,7 +43,7 @@ var practice_block_2_attempts = 0,
     skip_experiment = false;
 var practice_block_2_notice_text = "<p>OK, let's practice the task once more, just as it will be in the experiment...</p>",
     practice_block_2_notice = createTextBlock(practice_block_2_notice_text),
-    practice_block_2 = createPasatBlock(jsSART.PRACTICE_BLOCK_2_STIMULI);
+    practice_block_2 = createSartBlock(jsSART.PRACTICE_BLOCK_2_STIMULI);
 
 var practice_2_chunk = {
   chunk_type: 'while',

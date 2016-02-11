@@ -138,7 +138,7 @@ function formatBlockStimuli(trials, font_size) {
 
 
 // create a block of trials
-function createPasatBlock(stimuli, options) {
+function createSartBlock(stimuli, options) {
   options = options || {};
   var give_feedback = options.give_feedback || false;
   var added_data = options.added_data || {};
@@ -173,11 +173,11 @@ function createPasatBlock(stimuli, options) {
 }
 
 
-// generate a complete PASAT experiment chunk, complete with survey
-function generatePasatExperimentChunk(stimuli, options) {
+// generate a complete experiment chunk, complete with survey
+function generateExperimentChunk(stimuli, options) {
   var notice = createTextBlock("When you're ready to continue, a trial block will begin.");
 
-  var pasat_block = createPasatBlock(stimuli, options),
+  var block = createSartBlock(stimuli, options),
       survey_questions = jsSART.POST_BLOCK_QUESTIONS,
       // make all questions required
       required = _.map(survey_questions, function(){ return true; });
@@ -192,7 +192,7 @@ function generatePasatExperimentChunk(stimuli, options) {
 
   var chunk = {
     chunk_type: 'linear',
-    timeline: [notice, fixation_trial, pasat_block, survey]
+    timeline: [notice, fixation_trial, block, survey]
   };
   return chunk;
 }
@@ -234,7 +234,7 @@ function generateRandomBlockTypes(condition, outer_block_type) {
 
 // generate a formatted and complete set of jsPsych blocks
 // Note: return an object with block stimuli lists and formatted stimuli
-function generatePasatBlockStimuli(block_types) {
+function generateSartBlockStimuli(block_types) {
   // get random stimuli for each block
   var block_stimuli = _.map(block_types, function(difficulty) {
     return generateStimuli(difficulty);
@@ -245,7 +245,7 @@ function generatePasatBlockStimuli(block_types) {
   var formatted_stimuli = _.map(stimuli_types, function(stimuli_type) {
     var added_data = {block_type: stimuli_type[1]};
 
-    return generatePasatExperimentChunk(stimuli_type[0], {
+    return generateExperimentChunk(stimuli_type[0], {
       added_data: added_data
     });
   });
@@ -257,7 +257,7 @@ function generatePasatBlockStimuli(block_types) {
 }
 
 
-// generate random stimuli for PASAT blocks
+// generate random stimuli for SART blocks
 // return list of trial values
 function generateStimuli(difficulty, num_trials) {
   difficulty = (typeof difficulty === "undefined") ? 'medium' : difficulty;
