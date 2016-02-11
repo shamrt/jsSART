@@ -11,8 +11,16 @@ var jsSART = {
 
   // Stimuli
   // --------------------------------
-  // Font sizes
-  'STIMULI_FONT_SIZES': [48, 72, 94, 100, 120],
+  'STIMULI': {
+    // Possible stimuli values
+    'VALUES': _.range(1, 10),  // 1--9
+    // No-go value
+    'NO_GO_VALUE': 3,
+    // Font sizes
+    'FONT_SIZES': [48, 72, 94, 100, 120],
+    // Second level quasi-random counter range
+    'QUASI_RANDOM_RANGE': _.range(4)  // 0-3
+  },
 
   // Pace of PASAT trial presentation
   // --------------------------------

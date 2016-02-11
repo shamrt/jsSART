@@ -122,7 +122,7 @@ function displayTrialFeedback(data) {
 // create a formatted list of trial stimuli for a block
 function formatBlockStimuli(trials, font_size) {
   // make smallest font size by default
-  font_size = (typeof font_size !== "undefined") ? font_size : jsSART.STIMULI_FONT_SIZES[0];
+  font_size = (typeof font_size !== "undefined") ? font_size : jsSART.STIMULI.FONT_SIZES[0];
 
   var stimuli = [];
   for (var i = 0; i < trials.length; i++) {
@@ -257,60 +257,32 @@ function generateSartBlockStimuli(block_types) {
 }
 
 
-// generate random stimuli for SART blocks
+// generate quasi-random stimuli for SART blocks
 // return list of trial values
-function generateStimuli(difficulty, num_trials) {
-  difficulty = (typeof difficulty === "undefined") ? 'medium' : difficulty;
-  num_trials = (typeof num_trials === "undefined") ? jsSART.TRIALS_PER_BLOCK : num_trials;
+function generateStimuli(num_trials) {
+  var stimuli = [];
+  var quasi_random_counter = -1;
+  var last_trial;
 
-  var stimuli;
-  var i = 1;
-  var trial_value, digit_sum, digit_max;
-  switch (difficulty) {
-    case 'easy':
-      // Note: Easy Block defined by 2 digits summing to <= 9
-      digit_max = 7;
-      stimuli = [_.random(1, digit_max)];  // add first random number
-      while (i <= num_trials) {
-        trial_value = _.random(1, digit_max);
-        digit_sum = trial_value + _.last(stimuli);
-        if (digit_sum <= 9) {
-          stimuli.push(trial_value);
-          i++;
-        }
-      }
-      break;
-    case 'medium':
-      // Note: Medium Block defined by 2 digits summing to >= 9
-      digit_max = 9;
-      stimuli = [_.random(1, digit_max)];  // add first random number
-      while (i <= num_trials) {
-        digit_sum = trial_value + _.last(stimuli);
-        trial_value = _.random(1, digit_max);
-        if (digit_sum >= 9) {
-          stimuli.push(trial_value);
-          i++;
-        }
-      }
-      break;
-    case 'hard':
-      // Note: Hard Block defined as each trial has one double digit stimulus
-      // (and one single digit stimulus)
-      digit_max = 19;
-      stimuli = [_.random(1, digit_max)];  // add first random number
-      while (i <= num_trials) {
-        trial_value = _.random(1, digit_max);
-        var index_is_even = (i % 2 === 0);
-        if (index_is_even && trial_value >= 10) {
-          stimuli.push(trial_value);
-          i++;
-        } else if (!index_is_even && trial_value < 10) {
-          stimuli.push(trial_value);
-          i++;
-        }
-      }
-      break;
+  while (stimuli.length < num_trials) {
+    // prohibit 3s unless quasi-random counter equals zero
+    if (last_trial === 3 && quasi_random_counter < 0) {
+      // select a random countdown number from list
+      quasi_random_counter = _.sample(jsSART.STIMULI.QUASI_RANDOM_RANGE);
+    }
+
+    // select random stimuli
+    var trial = _.sample(jsSART.STIMULI.VALUES);
+
+    // add trial to stimuli if allowable
+    if (quasi_random_counter < 0 ||
+        (quasi_random_counter >= 0 && trial !== 3)) {
+      stimuli.push(trial);
+      last_trial = trial;
+      if (quasi_random_counter > -1) quasi_random_counter--;
+    }
   }
+
   return stimuli;
 }
 
