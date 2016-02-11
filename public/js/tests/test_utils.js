@@ -1,5 +1,10 @@
-QUnit.test("getParticipantId, with window prompt", function(assert) {
-  assert.ok(getParticipantId() >= 9999910000 );
+QUnit.test("getParticipantId", function(assert) {
+  var url_params = getUrlParams();
+  var expected_pid = 9999910000;
+  if (_.contains(_.keys(url_params), "pid")) {
+    expected_pid = url_params.pid;
+  }
+  assert.ok(getParticipantId() >= expected_pid);
 });
 
 
