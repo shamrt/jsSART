@@ -44,35 +44,10 @@ QUnit.test("formatBlockStimuli, several with font size given", function(assert) 
 });
 
 
-QUnit.test("formatBlockStimuli, single stimulus without font sizes given", function(assert) {
-  var trials = [2];
-  var block_stimuli = formatBlockStimuli(trials);
+// check that randomly formatted block matches set of possible objects
+function checkSingleFormattedBlockStimulus(trial, font_sizes) {
+  var block_stimuli = formatBlockStimuli(trial);
 
-  // check that randomly formatted block matches set of possible objects
-  var has_expected_block = false;
-  for (var i=0; i < jsSART.STIMULI.FONT_SIZES.length; i++) {
-    var possible_expected = [{
-      "stimuli": [
-        "<div style='font-size:" + jsSART.STIMULI.FONT_SIZES[i] + "'>2</div>"
-      ]
-    }];
-
-    if (_.isEqual(possible_expected, block_stimuli)) {
-      has_expected_block = true;
-      break;
-    }
-  }
-
-  assert.ok(has_expected_block);
-});
-
-
-QUnit.test("formatBlockStimuli, single stimulus with incorrect possible font sizes given", function(assert) {
-  var trials = [2];
-  var font_sizes = ["foo", "bar", "baz"];
-  var block_stimuli = formatBlockStimuli(trials);
-
-  // check that randomly formatted block doesn't match set of possible objects
   var has_expected_block = false;
   for (var i=0; i < font_sizes.length; i++) {
     var possible_expected = [{
@@ -87,6 +62,24 @@ QUnit.test("formatBlockStimuli, single stimulus with incorrect possible font siz
     }
   }
 
+  return has_expected_block;
+}
+
+
+QUnit.test("formatBlockStimuli, single stimulus without font sizes given", function(assert) {
+  var trial = [2];
+  var font_sizes = jsSART.STIMULI.FONT_SIZES;
+  var has_expected_block = checkSingleFormattedBlockStimulus(
+      trial, font_sizes);
+  assert.ok(has_expected_block);
+});
+
+
+QUnit.test("formatBlockStimuli, single stimulus with incorrect possible font sizes given", function(assert) {
+  var trial = [2];
+  var font_sizes = ["foo", "bar", "baz"];
+  var has_expected_block = checkSingleFormattedBlockStimulus(
+      trial, font_sizes);
   assert.notOk(has_expected_block);
 });
 
