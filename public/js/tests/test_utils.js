@@ -101,7 +101,6 @@ QUnit.test("generateStimuli stimuli values", function(assert) {
 
 QUnit.test("generateConditions", function(assert) {
   var conditions = generateConditions();
-  console.log(conditions);
   assert.ok(_.contains(jsSART.CONDITIONS.NUM_TRIALS, conditions.num_trials));
   assert.ok(_.contains(
     jsSART.CONDITIONS.TRIALS_PER_BLOCK, conditions.trials_per_block
