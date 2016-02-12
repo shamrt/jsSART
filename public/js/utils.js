@@ -206,34 +206,6 @@ function generateCondition() {
 }
 
 
-// generate a set of randomized block difficulty types
-// return list of block difficulty and block stimuli
-function generateRandomBlockTypes(condition, outer_block_type) {
-  outer_block_type = (typeof outer_block_type === "undefined") ? 'medium' : outer_block_type;
-  var blocks_in_condition = jsSART.BLOCKS_PER_CONDITION[condition - 1];
-
-  // calculate number of middle medium blocks
-  // Note: is equal to number of blocks in a given condition, minus 2 'medium'
-  // blocks at beginning and end of the list, minus 1 'easy' and 1 'hard' block
-  var num_middle_medium_blocks = blocks_in_condition - 2 - 2;
-
-  // add unshuffled middle 'medium', 'easy' and 'hard' blocks
-  var unshuffled_middle_blocks = Array.apply(
-    null, Array(num_middle_medium_blocks)).map(function() { return 'medium'; });
-  unshuffled_middle_blocks.push('easy', 'hard');
-
-  // randomize blocks
-  random_middle_blocks = _.shuffle(unshuffled_middle_blocks);
-
-  // complete block difficulty order generation
-  var block_types = [outer_block_type];
-  block_types = block_types.concat(random_middle_blocks);
-  block_types = block_types.concat([outer_block_type]);
-
-  return block_types;
-}
-
-
 // generate a formatted and complete set of jsPsych blocks
 // Note: return an object with block stimuli lists and formatted stimuli
 function generateSartBlockStimuli(block_types) {
