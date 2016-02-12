@@ -4,10 +4,14 @@
 
 var jsSART = {
 
-  // Condition
+  // Conditions
   // --------------------------------
-  // Sets the number of blocks in
-  'BLOCKS_PER_CONDITION': [5, 6, 7, 8, 9],
+  'CONDITIONS': {
+    // Total number of trials a participant will see during experiment
+    'NUM_TRIALS': [484, 560, 646, 731, 810],
+    // Number of trials before being shown real-time post-block questions
+    'TRIALS_PER_BLOCK': [225, 82]
+  },
 
   // Stimuli
   // --------------------------------
@@ -35,11 +39,6 @@ var jsSART = {
 
   // Experiment blocks
   // --------------------------------
-  'TRIALS_PER_BLOCK': 15,
-  // The order of blocks presented to a participant, e.g.:
-  //   'BLOCK_TYPE_ORDER': ["medium", "hard", "medium", "medium", "easy", "medium", "medium"],
-  // Note: If set to ``null``, block type order will be randomly generated
-  'BLOCK_TYPE_ORDER': null,
   // Can be a flat array of strings
   'POST_BLOCK_QUESTIONS': [
     "Rate your current level of <strong>mental effort</strong>.",

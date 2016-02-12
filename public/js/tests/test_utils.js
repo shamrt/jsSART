@@ -65,7 +65,6 @@ function checkSingleFormattedBlockStimulus(trial, font_sizes) {
   return has_expected_block;
 }
 
-
 QUnit.test("formatBlockStimuli, single stimulus without font sizes given", function(assert) {
   var trial = [2];
   var font_sizes = jsSART.STIMULI.FONT_SIZES;
@@ -73,7 +72,6 @@ QUnit.test("formatBlockStimuli, single stimulus without font sizes given", funct
       trial, font_sizes);
   assert.ok(has_expected_block);
 });
-
 
 QUnit.test("formatBlockStimuli, single stimulus with incorrect possible font sizes given", function(assert) {
   var trial = [2];
@@ -98,4 +96,14 @@ QUnit.test("generateStimuli stimuli values", function(assert) {
     var is_expected_value = _.contains(jsSART.STIMULI.VALUES, stimuli[i]);
     assert.ok(is_expected_value);
   }
+});
+
+
+QUnit.test("generateConditions", function(assert) {
+  var conditions = generateConditions();
+  console.log(conditions);
+  assert.ok(_.contains(jsSART.CONDITIONS.NUM_TRIALS, conditions.num_trials));
+  assert.ok(_.contains(
+    jsSART.CONDITIONS.TRIALS_PER_BLOCK, conditions.trials_per_block
+  ));
 });

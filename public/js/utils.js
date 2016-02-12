@@ -201,8 +201,12 @@ function generateExperimentChunk(stimuli, options) {
 
 
 // generate random condition
-function generateCondition() {
-  return _.random(1, jsSART.BLOCKS_PER_CONDITION.length);
+function generateConditions() {
+  var conditions = {
+    num_trials: _.sample(jsSART.CONDITIONS.NUM_TRIALS),
+    trials_per_block: _.sample(jsSART.CONDITIONS.TRIALS_PER_BLOCK)
+  };
+  return conditions;
 }
 
 
