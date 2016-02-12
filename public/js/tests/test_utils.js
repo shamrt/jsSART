@@ -107,3 +107,19 @@ QUnit.test("generateConditions", function(assert) {
     jsSART.CONDITIONS.TRIALS_PER_BLOCK, conditions.trials_per_block
   ));
 });
+
+
+QUnit.test("divideStimuliIntoBlocks with 10 stimuli and 2 trials per block", function(assert) {
+  // there should be five blocks
+  assert.expect(5);
+
+  var stimuli = [8, 3, 7, 5, 6, 3, 1, 5, 1, 4];
+  var trials_per_block = 2;
+  var blocks = divideStimuliIntoBlocks(stimuli, trials_per_block);
+
+  // check that blocks match
+  var expected_blocks = [[8, 3], [7, 5], [6, 3], [1, 5], [1, 4]];
+  for (var i=0; i < expected_blocks.length; i++) {
+    assert.deepEqual(expected_blocks[i], blocks[i]);
+  }
+});

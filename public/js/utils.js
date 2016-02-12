@@ -265,6 +265,31 @@ function generateStimuli(num_trials) {
 }
 
 
+// divide all experiment stimuli into specified block lengths
+// return list of lists
+function divideStimuliIntoBlocks(stimuli, trials_per_block) {
+  var blocks = [];
+
+  while (stimuli.length) {
+    // create blocks
+    var block = [];
+    for (var i=0; i < trials_per_block; i++) {
+      var stimulus = stimuli.shift();
+      block.push(stimulus);
+      console.log(stimuli.length);
+
+      if (!stimuli) {
+        // stop looping when run out of stimuli
+        // NOTE: for last block
+        break;
+      }
+    }
+    blocks.push(block);
+  }
+  return blocks;
+}
+
+
 // post data to the server using an AJAX call
 function postDataToDb(data, filename, redirect) {
   var pathname = window.location.pathname.slice(1);
