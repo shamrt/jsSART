@@ -17,7 +17,7 @@ var jsSART = {
     // No-go value
     'NO_GO_VALUE': 3,
     // Font sizes
-    'FONT_SIZES': [48, 72, 94, 100, 120],
+    'FONT_SIZES': ["48px", "72px", "94px", "100px", "120px"],
     // Second level quasi-random counter range
     'QUASI_RANDOM_RANGE': _.range(4)  // 0-3
   },

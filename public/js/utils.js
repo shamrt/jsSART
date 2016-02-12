@@ -120,20 +120,22 @@ function displayTrialFeedback(data) {
 
 
 // create a formatted list of trial stimuli for a block
-function formatBlockStimuli(trials, font_size) {
+function formatBlockStimuli(trials, font_sizes_px) {
   // make smallest font size by default
-  font_size = (typeof font_size !== "undefined") ? font_size : jsSART.STIMULI.FONT_SIZES[0];
+  font_sizes_px = (typeof font_sizes_px !== "undefined") ?
+    font_sizes_px : jsSART.STIMULI.FONT_SIZES;
 
-  var stimuli = [];
+  var block_stimuli = [];
   for (var i = 0; i < trials.length; i++) {
+    // create formatted stimulus with randomly sampled font size
     var trial_stimuli = {
       stimuli: [
-        "<div style='font-size:" + font_size + "'>" + trials[i] + "</div>"
+        "<div style='font-size:" + _.sample(font_sizes_px) + "'>" + trials[i] + "</div>"
       ]
     };
-    stimuli.push(trial_stimuli);
+    block_stimuli.push(trial_stimuli);
   }
-  return stimuli;
+  return block_stimuli;
 }
 
 

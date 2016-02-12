@@ -19,36 +19,75 @@ QUnit.test("createTextBlock", function(assert) {
 });
 
 
-QUnit.test("formatBlockStimuli", function(assert) {
-  assert.expect(2);
-
-  // without font size given
-  var without_trials = [2, 4];
-  var without_expected = [
+QUnit.test("formatBlockStimuli, several with font size given", function(assert) {
+  var font_sizes = ["100px"];
+  var trials = [3, 4, 9];
+  var expected = [
     {
       "stimuli": [
-        "<div style='font-size:" + jsSART.STIMULI.FONT_SIZES[0] + "'>2</div>"
+        "<div style='font-size:100px'>3</div>"
       ]
     },
     {
       "stimuli": [
-        "<div style='font-size:" + jsSART.STIMULI.FONT_SIZES[0] + "'>4</div>"
+        "<div style='font-size:100px'>4</div>"
+      ]
+    },
+    {
+      "stimuli": [
+        "<div style='font-size:100px'>9</div>"
       ]
     }
   ];
-  assert.deepEqual(formatBlockStimuli(without_trials), without_expected);
 
-  // with font size of 100 given
-  var font_size = 100;
-  var with_trials = [3];
-  var with_expected = [
-    {
+  assert.deepEqual(formatBlockStimuli(trials, font_sizes), expected);
+});
+
+
+QUnit.test("formatBlockStimuli, single stimulus without font sizes given", function(assert) {
+  var trials = [2];
+  var block_stimuli = formatBlockStimuli(trials);
+
+  // check that randomly formatted block matches set of possible objects
+  var has_expected_block = false;
+  for (var i=0; i < jsSART.STIMULI.FONT_SIZES.length; i++) {
+    var possible_expected = [{
       "stimuli": [
-        "<div style='font-size:100'>3</div>"
+        "<div style='font-size:" + jsSART.STIMULI.FONT_SIZES[i] + "'>2</div>"
       ]
-    },
-  ];
-  assert.deepEqual(formatBlockStimuli(with_trials, font_size), with_expected);
+    }];
+
+    if (_.isEqual(possible_expected, block_stimuli)) {
+      has_expected_block = true;
+      break;
+    }
+  }
+
+  assert.ok(has_expected_block);
+});
+
+
+QUnit.test("formatBlockStimuli, single stimulus with incorrect possible font sizes given", function(assert) {
+  var trials = [2];
+  var font_sizes = ["foo", "bar", "baz"];
+  var block_stimuli = formatBlockStimuli(trials);
+
+  // check that randomly formatted block doesn't match set of possible objects
+  var has_expected_block = false;
+  for (var i=0; i < font_sizes.length; i++) {
+    var possible_expected = [{
+      "stimuli": [
+        "<div style='font-size:" + font_sizes[i] + "'>2</div>"
+      ]
+    }];
+
+    if (_.isEqual(possible_expected, block_stimuli)) {
+      has_expected_block = true;
+      break;
+    }
+  }
+
+  assert.notOk(has_expected_block);
 });
 
 
