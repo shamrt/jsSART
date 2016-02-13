@@ -200,7 +200,7 @@ function generateExperimentChunk(stimuli, options) {
 }
 
 
-// generate random condition
+// generate random conditions
 function generateConditions() {
   var conditions = {
     num_trials: _.sample(jsSART.CONDITIONS.NUM_TRIALS),
