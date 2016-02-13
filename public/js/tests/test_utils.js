@@ -122,3 +122,20 @@ QUnit.test("divideStimuliIntoBlocks with 10 stimuli and 2 trials per block", fun
     assert.deepEqual(expected_blocks[i], blocks[i]);
   }
 });
+
+
+QUnit.test("divideStimuliIntoBlocks with 12 stimuli and 5 trials per block", function(assert) {
+  // expect three blocks
+  assert.expect(3);
+
+  var stimuli = [9, 4, 7, 7, 3, 5, 6, 2, 5, 4, 3, 2];
+  var trials_per_block = 5;
+  var blocks = divideStimuliIntoBlocks(stimuli, trials_per_block);
+
+  // check that blocks match
+  // NOTE: last block should be shortened
+  var expected_blocks = [[9, 4, 7, 7, 3], [5, 6, 2, 5, 4], [3, 2]];
+  for (var i=0; i < expected_blocks.length; i++) {
+    assert.deepEqual(expected_blocks[i], blocks[i]);
+  }
+});

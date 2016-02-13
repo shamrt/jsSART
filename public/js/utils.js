@@ -278,7 +278,7 @@ function divideStimuliIntoBlocks(stimuli, trials_per_block) {
       block.push(stimulus);
       console.log(stimuli.length);
 
-      if (!stimuli) {
+      if (!stimuli.length) {
         // stop looping when run out of stimuli
         // NOTE: for last block
         break;
