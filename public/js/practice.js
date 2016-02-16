@@ -111,7 +111,9 @@ jsPsych.init({
       url_params = _.extend(url_params, {skip_experiment: skip_experiment});
       url_path = 'follow_up';
     }
-    var url = url_path + '?' + $.param(url_params);
-    postDataToDb(jsPsych.data.getData(), participant_id, url);
-  }
+
+    var redirect_url = url_path + '?' + $.param(url_params);
+    postDataToDb(jsPsych.data.getData(), participant_id, redirect_url);
+  },
+  // fullscreen: true
 });

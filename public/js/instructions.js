@@ -30,7 +30,8 @@ jsPsych.init({
   display_element: $('#jspsych-target'),
   timeline: instructions,
   on_finish: function() {
-    var url = 'practice?pid=' + participant_id;
-    window.location = url;
-  }
+    var redirect_url = 'practice?pid=' + participant_id;
+    window.location = redirect_url;
+  },
+  // fullscreen: true
 });
