@@ -77,9 +77,9 @@ app.get('/tests', function(request, response) {
 app.post('/experiment-data', function(request, response) {
   var
     headers = [
-      "internal_node_id", "trial_index", "trial_type",
-      "participant_id", "num_trials", "trials_per_block",
-      "time_elapsed",
+      "internal_node_id", "trial_index", "trial_type", "time_elapsed",
+      "participant_id",
+      "num_trials", "trials_per_block", "practice_condition",
       "stimulus", "key_press", "rt",
       "correct", "response", "expected"
     ],

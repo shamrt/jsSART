@@ -1,9 +1,10 @@
 /**
  * Practice view blocks for jsSART
  */
-var
- practice = [],
- participant_id = getParticipantId();
+var practice = [];
+var participant_id = getParticipantId();
+var practice_condition = generatePracticeCondition();
+var practice_trials = generatePracticeTrials(practice_condition);
 
 // practice block 1 notice
 var practice_block_1_notice_text = "<p>For the first practice block, you will be given feedback after each item so that you know how you performed the task.</p>";
@@ -12,7 +13,7 @@ practice.push(practice_block_1_notice);
 
 
 // practice block 1
-var practice_block_1 = createSartBlock(jsSART.PRACTICE_BLOCK_1_STIMULI, {
+var practice_block_1 = createSartBlock(practice_trials.BLOCK_1_STIMULI, {
   give_feedback: true
 });
 practice.push(fixation_trial);
@@ -20,15 +21,17 @@ practice.push(practice_block_1);
 
 
 // practice block 2 instructions
-var practice_num_items = jsSART.PRACTICE_BLOCK_2_STIMULI.length,
-    practice_min_correct = Math.ceil((practice_num_items - 1) / 4);
+var practice_num_items = practice_trials.BLOCK_2_STIMULI.length;
+// participants must get a minimum number of items correct
+var practice_min_correct = getPracticeMinCorrect(
+  practice_min_correct, jsSART.PRACTICE.MAX_ERROR_RATE);
 
 var practice_block_2_instructions = {
   type: "instructions",
   pages: [
     "<p>OK, you should be getting the hang of it.</p> <p>Before continuing, let the experimenter know if you have any questions.</p>",
 
-    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (jsSART.TIMING_POST_STIM / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers; try your best to get as many problems right as possible.</p> <p>If you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again! We want to be sure that you understand the task that is ahead of you.</p>"
+    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (sum(jsSART.TIMING_STIM_DISPLAY) / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers; try your best to get as many problems right as possible.</p> <p>If you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again! We want to be sure that you understand the task that is ahead of you.</p>"
   ],
   show_clickable_nav: true,
   allow_backward: false
@@ -37,13 +40,12 @@ practice.push(practice_block_2_instructions);
 
 
 // practice block 2
-// note: repeats until 1/4 of problems are correctly answered, or 3 failed
-// trials
-var practice_block_2_attempts = 0,
-    skip_experiment = false;
-var practice_block_2_notice_text = "<p>OK, let's practice the task once more, just as it will be in the experiment...</p>",
-    practice_block_2_notice = createTextBlock(practice_block_2_notice_text),
-    practice_block_2 = createSartBlock(jsSART.PRACTICE_BLOCK_2_STIMULI);
+// NOTE: repeats if error rate threshold is eclipsed, or 3 failed trials
+var practice_block_2_attempts = 0;
+var skip_experiment = false;
+var practice_block_2_notice_text = "<p>OK, let's practice the task once more, just as it will be in the experiment...</p>";
+var practice_block_2_notice = createTextBlock(practice_block_2_notice_text);
+var practice_block_2 = createSartBlock(practice_trials.BLOCK_2_STIMULI);
 
 var practice_2_chunk = {
   chunk_type: 'while',
@@ -98,6 +100,7 @@ practice.push(end_practice_notice);
 // add generated experiment settings to saved data
 jsPsych.data.addProperties({
   participant_id: participant_id,
+  practice_condition: practice_condition
 });
 
 
@@ -105,8 +108,9 @@ jsPsych.init({
   display_element: $('#jspsych-target'),
   timeline: practice,
   on_finish: function() {
-    var url_params = {pid: participant_id},
-        url_path = 'experiment';
+    var url_params = {pid: participant_id};
+    var url_path = 'experiment';
+    // NOTE: different params and URL if practice block 2 not understood
     if (skip_experiment) {
       url_params = _.extend(url_params, {skip_experiment: skip_experiment});
       url_path = 'follow_up';

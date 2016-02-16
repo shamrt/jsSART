@@ -62,6 +62,13 @@ function createTextBlock(text_html) {
 }
 
 
+// calculate the minimum number of errors a participant can make in
+// practice block 2
+function getPracticeMinCorrect(num_items, max_error_rate) {
+  return Math.floor(num_items * (1 - max_error_rate));
+}
+
+
 // add results data to the last trial
 function addTrialResults(trial_data, extra_data) {
   extra_data = extra_data || {};
@@ -285,6 +292,36 @@ function divideStimuliIntoBlocks(stimuli, trials_per_block) {
     blocks.push(block);
   }
   return blocks;
+}
+
+
+// generate random practice condition
+function generatePracticeCondition() {
+  return _.sample(jsSART.CONDITIONS.PRACTICE);
+}
+
+
+// generate practice trials from a random condition
+function generatePracticeTrials(condition) {
+  var trials;
+  switch (condition) {
+    case 'num_trials':
+      // NOTE: Pre-set practice block trials for mirrored number of trials
+      // condition
+      trials = {
+        'BLOCK_1_STIMULI': _.shuffle([9, 1, 3, 5, 6]),
+        'BLOCK_2_STIMULI': _.shuffle(
+          [4, 5, 7, 2, 8, 4, 5, 9, 3, 6, 9, 2, 7, 3, 8]
+        )
+      };
+      break;
+    default:
+      trials = {
+        'BLOCK_1_STIMULI': generateStimuli(29),
+        'BLOCK_2_STIMULI': generateStimuli(72)
+      };
+  }
+  return trials;
 }
 
 

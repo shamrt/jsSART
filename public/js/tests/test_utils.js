@@ -258,3 +258,41 @@ QUnit.test("addTrialResults, incorrect response on no-go trial", function(assert
   };
   assert.deepEqual(trial_results, expected);
 });
+
+
+QUnit.test("generatePracticeCondition", function(assert) {
+  var condition = generatePracticeCondition();
+  assert.ok(_.contains(jsSART.CONDITIONS.PRACTICE, condition));
+});
+
+
+QUnit.test("generatePracticeTrials, with num_trials condition", function(assert) {
+  function numberOfThreesInList(list) {
+    var counts = _.countBy(list, function(num) { return num === 3; });
+    return counts["true"];
+  }
+
+  var trials = generatePracticeTrials('num_trials');
+
+  assert.ok(trials.BLOCK_1_STIMULI.length === 5);
+  assert.equal(numberOfThreesInList(trials.BLOCK_1_STIMULI), 1);
+
+  assert.ok(trials.BLOCK_2_STIMULI.length === 15);
+  assert.equal(numberOfThreesInList(trials.BLOCK_2_STIMULI), 2);
+});
+
+
+QUnit.test("generatePracticeTrials, with time_duration condition", function(assert) {
+  var trials = generatePracticeTrials('time_duration');
+  assert.ok(trials.BLOCK_1_STIMULI.length === 29);
+  assert.ok(trials.BLOCK_2_STIMULI.length === 72);
+});
+
+
+QUnit.test("getPracticeMinCorrect", function(assert) {
+  var min_correct = getPracticeMinCorrect(15, 0.10);
+  assert.equal(min_correct, 13);
+
+  var min_correct = getPracticeMinCorrect(72, 0.15);
+  assert.equal(min_correct, 61);
+});

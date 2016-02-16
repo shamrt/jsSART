@@ -10,7 +10,9 @@ var jsSART = {
     // Total number of trials a participant will see during experiment
     'NUM_TRIALS': [484, 560, 646, 731, 810],
     // Number of trials before being shown real-time post-block questions
-    'TRIALS_PER_BLOCK': [225, 82]
+    'TRIALS_PER_BLOCK': [225, 82],
+    // Practice blocks conditions
+    'PRACTICE': ['num_trials', 'time_duration']
   },
 
   // Stimuli
@@ -35,9 +37,10 @@ var jsSART = {
 
   // Practice block stimuli
   // --------------------------------
-  'PRACTICE_BLOCK_1_STIMULI': [9, 1, 3, 5, 2, 6],
-  'PRACTICE_BLOCK_2_STIMULI': [6, 4, 5, 7, 2, 8, 4, 5, 9, 3, 6, 9, 2, 7, 3, 8],
-  'PRACTICE_BLOCK_2_MAX_ATTEMPTS': 3,
+  'PRACTICE': {
+    'MAX_ERROR_RATE': 0.10,
+    'BLOCK_2_MAX_ATTEMPTS': 3,
+  },
 
   // Experiment blocks
   // --------------------------------
