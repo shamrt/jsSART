@@ -88,7 +88,8 @@ function addTrialResults(trial_data, extra_data) {
   var trial_results = $.extend({
     expected: expected,
     response: response,
-    correct: correct
+    correct: correct,
+    stimulus: stimulus
   }, extra_data);  // merge with given data
 
   return trial_results;
@@ -153,7 +154,6 @@ function createSartBlock(stimuli, options) {
     timing_post_trial: 0,
     response_ends_trial: false,
 
-    data: {block_stimuli: stimuli},
     on_finish: function() {
       // add results to trial data
       var trial_data = jsPsych.data.getLastTrialData();

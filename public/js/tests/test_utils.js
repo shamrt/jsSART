@@ -170,8 +170,6 @@ QUnit.test("createSartBlock with 1 stimulus", function(assert) {
       timing_stim: jsSART.TIMING_STIM_DISPLAY,
       timing_response: sum(jsSART.TIMING_STIM_DISPLAY),
       response_ends_trial: false,
-
-      data: {block_stimuli: stimulus}
     };
 
     var block_objs_are_equal = check_block_obj_equality(
@@ -216,7 +214,8 @@ QUnit.test("addTrialResults, correct response on go trial", function(assert) {
   var expected = {
     correct: true,
     expected: true,
-    response: true
+    response: true,
+    stimulus: 6
   };
   assert.deepEqual(trial_results, expected);
 });
@@ -228,7 +227,8 @@ QUnit.test("addTrialResults, correct response on no-go trial", function(assert) 
   var expected = {
     correct: true,
     expected: false,
-    response: false
+    response: false,
+    stimulus: 3
   };
   assert.deepEqual(trial_results, expected);
 });
@@ -240,7 +240,8 @@ QUnit.test("addTrialResults, incorrect response on go trial", function(assert) {
   var expected = {
     correct: false,
     expected: true,
-    response: false
+    response: false,
+    stimulus: 9
   };
   assert.deepEqual(trial_results, expected);
 });
@@ -252,7 +253,8 @@ QUnit.test("addTrialResults, incorrect response on no-go trial", function(assert
   var expected = {
     correct: false,
     expected: false,
-    response: true
+    response: true,
+    stimulus: 3
   };
   assert.deepEqual(trial_results, expected);
 });

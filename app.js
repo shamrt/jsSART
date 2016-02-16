@@ -77,11 +77,10 @@ app.get('/tests', function(request, response) {
 app.post('/experiment-data', function(request, response) {
   var
     headers = [
-      "internal_chunk_id",
-      "trial_index", "trial_index_global", "trial_type",
-      "participant_id", "condition", "block_order",
-      "block_stimuli", "block_type",
-      "key_press", "responses", "rt", "time_elapsed",
+      "internal_node_id", "trial_index", "trial_type",
+      "participant_id", "num_trials", "trials_per_block",
+      "time_elapsed",
+      "stimulus", "key_press", "rt",
       "correct", "response", "expected"
     ],
     file_path = ["data", request.body.pathname, request.body.filename + ".csv"].join('/');

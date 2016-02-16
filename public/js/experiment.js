@@ -45,9 +45,7 @@ experiment.push(experiment_notice);
 
 
 // generate the experiment blocks
-var condition = generateCondition();
-var block_types = (jsSART.BLOCK_TYPE_ORDER === null) ? generateRandomBlockTypes(condition) : jsSART.BLOCK_TYPE_ORDER;
-var blocks = generateSartBlockStimuli(block_types);
+var conditions = generateConditions();
 experiment = experiment.concat(blocks.formatted_stimuli);
 
 
@@ -60,8 +58,8 @@ experiment.push(experiment_end_notice);
 
 // add generated experiment settings to saved data
 jsPsych.data.addProperties({
-  condition: condition,
-  block_order: block_types,
+  num_trials: conditions.num_trials,
+  trials_per_block: conditions.trials_per_block,
   participant_id: participant_id,
 });
 
