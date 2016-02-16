@@ -139,3 +139,46 @@ QUnit.test("divideStimuliIntoBlocks with 12 stimuli and 5 trials per block", fun
     assert.deepEqual(expected_blocks[i], blocks[i]);
   }
 });
+
+
+QUnit.test("createSartBlock with 1 stimulus", function(assert) {
+  var stimulus = [9];
+  var sart_block = createSartBlock([9]);
+  var font_sizes = jsSART.STIMULI.FONT_SIZES;
+
+  var check_block_obj_equality = function(obj1, obj2) {
+    var obj_equality = {};
+    _.map(_.keys(obj1), function(k){
+      obj_equality[k] = _.isEqual(obj1[k], obj2[k]);
+    });
+    return obj_equality;
+  };
+
+  var has_expected_block = false;
+  for (var i=0; i < font_sizes.length; i++) {
+    var possible_expected = {
+      type: "multi-stim-multi-response",
+
+      timeline: formatBlockStimuli(stimulus, [font_sizes[i]]),
+      is_html: true,
+      choices: [jsSART.STIMULI.ALLOW_KEYCODES],
+
+      timing_stim: [jsSART.TIMING_STIM_DISPLAY],
+      timing_response: jsSART.TIMING_POST_STIM,
+      response_ends_trial: false,
+
+      data: {block_stimuli: stimulus}
+    };
+
+    var block_objs_are_equal = check_block_obj_equality(
+      possible_expected, sart_block
+    );
+
+    if (_.all(block_objs_are_equal)) {
+      has_expected_block = true;
+      break;
+    }
+  }
+
+  assert.ok(has_expected_block);
+});
