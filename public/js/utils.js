@@ -10,17 +10,23 @@ var spacebar_html = "<code>&lt;SPACEBAR&gt;</code>";
 var continue_html = "<p>Press the " + spacebar_html + " to continue.</p>";
 
 // fixation stimulus
-var fixation_cross_path = "../img/fixation_cross.png";
+var fixation_cross_path = "../img/fixation-cross.png";
 var fixation_trial = {
   type: 'single-stim',
-  stimuli: [],
-  timing_response: jsSART.TIMING_STIM_DISPLAY,
-  timing_post_trial: jsSART.TIMING_POST_STIM
+  stimulus: [fixation_cross_path],
+  timing_stim: jsSART.TIMING_STIM_DISPLAY[1],
+  timing_response: jsSART.TIMING_STIM_DISPLAY[1],
+  timing_post_trial: 0
 };
 
 
 // Functions
 // ------------------------
+
+// sum a list of values
+function sum(list) {
+  return _.reduce(list, function(memo, num){ return memo + num; });
+}
 
 // get url parameters
 function getUrlParams() {
@@ -114,7 +120,7 @@ function displayTrialFeedback(data) {
     // hide feedback
     window.setTimeout(function() {
       $('#jspsych-feedback').empty();
-    }, 800);
+    }, 350);
   }
 }
 
@@ -130,7 +136,10 @@ function formatBlockStimuli(trials, font_sizes_px) {
     // create formatted stimulus with randomly sampled font size
     var trial_stimuli = {
       stimuli: [
-        "<div style='font-size:" + _.sample(font_sizes_px) + "'>" + trials[i] + "</div>"
+        "<div style='font-size:" + _.sample(font_sizes_px) + "'>" +
+        trials[i] +
+        "</div>",
+        "<img src='" + fixation_cross_path + "'/>"
       ]
     };
     block_stimuli.push(trial_stimuli);
@@ -152,8 +161,8 @@ function createSartBlock(stimuli, options) {
     is_html: true,
     choices: [jsSART.STIMULI.ALLOW_KEYCODES],
 
-    timing_stim: [jsSART.TIMING_STIM_DISPLAY],
-    timing_response: jsSART.TIMING_POST_STIM,
+    timing_stim: jsSART.TIMING_STIM_DISPLAY,
+    timing_response: sum(jsSART.TIMING_STIM_DISPLAY),
     response_ends_trial: false,
 
     data: {block_stimuli: stimuli},
@@ -167,7 +176,7 @@ function createSartBlock(stimuli, options) {
   };
   if (give_feedback) {
     // add post-trial time for feedback display
-    block.timing_post_trial = 1000;
+    block.timing_post_trial = 350;
   }
 
   return block;

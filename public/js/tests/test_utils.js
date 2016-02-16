@@ -25,17 +25,20 @@ QUnit.test("formatBlockStimuli, several with font size given", function(assert) 
   var expected = [
     {
       "stimuli": [
-        "<div style='font-size:100px'>3</div>"
+        "<div style='font-size:100px'>3</div>",
+        "<img src='../img/fixation-cross.png'/>"
       ]
     },
     {
       "stimuli": [
-        "<div style='font-size:100px'>4</div>"
+        "<div style='font-size:100px'>4</div>",
+        "<img src='../img/fixation-cross.png'/>"
       ]
     },
     {
       "stimuli": [
-        "<div style='font-size:100px'>9</div>"
+        "<div style='font-size:100px'>9</div>",
+        "<img src='../img/fixation-cross.png'/>"
       ]
     }
   ];
@@ -52,7 +55,8 @@ function checkSingleFormattedBlockStimulus(trial, font_sizes) {
   for (var i=0; i < font_sizes.length; i++) {
     var possible_expected = [{
       "stimuli": [
-        "<div style='font-size:" + font_sizes[i] + "'>2</div>"
+        "<div style='font-size:" + font_sizes[i] + "'>2</div>",
+        "<img src='../img/fixation-cross.png'/>"
       ]
     }];
 
@@ -163,8 +167,8 @@ QUnit.test("createSartBlock with 1 stimulus", function(assert) {
       is_html: true,
       choices: [jsSART.STIMULI.ALLOW_KEYCODES],
 
-      timing_stim: [jsSART.TIMING_STIM_DISPLAY],
-      timing_response: jsSART.TIMING_POST_STIM,
+      timing_stim: jsSART.TIMING_STIM_DISPLAY,
+      timing_response: sum(jsSART.TIMING_STIM_DISPLAY),
       response_ends_trial: false,
 
       data: {block_stimuli: stimulus}
