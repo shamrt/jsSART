@@ -145,13 +145,12 @@ function createSartBlock(stimuli, options) {
   var give_feedback = options.give_feedback || false;
   var added_data = options.added_data || {};
 
-  var digit_keycodes = (_.range(48, 58)).concat(_.range(96, 106));
   var block = {
     type: "multi-stim-multi-response",
 
     timeline: formatBlockStimuli(stimuli),
     is_html: true,
-    choices: [digit_keycodes, digit_keycodes],
+    choices: [jsSART.STIMULI.ALLOW_KEYCODES],
 
     timing_stim: [jsSART.TIMING_STIM_DISPLAY],
     timing_response: jsSART.TIMING_POST_STIM,

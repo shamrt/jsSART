@@ -23,7 +23,9 @@ var jsSART = {
     // Font sizes
     'FONT_SIZES': ["48px", "72px", "94px", "100px", "120px"],
     // Second level quasi-random counter range
-    'QUASI_RANDOM_RANGE': _.range(4)  // 0-3
+    'QUASI_RANDOM_RANGE': _.range(4),  // 0-3
+    // Allow keys 1--9 and numpad 1--9
+    'ALLOW_KEYCODES': (_.range(49, 58)).concat(_.range(97, 106))
   },
 
   // Pace of PASAT trial presentation
