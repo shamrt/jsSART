@@ -63,46 +63,31 @@ function createTextBlock(text_html) {
 
 
 // add results data to the last trial
-function addTrialResults(added_data) {
-  added_data = added_data || {};
+function addTrialResults(trial_data, extra_data) {
+  extra_data = extra_data || {};
   var expected, response, correct;
-  var current_trial = jsPsych.data.getLastTrialData();
-  var current_index = current_trial.trial_index - 1;
+  var trial_index = trial_data.trial_index - 1;
+  var trial_stimulus = trial_data.block_stimuli[trial_index];
 
-  // nothing expected on first trial
-  if (current_index !== 0) {
-    var current_value = current_trial.block_stimuli[current_index];
-    var previous_value = current_trial.block_stimuli[current_index - 1];
-
-    // expected (correct) response for the last trial
-    expected = current_value + previous_value;
-
-    // response given in the last trial
-    var key_presses = JSON.parse(current_trial.key_press);
-    var digit_presses = [];
-    for (var i = 0; i < key_presses.length; i++) {
-      var key_press = key_presses[i];
-      if (key_press !== -1) {
-        // normalize keycode from numpad to numrow
-        if (key_press >= 96 && key_press <= 105) {
-          key_press = key_press - 48;
-        }
-
-        var digit = String.fromCharCode(key_press);
-        digit_presses.push(digit);
-      }
-    }
-    response = parseInt(digit_presses.join(''));
-
-    // was the response given as expected (correct)?
-    correct = (expected === response) ? true : false;
+  // expected (correct) response for the last trial
+  if (trial_stimulus === jsSART.STIMULI.NO_GO_VALUE) {
+    expected = false;
+  } else {
+    expected = true;
   }
+
+  // check whether an expected key was pressed
+  var key_press = JSON.parse(trial_data.key_press);
+  response = _.contains(jsSART.STIMULI.ALLOW_KEYCODES, key_press);
+
+  // was the response given as expected (correct)?
+  correct = (expected === response) ? true : false;
 
   var trial_results = $.extend({
     expected: expected,
     response: response,
     correct: correct
-  }, added_data);  // merge with given data
+  }, extra_data);  // merge with given data
 
   return trial_results;
 }
@@ -152,7 +137,7 @@ function formatBlockStimuli(trials, font_sizes_px) {
 function createSartBlock(stimuli, options) {
   options = options || {};
   var give_feedback = options.give_feedback || false;
-  var added_data = options.added_data || {};
+  var extra_data = options.extra_data || {};
 
   var block = {
     type: "multi-stim-multi-response",
@@ -167,9 +152,12 @@ function createSartBlock(stimuli, options) {
 
     data: {block_stimuli: stimuli},
     on_finish: function() {
-      jsPsych.data.addDataToLastTrial(addTrialResults(added_data));
+      // add results to trial data
+      var trial_data = jsPsych.data.getLastTrialData();
+      var added_data = addTrialResults(trial_data, extra_data);
+      jsPsych.data.addDataToLastTrial(added_data);
+
       if (give_feedback) {
-        var trial_data = jsPsych.data.getLastTrialData();
         displayTrialFeedback(trial_data);
       }
     }

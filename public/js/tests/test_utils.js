@@ -186,3 +186,71 @@ QUnit.test("createSartBlock with 1 stimulus", function(assert) {
 
   assert.ok(has_expected_block);
 });
+
+
+// mock trial data generator (of block with 6 trials)
+// NOTE: no-go trial is 3rd in index
+function generateMockTrialData(key_press, trial_index) {
+  return {
+    block_stimuli: [9, 1, 3, 5, 2, 6],
+    internal_node_id: "0.0-2.0-4.0",
+    key_press: [key_press],
+    participant_id: "123456",
+    rt: "350",
+    stimulus: [
+      "<div style='font-size:120px'>2</div>",
+      "<img src='../img/fixation-cross.png'/>"
+    ],
+    time_elapsed: 9596,
+    trial_index: trial_index,
+    trial_type: "multi-stim-multi-response",
+  };
+}
+
+QUnit.test("addTrialResults, correct response on go trial", function(assert) {
+  // should expect response on 6th trial
+  var mock_trial_data = generateMockTrialData(32, 6);
+  var trial_results = addTrialResults(mock_trial_data);
+  var expected = {
+    correct: true,
+    expected: true,
+    response: true
+  };
+  assert.deepEqual(trial_results, expected);
+});
+
+QUnit.test("addTrialResults, correct response on no-go trial", function(assert) {
+  // should NOT expect response on 3rd trial
+  var mock_trial_data = generateMockTrialData(-1, 3);
+  var trial_results = addTrialResults(mock_trial_data);
+  var expected = {
+    correct: true,
+    expected: false,
+    response: false
+  };
+  assert.deepEqual(trial_results, expected);
+});
+
+QUnit.test("addTrialResults, incorrect response on go trial", function(assert) {
+  // should expect response on 1st trial
+  var mock_trial_data = generateMockTrialData(-1, 1);
+  var trial_results = addTrialResults(mock_trial_data);
+  var expected = {
+    correct: false,
+    expected: true,
+    response: false
+  };
+  assert.deepEqual(trial_results, expected);
+});
+
+QUnit.test("addTrialResults, incorrect response on no-go trial", function(assert) {
+  // should expect response on 1st trial
+  var mock_trial_data = generateMockTrialData(32, 3);
+  var trial_results = addTrialResults(mock_trial_data);
+  var expected = {
+    correct: false,
+    expected: false,
+    response: true
+  };
+  assert.deepEqual(trial_results, expected);
+});
