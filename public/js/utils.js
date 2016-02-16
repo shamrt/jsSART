@@ -66,11 +66,13 @@ function createTextBlock(text_html) {
 function addTrialResults(trial_data, extra_data) {
   extra_data = extra_data || {};
   var expected, response, correct;
-  var trial_index = trial_data.trial_index - 1;
-  var trial_stimulus = trial_data.block_stimuli[trial_index];
+
+  var trial_stimulus = JSON.parse(trial_data.stimulus);
+  var stimulus_text = $(trial_stimulus[0]).text();
+  var stimulus = parseInt(stimulus_text);
 
   // expected (correct) response for the last trial
-  if (trial_stimulus === jsSART.STIMULI.NO_GO_VALUE) {
+  if (stimulus === jsSART.STIMULI.NO_GO_VALUE) {
     expected = false;
   } else {
     expected = true;
@@ -78,7 +80,7 @@ function addTrialResults(trial_data, extra_data) {
 
   // check whether an expected key was pressed
   var key_press = JSON.parse(trial_data.key_press);
-  response = _.contains(jsSART.STIMULI.ALLOW_KEYCODES, key_press);
+  response = _.contains(jsSART.STIMULI.ALLOW_KEYCODES, key_press[0]);
 
   // was the response given as expected (correct)?
   correct = (expected === response) ? true : false;
@@ -158,7 +160,7 @@ function createSartBlock(stimuli, options) {
       jsPsych.data.addDataToLastTrial(added_data);
 
       if (give_feedback) {
-        displayTrialFeedback(trial_data);
+        displayTrialFeedback(added_data);
       }
     }
   };

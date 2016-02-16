@@ -191,16 +191,18 @@ QUnit.test("createSartBlock with 1 stimulus", function(assert) {
 // mock trial data generator (of block with 6 trials)
 // NOTE: no-go trial is 3rd in index
 function generateMockTrialData(key_press, trial_index) {
+  var block_stimuli = [9, 1, 3, 5, 2, 6];
   return {
-    block_stimuli: [9, 1, 3, 5, 2, 6],
+    block_stimuli: block_stimuli,
     internal_node_id: "0.0-2.0-4.0",
-    key_press: [key_press],
+    key_press: "[" + key_press + "]",
     participant_id: "123456",
     rt: "350",
-    stimulus: [
-      "<div style='font-size:120px'>2</div>",
-      "<img src='../img/fixation-cross.png'/>"
-    ],
+    stimulus: "[" +
+      "\"<div style='font-size:120px'>" +
+        block_stimuli[trial_index - 1] +
+      "</div>\",\"<img src='../img/fixation-cross.png'/>\"" +
+    "]",
     time_elapsed: 9596,
     trial_index: trial_index,
     trial_type: "multi-stim-multi-response",
