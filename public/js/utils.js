@@ -150,6 +150,7 @@ function createSartBlock(stimuli, options) {
 
     timing_stim: jsSART.TIMING_STIM_DISPLAY,
     timing_response: sum(jsSART.TIMING_STIM_DISPLAY),
+    timing_post_trial: 0,
     response_ends_trial: false,
 
     data: {block_stimuli: stimuli},
