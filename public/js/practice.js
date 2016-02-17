@@ -24,7 +24,7 @@ practice.push(practice_block_1);
 var practice_num_items = practice_trials.BLOCK_2_STIMULI.length;
 // participants must get a minimum number of items correct
 var practice_min_correct = getPracticeMinCorrect(
-  practice_min_correct, jsSART.PRACTICE.MAX_ERROR_RATE);
+  practice_num_items, jsSART.PRACTICE.MAX_ERROR_RATE);
 
 var practice_block_2_instructions = {
   type: "instructions",
@@ -50,7 +50,7 @@ var practice_block_2 = createSartBlock(practice_trials.BLOCK_2_STIMULI);
 var practice_2_chunk = {
   chunk_type: 'while',
   timeline: [practice_block_2_notice, fixation_trial, practice_block_2],
-  continue_function: function(data) {
+  loop_function: function(data) {
     practice_block_2_attempts++;
     // total number of correct problems
     var num_correct = 0;
@@ -63,9 +63,9 @@ var practice_2_chunk = {
     if (num_correct >= practice_min_correct) {
       // end the practice loop
       return false;
-    } else if (practice_block_2_attempts >=
-        jsSART.PRACTICE_BLOCK_2_MAX_ATTEMPTS) {
-      // skip the experiment in order to go straight to demographics
+    } else if (practice_block_2_attempts > jsSART.PRACTICE.MAX_ATTEMPTS) {
+      // end the practice loop
+      // also skip the experiment in order to go straight to demographics
       skip_experiment = true;
       return false;
     } else {

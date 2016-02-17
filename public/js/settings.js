@@ -38,8 +38,11 @@ var jsSART = {
   // Practice block stimuli
   // --------------------------------
   'PRACTICE': {
+    // Maximum proportion of trials a participant can get wrong in block 2
     'MAX_ERROR_RATE': 0.10,
-    'BLOCK_2_MAX_ATTEMPTS': 3,
+    // Maximum number of times a participant can attempt block 2
+    // (before skipping experiment)
+    'MAX_ATTEMPTS': 3
   },
 
   // Experiment blocks
