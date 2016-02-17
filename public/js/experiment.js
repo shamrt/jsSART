@@ -51,7 +51,7 @@ experiment.push(prospective_survey);
 
 
 // pre-experiment notice
-var experiment_notice_text = "<p>This was an overview of the task, and you have completed the practice trials.</p> <p>The <strong>working memory</strong> task that will follow is identical to the practice trial you have just completed, altogether it will be " + approxExperimentDuration(conditions.num_trials) + " long.</p> <p>Remember, if you get lost, just jump back in because we can’t stop the experiment once it has started. At several points in the task you will pause briefly to report your experience and then continue with the task.</p> <p>The <strong>working memory</strong> task will now follow.";
+var experiment_notice_text = "<p>This was an overview of the task, and you have completed the practice trials.</p> <p>The <strong>sustained attention</strong> task that will follow is identical to the practice trial you have just completed, altogether it will be 5-10 minutes long.</p> <p>Remember, if you get lost, just jump back in because we can’t stop the experiment once it has started. At several points in the task you will pause briefly to report your experience and then continue with the task.</p> <p>The <strong>sustained attention</strong> task will now follow.";
 var experiment_notice = createTextBlock(experiment_notice_text);
 experiment.push(experiment_notice);
 
