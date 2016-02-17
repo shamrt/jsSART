@@ -48,22 +48,29 @@ var jsSART = {
   // Experiment blocks
   // --------------------------------
   // Can be a flat array of strings
-  'POST_BLOCK_QUESTIONS': [
-    "Rate your current level of <strong>mental effort</strong>.",
-    "Rate your current level of <strong>discomfort or distress</strong>."
+  'REAL_TIME_QUESTIONS': [
+    {
+      question: "Right now, I am feeling:",
+      likert_scale: 'SCALE_3'
+    },
+    {
+      question: "Right now, my mind and body are:",
+      likert_scale: "SCALE_4"
+    },
   ],
 
   // Re-useable Likert scale labels
   // --------------------------------
-  'LIKERT_SCALE_1': ["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"],
-  'LIKERT_SCALE_2': [
-    "1<br>Significantly<br>Below Average",
-    "2",
-    "3",
-    "4<br>Average",
-    "5",
-    "6",
-    "7<br>Significantly<br>Above Average"
-  ],
-
+  'LIKERT': {
+    'SCALE_1': ["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"],
+    'SCALE_2': [
+      "1<br>Significantly<br>Below Average", "2", "3", "4<br>Average",
+      "5", "6", "7<br>Significantly<br>Above Average"],
+    'SCALE_3': [
+      "1<br>Very Negative/<br>Unpleasant<br>Emotions ", "2", "3", "4",
+      "5", "6", "7<br>Very Positive/<br>Pleasant<br>Emotions"],
+    'SCALE_4': [
+      "1<br>Deactivated<br>and Have Very<br>Little Energy ", "2", "3", "4",
+      "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"]
+  }
 };
