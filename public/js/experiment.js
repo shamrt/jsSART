@@ -57,8 +57,8 @@ experiment.push(experiment_notice);
 
 
 // generate the experiment blocks
-var conditions = generateConditions();
-experiment = experiment.concat(blocks.formatted_stimuli);
+var formatted_block_stimuli = generateSartBlockStimuli(conditions);
+experiment = experiment.concat(formatted_block_stimuli);
 
 
 // end notice

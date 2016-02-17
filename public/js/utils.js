@@ -199,25 +199,29 @@ function createSartBlock(stimuli, options) {
 
 
 // generate a complete experiment chunk, complete with survey
-function generateExperimentChunk(stimuli, options) {
+function generateExperimentChunk(stimuli) {
   var notice = createTextBlock("When you're ready to continue, a trial block will begin.");
 
-  var block = createSartBlock(stimuli, options),
-      survey_questions = jsSART.POST_BLOCK_QUESTIONS,
-      // make all questions required
-      required = _.map(survey_questions, function(){ return true; });
+  var sart_block = createSartBlock(stimuli);
+  var survey_questions = jsSART.POST_BLOCK_QUESTIONS;
+  // make all questions required
+  var required = _.map(survey_questions, function(){ return true; });
 
   var survey = {
       type: 'survey-multi-choice',
-      questions: [survey_questions],
-      options: [[jsSART.LIKERT_SCALE_1, jsSART.LIKERT_SCALE_1]],
-      required: [required],
+      timeline: _.map(survey_questions, function(q) {
+        return {
+          questions: [q],
+          options: [jsSART.LIKERT_SCALE_1],
+          required: [true]
+        };
+      }),
       horizontal: true
   };
 
   var chunk = {
     chunk_type: 'linear',
-    timeline: [notice, fixation_trial, block, survey]
+    timeline: [notice, fixation_trial, sart_block, survey]
   };
   return chunk;
 }
@@ -234,27 +238,19 @@ function generateConditions() {
 
 
 // generate a formatted and complete set of jsPsych blocks
-// Note: return an object with block stimuli lists and formatted stimuli
-function generateSartBlockStimuli(block_types) {
-  // get random stimuli for each block
-  var block_stimuli = _.map(block_types, function(difficulty) {
-    return generateStimuli(difficulty);
+// NOTE: return an object with block stimuli lists and formatted stimuli
+function generateSartBlockStimuli(conditions) {
+  // generate all random stimuli for the experiment
+  var all_stimuli = generateStimuli(conditions.num_trials);
+
+  // generate all experiment block objects
+  var trials_per_block = conditions.trials_per_block;
+  var stimuli_blocks = divideStimuliIntoBlocks(all_stimuli, trials_per_block);
+  var formatted_stimuli = _.map(stimuli_blocks, function(stimuli) {
+    return generateExperimentChunk(stimuli);
   });
 
-  // generate jsPsych block objects
-  var stimuli_types = _.zip(block_stimuli, block_types);
-  var formatted_stimuli = _.map(stimuli_types, function(stimuli_type) {
-    var added_data = {block_type: stimuli_type[1]};
-
-    return generateExperimentChunk(stimuli_type[0], {
-      added_data: added_data
-    });
-  });
-
-  return {
-    block_stimuli: block_stimuli,
-    formatted_stimuli: formatted_stimuli
-  };
+  return formatted_stimuli;
 }
 
 
