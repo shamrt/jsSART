@@ -31,7 +31,7 @@ var practice_block_2_instructions = {
   pages: [
     "<p>OK, you should be getting the hang of it.</p> <p>Before continuing, let the experimenter know if you have any questions.</p>",
 
-    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (sum(jsSART.TIMING_STIM_DISPLAY) / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers; try your best to get as many problems right as possible.</p> <p>We want to be sure that you understand the task that is ahead of you, so if you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again!</p>"
+    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (sum(jsSART.STIMULI.DISPLAY_TIMING) / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers; try your best to get as many problems right as possible.</p> <p>We want to be sure that you understand the task that is ahead of you, so if you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again!</p>"
   ],
   show_clickable_nav: true,
   allow_backward: false

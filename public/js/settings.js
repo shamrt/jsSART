@@ -28,12 +28,10 @@ var jsSART = {
     'QUASI_RANDOM_RANGE': _.range(4),  // 0-3
     // Allow keys 1--9 and numpad 1--9
     'ALLOW_KEYCODES': [32, 13]
+    // Pace of PASAT trial presentation
+    // NOTE: first number for stimlus (in milliseconds), second for fixation
+    'DISPLAY_TIMING': [250, 900],
   },
-
-  // Pace of PASAT trial presentation
-  // --------------------------------
-  // NOTE: first number for stimlus (in milliseconds), second for fixation
-  'TIMING_STIM_DISPLAY': [250, 900],
 
   // Practice block stimuli
   // --------------------------------
