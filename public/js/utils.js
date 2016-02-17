@@ -151,7 +151,7 @@ function formatBlockStimuli(trials, font_sizes_px) {
         "<div style='font-size:" + _.sample(font_sizes_px) + "'>" +
         trials[i] +
         "</div>",
-        "<img src='" + fixation_cross_path + "'/>"
+        "<img src='" + fixation_cross_path + "' style='width:29mm;height:29mm'/>"
       ]
     };
     block_stimuli.push(trial_stimuli);

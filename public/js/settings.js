@@ -23,7 +23,7 @@ var jsSART = {
     // No-go value
     'NO_GO_VALUE': 3,
     // Font sizes
-    'FONT_SIZES': ["48px", "72px", "94px", "100px", "120px"],
+    'FONT_SIZES': ["12mm", "17.4mm", "22.717mm", "24.17mm", "29mm"],
     // Second level quasi-random counter range
     'QUASI_RANDOM_RANGE': _.range(4),  // 0-3
     // Allow keys 1--9 and numpad 1--9

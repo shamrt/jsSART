@@ -45,19 +45,19 @@ QUnit.test("formatBlockStimuli, several with font size given", function(assert) 
     {
       "stimuli": [
         "<div style='font-size:100px'>3</div>",
-        "<img src='../img/fixation-cross.png'/>"
+        "<img src='../img/fixation-cross.png' style='width:29mm;height:29mm'/>"
       ]
     },
     {
       "stimuli": [
         "<div style='font-size:100px'>4</div>",
-        "<img src='../img/fixation-cross.png'/>"
+        "<img src='../img/fixation-cross.png' style='width:29mm;height:29mm'/>"
       ]
     },
     {
       "stimuli": [
         "<div style='font-size:100px'>9</div>",
-        "<img src='../img/fixation-cross.png'/>"
+        "<img src='../img/fixation-cross.png' style='width:29mm;height:29mm'/>"
       ]
     }
   ];
@@ -75,7 +75,7 @@ function checkSingleFormattedBlockStimulus(trial, font_sizes) {
     var possible_expected = [{
       "stimuli": [
         "<div style='font-size:" + font_sizes[i] + "'>2</div>",
-        "<img src='../img/fixation-cross.png'/>"
+        "<img src='../img/fixation-cross.png' style='width:29mm;height:29mm'/>"
       ]
     }];
 
