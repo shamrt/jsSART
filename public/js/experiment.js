@@ -6,7 +6,7 @@ var
   participant_id = getParticipantId();
 
 // prospective survey notice and questions
-var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>working memory task</strong>. The <strong>working memory task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer, approximately 5-10 minutes.</p>";
+var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>sustained attention task</strong>. The <strong>sustained attention task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer, approximately 5-10 minutes.</p>";
 var prospective_survey_notice = createTextBlock(prospective_survey_text);
 experiment.push(prospective_survey_notice);
 
@@ -51,7 +51,7 @@ experiment = experiment.concat(blocks.formatted_stimuli);
 
 // end notice
 var experiment_end_notice = createTextBlock(
-  "<p><strong>You have completed the working memory task.</strong></p>"
+  "<p><strong>You have completed the sustained attention task.</strong></p>"
 );
 experiment.push(experiment_end_notice);
 
