@@ -38,6 +38,8 @@ var jsSART = {
   // Practice block stimuli
   // --------------------------------
   'PRACTICE': {
+    // Duration of time to show trial feedback for block 1
+    'FEEDBACK_DELAY_MS': 350,
     // Maximum proportion of trials a participant can get wrong in block 2
     'MAX_ERROR_RATE': 0.10,
     // Maximum number of times a participant can attempt block 2

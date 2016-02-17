@@ -115,7 +115,7 @@ function displayTrialFeedback(data) {
     // hide feedback
     window.setTimeout(function() {
       $('#jspsych-feedback').empty();
-    }, 350);
+    }, jsSART.PRACTICE.FEEDBACK_DELAY_MS);
   }
 }
 
@@ -174,7 +174,7 @@ function createSartBlock(stimuli, options) {
   };
   if (give_feedback) {
     // add post-trial time for feedback display
-    block.timing_post_trial = 350;
+    block.timing_post_trial = jsSART.PRACTICE.FEEDBACK_DELAY_MS;
   }
 
   return block;
