@@ -1,12 +1,12 @@
 /**
  * Experiment view blocks for jsSART
  */
-var
-  experiment = [],
-  participant_id = getParticipantId();
+var experiment = [];
+var participant_id = getParticipantId();
+var conditions = generateConditions();
 
 // prospective survey notice and questions
-var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>sustained attention task</strong>. The <strong>sustained attention task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer, approximately 5-10 minutes.</p>";
+var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>sustained attention task</strong>. The <strong>sustained attention task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer.</p>";
 var prospective_survey_notice = createTextBlock(prospective_survey_text);
 experiment.push(prospective_survey_notice);
 
@@ -39,7 +39,7 @@ experiment.push(prospective_survey);
 
 
 // pre-experiment notice
-var experiment_notice_text = "<p>This was an overview of the task, and you have completed the practice trials.</p> <p>The <strong>working memory</strong> task that will follow is identical to the practice trial you have just completed, altogether it will be 5-10 minutes long.</p> <p>Remember, if you get lost, just jump back in because we can’t stop the experiment once it has started. At several points in the task you will pause briefly to report your experience and then continue with the task.</p> <p>The <strong>working memory</strong> task will now follow.";
+var experiment_notice_text = "<p>This was an overview of the task, and you have completed the practice trials.</p> <p>The <strong>working memory</strong> task that will follow is identical to the practice trial you have just completed, altogether it will be " + approxExperimentDuration(conditions.num_trials) + " long.</p> <p>Remember, if you get lost, just jump back in because we can’t stop the experiment once it has started. At several points in the task you will pause briefly to report your experience and then continue with the task.</p> <p>The <strong>working memory</strong> task will now follow.";
 var experiment_notice = createTextBlock(experiment_notice_text);
 experiment.push(experiment_notice);
 

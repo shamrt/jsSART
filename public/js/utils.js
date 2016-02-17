@@ -28,6 +28,11 @@ function sum(list) {
   return _.reduce(list, function(memo, num){ return memo + num; });
 }
 
+// convert milliseconds to minutes, rounding up
+function millisecondsToMinutes(ms) {
+  return Math.ceil(ms / 1000 / 60);
+}
+
 // get url parameters
 function getUrlParams() {
   var url_params = window.location.search.slice(1);
@@ -59,6 +64,18 @@ function createTextBlock(text_html) {
     text: text_html + continue_html,
     cont_key: [32, 13]
   };
+}
+
+
+// calculate approximate length of time to complete SART experiment blocks
+// returns a string
+function approxExperimentDuration(num_trials) {
+  var trial_duration_ms = sum(jsSART.TIMING_STIM_DISPLAY);
+  var min_duration_ms = trial_duration_ms * num_trials;
+  var max_duration_ms = trial_duration_ms * num_trials * 1.3;
+  var min_duration_in_min = millisecondsToMinutes(min_duration_ms);
+  var max_duration_in_min = millisecondsToMinutes(max_duration_ms);
+  return min_duration_in_min + "-" + max_duration_in_min + " minutes";
 }
 
 

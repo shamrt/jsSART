@@ -1,3 +1,22 @@
+QUnit.test("millisecondsToMinutes", function(assert) {
+  // 1 second rounds to one minute
+  assert.equal(millisecondsToMinutes(1000), 1);
+  // 65 seconds rounds to 2 minutes
+  assert.equal(millisecondsToMinutes(65000), 2);
+  // 600 seconds rounds to 10 minutes
+  assert.equal(millisecondsToMinutes(600000), 10);
+});
+
+QUnit.test("approxExperimentDuration", function(assert) {
+  // 40 trials
+  assert.equal(approxExperimentDuration(50), "1-2 minutes");
+  // 150 trials
+  assert.equal(approxExperimentDuration(150), "3-4 minutes");
+  // 800 trials
+  assert.equal(approxExperimentDuration(800), "16-20 minutes");
+});
+
+
 QUnit.test("getParticipantId", function(assert) {
   var url_params = getUrlParams();
   var expected_pid = 9999910000;
