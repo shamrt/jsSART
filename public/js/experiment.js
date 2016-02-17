@@ -12,27 +12,39 @@ experiment.push(prospective_survey_notice);
 
 var prospective_survey = {
     type: 'survey-multi-choice',
-    questions: [
-      ["In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> the <strong>sustained attention task</strong>?"],
-      ["In light of your experience so far, how well do you <strong><u>anticipate performing</strong></u> during the <strong>sustained attention task</strong>?"],
-      ["In light of your experience so far, how much <strong><u>mental effort</strong></u> do you expect will be required to complete the <strong>sustained attention task</strong>?"],
-      ["In light of your experience so far, how much <strong><u>discomfort or distress</strong></u> do you expect to experience during the <strong>sustained attention task</strong>?"],
-      ["In light of your experience so far, how much <strong><u>mental fatigue</strong></u> do you expect to have while completing the <strong>sustained attention task</strong>?"],
+    timeline: [
+      {
+        questions:
+         ["In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> the <strong>sustained attention task</strong>?"],
+         options:
+         [jsSART.LIKERT_SCALE_1],
+      },
+      {
+        questions:
+        ["In light of your experience so far, how well do you <strong><u>anticipate performing</strong></u> during the <strong>sustained attention task</strong>?"],
+        options:
+        [jsSART.LIKERT_SCALE_2],
+      },
+      {
+        questions:
+        ["In light of your experience so far, how much <strong><u>mental effort</strong></u> do you expect will be required to complete the <strong>sustained attention task</strong>?"],
+        options:
+        [jsSART.LIKERT_SCALE_1],
+      },
+      {
+        questions:
+        ["In light of your experience so far, how much <strong><u>discomfort or distress</strong></u> do you expect to experience during the <strong>sustained attention task</strong>?"],
+        options:
+        [jsSART.LIKERT_SCALE_1],
+      },
+      {
+        questions:
+        ["In light of your experience so far, how much <strong><u>mental fatigue</strong></u> do you expect to have while completing the <strong>sustained attention task</strong>?"],
+        options:
+        [jsSART.LIKERT_SCALE_1]
+      },
     ],
-    options: [
-      [jsSART.LIKERT_SCALE_1],
-      [jsSART.LIKERT_SCALE_2],
-      [jsSART.LIKERT_SCALE_1],
-      [jsSART.LIKERT_SCALE_1],
-      [jsSART.LIKERT_SCALE_1]
-    ],
-    required: [
-      [true],
-      [true],
-      [true],
-      [true],
-      [true],
-    ],
+    required: [true, true, true, true, true],
     horizontal: true
 };
 experiment.push(prospective_survey);
