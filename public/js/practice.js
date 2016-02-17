@@ -7,7 +7,7 @@ var practice_condition = generatePracticeCondition();
 var practice_trials = generatePracticeTrials(practice_condition);
 
 // practice block 1 notice
-var practice_block_1_notice_text = "<p>For the first practice block, you will be given feedback after each item so that you know how you performed the task.</p>";
+var practice_block_1_notice_text = "<p>For the first practice block, you will be given feedback after each item so that you know how you performed the task.</p> <p>When you're ready to continue, the practice block will begin.</p>";
 var practice_block_1_notice = createTextBlock(practice_block_1_notice_text);
 practice.push(practice_block_1_notice);
 
