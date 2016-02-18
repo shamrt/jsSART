@@ -224,17 +224,17 @@ var behavioural_survey = {
 };
 
 follow_up.push(
-  // demographics_age,
-  // demographics_1,
-  // demographics_2,
-  // demographics_3,
-  // demographics_4,
-  // demographics_5,
-  // demographics_6,
-  // extended_questions_1,
-  // extended_questions_2,
-  // behav_survey_notice,
-  // behavioural_survey
+  demographics_age,
+  demographics_1,
+  demographics_2,
+  demographics_3,
+  demographics_4,
+  demographics_5,
+  demographics_6,
+  extended_questions_1,
+  extended_questions_2,
+  behav_survey_notice,
+  behavioural_survey
 );
 
 
