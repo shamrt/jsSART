@@ -69,6 +69,32 @@ var jsSART = {
         likert_scale: "SCALE_1"
       },
     ],
+    'ANTICIPATION': [
+      {
+        question: ["In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> this task?"],
+         likert_scale: "SCALE_1"
+      },
+      {
+        question: ["In light of your experience so far, how well do you <strong><u>anticipate performing</strong></u> during this task?"],
+        likert_scale: "SCALE_2"
+      },
+      {
+        question: ["In light of your experience so far, how much <strong><u>mental effort</strong></u> do you expect will be required to complete this task?"],
+        likert_scale: "SCALE_1"
+      },
+      {
+        question: ["In light of your experience so far, how much <strong><u>discomfort or distress</strong></u> do you expect to experience during this task?"],
+        likert_scale: "SCALE_1"
+      },
+      {
+        question: ["In light of your experience so far, how much <strong><u>mental fatigue</strong></u> do you expect to have while completing this task?"],
+        likert_scale: "SCALE_1"
+      },
+      {
+        question: ["In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?"],
+        likert_scale: "SCALE_5"
+      },
+    ]
   },
 
   // Re-useable Likert scale labels
@@ -83,6 +109,8 @@ var jsSART = {
       "5", "6", "7<br>Very Positive/<br>Pleasant<br>Emotions"],
     'SCALE_4': [
       "1<br>Deactivated<br>and Have Very<br>Little Energy ", "2", "3", "4",
-      "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"]
+      "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"],
+    'SCALE_5': [
+      "1<br>Not<br>at all", "2", "3", "4", "5", "6", "7<br>Extremely"]
   }
 };
