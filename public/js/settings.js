@@ -61,12 +61,12 @@ var jsSART = {
     ],
     'REAL_TIME': [
       {
-        question: "Right now, I am feeling:",
-        likert_scale: 'SCALE_3'
+        question: "How much mental effort is this task currently requiring?",
+        likert_scale: 'SCALE_1'
       },
       {
-        question: "Right now, my mind and body are:",
-        likert_scale: "SCALE_4"
+        question: "How much discomfort or distress is this task currently causing?",
+        likert_scale: "SCALE_1"
       },
     ],
   },
