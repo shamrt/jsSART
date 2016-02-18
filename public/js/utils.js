@@ -14,8 +14,8 @@ var fixation_cross_path = "../img/fixation-cross.png";
 var fixation_trial = {
   type: 'single-stim',
   stimulus: [fixation_cross_path],
-  timing_stim: jsSART.STIMULI.DISPLAY_TIMING[1],
-  timing_response: jsSART.STIMULI.DISPLAY_TIMING[1],
+  timing_stim: jsSART.STIMULI.DISPLAY_TIMINGS[1],
+  timing_response: jsSART.STIMULI.DISPLAY_TIMINGS[1],
   timing_post_trial: 0
 };
 
@@ -70,7 +70,7 @@ function createTextBlock(text_html) {
 // calculate approximate length of time to complete SART experiment blocks
 // returns a string
 function approxExperimentDuration(num_trials) {
-  var trial_duration_ms = sum(jsSART.STIMULI.DISPLAY_TIMING);
+  var trial_duration_ms = sum(jsSART.STIMULI.DISPLAY_TIMINGS);
   var min_duration_ms = trial_duration_ms * num_trials;
   var max_duration_ms = trial_duration_ms * num_trials * 1.3;
   var min_duration_in_min = millisecondsToMinutes(min_duration_ms);
@@ -173,8 +173,8 @@ function createSartBlock(stimuli, options) {
     is_html: true,
     choices: [jsSART.STIMULI.ALLOW_KEYCODES],
 
-    timing_stim: jsSART.STIMULI.DISPLAY_TIMING,
-    timing_response: sum(jsSART.STIMULI.DISPLAY_TIMING),
+    timing_stim: jsSART.STIMULI.DISPLAY_TIMINGS,
+    timing_response: sum(jsSART.STIMULI.DISPLAY_TIMINGS),
     timing_post_trial: 0,
     response_ends_trial: false,
 

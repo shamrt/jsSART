@@ -218,8 +218,8 @@ QUnit.test("createSartBlock with 1 stimulus", function(assert) {
       is_html: true,
       choices: [jsSART.STIMULI.ALLOW_KEYCODES],
 
-      timing_stim: jsSART.STIMULI.DISPLAY_TIMING,
-      timing_response: sum(jsSART.STIMULI.DISPLAY_TIMING),
+      timing_stim: jsSART.STIMULI.DISPLAY_TIMINGS,
+      timing_response: sum(jsSART.STIMULI.DISPLAY_TIMINGS),
       response_ends_trial: false,
     };
 

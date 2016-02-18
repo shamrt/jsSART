@@ -48,7 +48,7 @@ var practice_block_2_instructions = {
 
     "<p>Remember: Whenever there is a digit other than <code>3</code> (e.g. <code>1, 2, 4, 5, 6, 7, 8, 9</code>), press the " + spacebar_html + " as fast as you can. However, if digit <code>3</code> is presented, don’t do anything. Just wait for the next digit.</p> <p>Use the index finger of your dominant hand when responding (e.g. if you are left-handed, use your left index finger to press the " + spacebar_html + ".</p> <p>It’s important to be accurate and fast in this study.</p>",
 
-    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (sum(jsSART.STIMULI.DISPLAY_TIMING) / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers.</p> <p>We want to be sure that you understand the task that is ahead of you, so if you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again!</p>"
+    "<p>Now we are going to try some more practice but this time the numbers will be presented at a rate of <code>1</code> every <code>" + (sum(jsSART.STIMULI.DISPLAY_TIMINGS) / 1000) + "</code> seconds. You will be shown <code>" + practice_num_items + "</code> numbers.</p> <p>We want to be sure that you understand the task that is ahead of you, so if you get fewer than <code>" + practice_min_correct + "</code> right, don't worry, the practice will repeat and you can try again!</p>"
   ],
   show_clickable_nav: true,
   allow_backward: false

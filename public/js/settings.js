@@ -30,7 +30,7 @@ var jsSART = {
     'ALLOW_KEYCODES': [32, 13],
     // Pace of PASAT trial presentation
     // NOTE: first number for stimlus (in milliseconds), second for fixation
-    'DISPLAY_TIMING': [250, 900]
+    'DISPLAY_TIMINGS': [250, 900]
   },
 
   // Practice block stimuli
