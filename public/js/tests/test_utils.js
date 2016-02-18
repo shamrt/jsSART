@@ -239,7 +239,7 @@ QUnit.test("createSartBlock with 1 stimulus", function(assert) {
 
 // mock trial data generator (of block with 6 trials)
 // NOTE: no-go trial is 3rd in index
-function generateMockTrialData(key_press, trial_index) {
+function generateMockTrialData(key_press, trial_index, font_size) {
   var block_stimuli = [9, 1, 3, 5, 2, 6];
   return {
     block_stimuli: block_stimuli,
@@ -248,7 +248,7 @@ function generateMockTrialData(key_press, trial_index) {
     participant_id: "123456",
     rt: "350",
     stimulus: "[" +
-      "\"<div style='font-size:120px'>" +
+      "\"<div style='font-size:" + font_size + "'>" +
         block_stimuli[trial_index - 1] +
       "</div>\",\"<img src='../img/fixation-cross.png'/>\"" +
     "]",
@@ -260,12 +260,13 @@ function generateMockTrialData(key_press, trial_index) {
 
 QUnit.test("addTrialResults, correct response on go trial", function(assert) {
   // should expect response on 6th trial
-  var mock_trial_data = generateMockTrialData(32, 6);
+  var mock_trial_data = generateMockTrialData(32, 6, "120px");
   var trial_results = addTrialResults(mock_trial_data);
   var expected = {
     correct: true,
     expected: true,
     response: true,
+    font_size: "120px",
     stimulus: 6
   };
   assert.deepEqual(trial_results, expected);
@@ -273,12 +274,13 @@ QUnit.test("addTrialResults, correct response on go trial", function(assert) {
 
 QUnit.test("addTrialResults, correct response on no-go trial", function(assert) {
   // should NOT expect response on 3rd trial
-  var mock_trial_data = generateMockTrialData(-1, 3);
+  var mock_trial_data = generateMockTrialData(-1, 3, "120px");
   var trial_results = addTrialResults(mock_trial_data);
   var expected = {
     correct: true,
     expected: false,
     response: false,
+    font_size: "120px",
     stimulus: 3
   };
   assert.deepEqual(trial_results, expected);
@@ -286,12 +288,13 @@ QUnit.test("addTrialResults, correct response on no-go trial", function(assert) 
 
 QUnit.test("addTrialResults, incorrect response on go trial", function(assert) {
   // should expect response on 1st trial
-  var mock_trial_data = generateMockTrialData(-1, 1);
+  var mock_trial_data = generateMockTrialData(-1, 1, "120px");
   var trial_results = addTrialResults(mock_trial_data);
   var expected = {
     correct: false,
     expected: true,
     response: false,
+    font_size: "120px",
     stimulus: 9
   };
   assert.deepEqual(trial_results, expected);
@@ -299,12 +302,13 @@ QUnit.test("addTrialResults, incorrect response on go trial", function(assert) {
 
 QUnit.test("addTrialResults, incorrect response on no-go trial", function(assert) {
   // should expect response on 1st trial
-  var mock_trial_data = generateMockTrialData(32, 3);
+  var mock_trial_data = generateMockTrialData(32, 3, "29mm");
   var trial_results = addTrialResults(mock_trial_data);
   var expected = {
     correct: false,
     expected: false,
     response: true,
+    font_size: "29mm",
     stimulus: 3
   };
   assert.deepEqual(trial_results, expected);

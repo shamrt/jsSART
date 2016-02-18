@@ -98,8 +98,10 @@ function addTrialResults(trial_data, extra_data) {
   extra_data = extra_data || {};
   var expected, response, correct;
 
-  var trial_stimulus = JSON.parse(trial_data.stimulus);
-  var stimulus_text = $(trial_stimulus[0]).text();
+  var trial_stimuli = JSON.parse(trial_data.stimulus);
+  var $stimulus = $(trial_stimuli[0]);
+  var stimulus_font_size = $stimulus.css('font-size');
+  var stimulus_text = $stimulus.text();
   var stimulus = parseInt(stimulus_text);
 
   // expected (correct) response for the last trial
@@ -120,6 +122,7 @@ function addTrialResults(trial_data, extra_data) {
     expected: expected,
     response: response,
     correct: correct,
+    font_size: stimulus_font_size,
     stimulus: stimulus
   }, extra_data);  // merge with given data
 
