@@ -10,29 +10,34 @@ var practice_trials = generatePracticeTrials(practice_condition);
 // baseline evaluation questions
 var baseline_notice_text = "<p>Before we get started, we would like to ask you a couple of questions about how you're feeling right now.</p>";
 var baseline_notice = createTextBlock(baseline_notice_text);
-practice.push(baseline_notice);
-
 var baseline_questions = generateMultiChoiceSurvey(jsSART.QUESTIONS.AROUSAL);
-practice.push(baseline_questions);
+practice.push(
+  baseline_notice,
+  baseline_questions
+);
 
 
-// practice block 1 notice
+// practice block 1
+// ----------------------------
+// notice
 var practice_block_1_notice_text = "<p>Thank you!</p> <p>Now, for the first practice block, you will be given feedback after each item so that you know how you performed the task.</p> <p>When you're ready to continue, the practice block will begin.</p>";
 var practice_block_1_notice = createTextBlock(practice_block_1_notice_text);
-practice.push(practice_block_1_notice);
-
-
 // practice block 1
 var practice_block_1 = createSartBlock(practice_trials.BLOCK_1_STIMULI, {
   give_feedback: true
 });
-practice.push(fixation_trial);
-practice.push(practice_block_1);
+practice.push(
+  practice_block_1_notice,
+  fixation_trial,
+  practice_block_1
+);
 
 
-// practice block 2 instructions
+// practice block 2
+// ----------------------------
+// instructions
 var practice_num_items = practice_trials.BLOCK_2_STIMULI.length;
-// participants must get a minimum number of items correct
+// NOTE: participants must get a minimum number of items correct
 var practice_min_correct = getPracticeMinCorrect(
   practice_num_items, jsSART.PRACTICE.MAX_ERROR_RATE);
 
