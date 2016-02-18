@@ -50,8 +50,8 @@ function getParticipantId() {
   // next, get PID via window prompt
   pid = pid || window.prompt("Please enter a participant ID.");
 
-  // as a last resort, use 99999 with 5-digit random integer appended
-  pid = pid || "99999" + _.random(10000, 99999);
+  // as a last resort, generate a jsPsych random ID
+  pid = pid || jsPsych.randomization.randomID();
 
   return pid;
 }

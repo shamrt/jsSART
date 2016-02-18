@@ -18,12 +18,19 @@ QUnit.test("approxExperimentDuration", function(assert) {
 
 
 QUnit.test("getParticipantId", function(assert) {
+  // NOTE: does not test for getting PID via window prompt
+  var pid = getParticipantId();
+
   var url_params = getUrlParams();
-  var expected_pid = 9999910000;
   if (_.contains(_.keys(url_params), "pid")) {
+    // just get the PID from URL
     expected_pid = url_params.pid;
+    assert.ok(pid === expected_pid);
+  } else {
+    // should be an 32-char alphanumeric string
+    var re = new RegEx('[a-z0-9]{32}');
+    assert.ok(re.match(pid));
   }
-  assert.ok(getParticipantId() >= expected_pid);
 });
 
 
