@@ -48,7 +48,7 @@ var jsSART = {
   // Evaluation questions
   // --------------------------------
   'QUESTIONS': {
-    // Baseline evaluation of valence and arousal
+    // Baseline and post-experiment evaluation of valence and arousal
     'AROUSAL': [
       {
         question: "Right now, I am feeling:",
@@ -59,6 +59,7 @@ var jsSART = {
         likert_scale: "SCALE_4"
       },
     ],
+    // Real-time evaluation during the experiment (between blocks)
     'REAL_TIME': [
       {
         question: "How much mental effort is this task currently requiring?",
@@ -69,6 +70,7 @@ var jsSART = {
         likert_scale: "SCALE_1"
       },
     ],
+    // Self-report anticipated effort, discomfort, etc
     'ANTICIPATION': [
       {
         question: "In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> this task?",
@@ -95,6 +97,7 @@ var jsSART = {
         likert_scale: "SCALE_5"
       },
     ],
+    // Post-experiment retrospective evaluation 
     'RETROSPECTIVE': [
       {
         question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>mental effort</u></strong> it required?",
