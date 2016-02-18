@@ -49,7 +49,7 @@ var jsSART = {
   // --------------------------------
   'QUESTIONS': {
     // Baseline evaluation of valence and arousal
-    'BASELINE': [
+    'AROUSAL': [
       {
         question: "Right now, I am feeling:",
         likert_scale: 'SCALE_3'

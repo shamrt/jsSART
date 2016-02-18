@@ -12,7 +12,7 @@ var baseline_notice_text = "<p>Before we get started, we would like to ask you a
 var baseline_notice = createTextBlock(baseline_notice_text);
 practice.push(baseline_notice);
 
-var baseline_questions = generateMultiChoiceSurvey(jsSART.QUESTIONS.BASELINE);
+var baseline_questions = generateMultiChoiceSurvey(jsSART.QUESTIONS.AROUSAL);
 practice.push(baseline_questions);
 
 

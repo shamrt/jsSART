@@ -25,6 +25,11 @@ var formatted_block_stimuli = generateSartBlockStimuli(conditions);
 experiment = experiment.concat(formatted_block_stimuli);
 
 
+// post-experiment valance and arousal questions
+var valence_and_arousal = generateMultiChoiceSurvey(jsSART.QUESTIONS.AROUSAL);
+experiment.push(valence_and_arousal);
+
+
 // end notice
 var experiment_end_notice = createTextBlock(
   "<p><strong>You have completed the sustained attention task.</strong></p>"
