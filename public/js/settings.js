@@ -45,19 +45,31 @@ var jsSART = {
     'MAX_ATTEMPTS': 3
   },
 
-  // Experiment blocks
+  // Evaluation questions
   // --------------------------------
-  // Can be a flat array of strings
-  'REAL_TIME_QUESTIONS': [
-    {
-      question: "Right now, I am feeling:",
-      likert_scale: 'SCALE_3'
-    },
-    {
-      question: "Right now, my mind and body are:",
-      likert_scale: "SCALE_4"
-    },
-  ],
+  'QUESTIONS': {
+    // Baseline evaluation of valence and arousal
+    'BASELINE': [
+      {
+        question: "Right now, I am feeling:",
+        likert_scale: 'SCALE_3'
+      },
+      {
+        question: "Right now, my mind and body are:",
+        likert_scale: "SCALE_4"
+      },
+    ],
+    'REAL_TIME': [
+      {
+        question: "Right now, I am feeling:",
+        likert_scale: 'SCALE_3'
+      },
+      {
+        question: "Right now, my mind and body are:",
+        likert_scale: "SCALE_4"
+      },
+    ],
+  },
 
   // Re-useable Likert scale labels
   // --------------------------------

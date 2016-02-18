@@ -198,14 +198,11 @@ function createSartBlock(stimuli, options) {
 }
 
 
-// generate a complete experiment chunk, complete with survey
-function generateExperimentChunk(stimuli) {
-  var notice = createTextBlock("When you're ready to continue, a trial block will begin.");
-  var sart_block = createSartBlock(stimuli);
-
-  var survey = {
+// generate a multiple choice survey trials object
+function generateMultiChoiceSurvey(questions) {
+  return {
       type: 'survey-multi-choice',
-      timeline: _.map(jsSART.REAL_TIME_QUESTIONS, function(q) {
+      timeline: _.map(questions, function(q) {
         return {
           questions: [q.question],
           options: [jsSART.LIKERT[q.likert_scale]],
@@ -214,6 +211,14 @@ function generateExperimentChunk(stimuli) {
       }),
       horizontal: true
   };
+}
+
+
+// generate a complete experiment chunk, complete with survey
+function generateExperimentChunk(stimuli) {
+  var notice = createTextBlock("When you're ready to continue, a trial block will begin.");
+  var sart_block = createSartBlock(stimuli);
+  var survey = generateMultiChoiceSurvey(jsSART.QUESTIONS.REAL_TIME);
 
   var chunk = {
     chunk_type: 'linear',

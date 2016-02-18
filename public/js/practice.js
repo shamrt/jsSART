@@ -6,8 +6,18 @@ var participant_id = getParticipantId();
 var practice_condition = generatePracticeCondition();
 var practice_trials = generatePracticeTrials(practice_condition);
 
+
+// baseline evaluation questions
+var baseline_notice_text = "<p>Before we get started, we would like to ask you a couple of questions about how you're feeling right now.</p>";
+var baseline_notice = createTextBlock(baseline_notice_text);
+practice.push(baseline_notice);
+
+var baseline_questions = generateMultiChoiceSurvey(jsSART.QUESTIONS.BASELINE);
+practice.push(baseline_questions);
+
+
 // practice block 1 notice
-var practice_block_1_notice_text = "<p>For the first practice block, you will be given feedback after each item so that you know how you performed the task.</p> <p>When you're ready to continue, the practice block will begin.</p>";
+var practice_block_1_notice_text = "<p>Thank you!</p> <p>Now, for the first practice block, you will be given feedback after each item so that you know how you performed the task.</p> <p>When you're ready to continue, the practice block will begin.</p>";
 var practice_block_1_notice = createTextBlock(practice_block_1_notice_text);
 practice.push(practice_block_1_notice);
 

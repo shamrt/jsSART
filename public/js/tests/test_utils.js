@@ -138,6 +138,31 @@ QUnit.test("generateConditions", function(assert) {
 });
 
 
+QUnit.test("generateMultiChoiceSurvey", function(assert) {
+  var questions = [
+    {question: "Question #1", likert_scale: "SCALE_1"},
+    {question: "Question #2", likert_scale: "SCALE_1"},
+  ];
+  var expected = {
+    "type": "survey-multi-choice",
+    "timeline": [
+      {
+        "questions": ["Question #1"],
+        "options": [["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"]],
+        "required": [true]
+      },
+      {
+        "questions": ["Question #2"],
+        "options": [["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"]],
+        "required": [true]
+      },
+    ],
+    "horizontal": true
+  };
+  assert.deepEqual(generateMultiChoiceSurvey(questions), expected);
+});
+
+
 QUnit.test("divideStimuliIntoBlocks with 10 stimuli and 2 trials per block", function(assert) {
   // there should be five blocks
   assert.expect(5);
