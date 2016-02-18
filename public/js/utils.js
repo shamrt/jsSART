@@ -47,6 +47,13 @@ function getParticipantId() {
   params = getUrlParams();
   pid = params.pid;
 
+  // if PID was in URL params, initialize page reload alert
+  if (pid) {
+    $(window).bind('beforeunload', function(){
+      return 'If you leave this page, your progress will be lost. Are you sure you want to leave?';
+    });
+  }
+
   // next, get PID via window prompt
   pid = pid || window.prompt("Please enter a participant ID.");
 
@@ -341,6 +348,10 @@ function generatePracticeTrials(condition) {
 
 // post data to the server using an AJAX call
 function postDataToDb(data, filename, redirect) {
+  // remove page reload alert binding
+  $(window).unbind('beforeunload');
+
+  // save data
   var pathname = window.location.pathname.slice(1);
   $.ajax({
     type: "POST",
