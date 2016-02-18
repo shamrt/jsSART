@@ -10,10 +10,6 @@ body {
     color: #f1f1f1;
 }
 
-p {
-    max-width: 48em;
-}
-
 ol {
     text-align: left;
 }
@@ -37,6 +33,7 @@ input, textarea {
     left:0;
     right:0;
     width: 75%;
+    max-width: 960px;
     height: 100%;
     display: table;
     margin-left: auto;
@@ -45,9 +42,7 @@ input, textarea {
 .container-inner {
     display: table-cell;
     vertical-align: middle;
-
-    margin-left: auto;
-    margin-right: auto;
+    align-content: center;
 }
 
 .jspsych-categorize-stimulus {

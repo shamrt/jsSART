@@ -121,7 +121,7 @@ var jsSART = {
         likert_scale: "SATISFACTION"
       },
       {
-        question: "Considering the <strong>sustained attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>",
+        question: "Considering the <strong>sustained attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>.",
         likert_scale: "TRUTH"
       },
     ]
@@ -136,11 +136,11 @@ var jsSART = {
       "5", "6", "7<br>Significantly<br>Above Average"
     ],
     'EMOTIONS': [
-      "1<br>Very Negative/<br>Unpleasant<br>Emotions ", "2", "3", "4",
+      "1<br>Very Negative/<br>Unpleasant<br>Emotions", "2", "3", "4",
       "5", "6", "7<br>Very Positive/<br>Pleasant<br>Emotions"
     ],
     'ENERGY': [
-      "1<br>Deactivated<br>and Have Very<br>Little Energy ", "2", "3", "4",
+      "1<br>Deactivated<br>and Have Very<br>Little Energy", "2", "3", "4",
       "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"
     ],
     'NOT_EXTREMELY': [
