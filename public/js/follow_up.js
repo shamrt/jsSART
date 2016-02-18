@@ -127,7 +127,7 @@ var demographics_5_questions = [
   },
   {
     questions: ["On a scale of 1–7, how much do you like math?"],
-    options: jsSART.LIKERT.SCALE_1,
+    options: jsSART.LIKERT.NONE_ALOT,
   },
   {
     questions: ["Have you been previously diagnosed with ADD or AD/HD?"],

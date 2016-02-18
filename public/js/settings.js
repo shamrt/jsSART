@@ -52,76 +52,76 @@ var jsSART = {
     'AROUSAL': [
       {
         question: "Right now, I am feeling:",
-        likert_scale: 'SCALE_3'
+        likert_scale: 'EMOTIONS'
       },
       {
         question: "Right now, my mind and body are:",
-        likert_scale: "SCALE_4"
+        likert_scale: "ENERGY"
       },
     ],
     // Real-time evaluation during the experiment (between blocks)
     'REAL_TIME': [
       {
         question: "How much mental effort is this task currently requiring?",
-        likert_scale: 'SCALE_1'
+        likert_scale: 'NONE_ALOT'
       },
       {
         question: "How much discomfort or distress is this task currently causing?",
-        likert_scale: "SCALE_1"
+        likert_scale: "NONE_ALOT"
       },
     ],
     // Self-report anticipated effort, discomfort, etc
     'ANTICIPATION': [
       {
         question: "In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> this task?",
-         likert_scale: "SCALE_1"
+         likert_scale: "NONE_ALOT"
       },
       {
         question: "In light of your experience so far, how well do you <strong><u>anticipate performing</strong></u> during this task?",
-        likert_scale: "SCALE_2"
+        likert_scale: "BELOW_ABOVE_AVG"
       },
       {
         question: "In light of your experience so far, how much <strong><u>mental effort</strong></u> do you expect will be required to complete this task?",
-        likert_scale: "SCALE_1"
+        likert_scale: "NONE_ALOT"
       },
       {
         question: "In light of your experience so far, how much <strong><u>discomfort or distress</strong></u> do you expect to experience during this task?",
-        likert_scale: "SCALE_1"
+        likert_scale: "NONE_ALOT"
       },
       {
         question: "In light of your experience so far, how much <strong><u>mental fatigue</strong></u> do you expect to have while completing this task?",
-        likert_scale: "SCALE_1"
+        likert_scale: "NONE_ALOT"
       },
       {
         question: "In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?",
-        likert_scale: "SCALE_5"
+        likert_scale: "NOT_EXTREMELY"
       },
     ],
-    // Post-experiment retrospective evaluation 
+    // Post-experiment retrospective evaluation
     'RETROSPECTIVE': [
       {
         question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>mental effort</u></strong> it required?",
-        likert_scale: "SCALE_1"
+        likert_scale: "NONE_ALOT"
       },
       {
         question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>discomfort or distress</u></strong> it caused? ",
-        likert_scale: "SCALE_1"
+        likert_scale: "NONE_ALOT"
       },
       {
         question: "How well did you <strong><u>perform</u></strong> on the <strong>sustained attention task</strong>?",
-        likert_scale: "SCALE_2"
+        likert_scale: "BELOW_ABOVE_AVG"
       },
       {
         question: "How willing would you be to do another <strong>sustained attention task</strong> right now?",
-        likert_scale: "SCALE_7"
+        likert_scale: "WILLINGNESS"
       },
       {
         question: "How <strong><u>satisfied</u></strong> are you with your performance on the <strong>sustained attention task</strong>?",
-        likert_scale: "SCALE_6"
+        likert_scale: "SATISFACTION"
       },
       {
         question: "Considering the <strong>sustained attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>",
-        likert_scale: "SCALE_8"
+        likert_scale: "TRUTH"
       },
     ]
   },
@@ -129,31 +129,31 @@ var jsSART = {
   // Re-useable Likert scale labels
   // --------------------------------
   'LIKERT': {
-    'SCALE_1': ["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"],
-    'SCALE_2': [
+    'NONE_ALOT': ["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"],
+    'BELOW_ABOVE_AVG': [
       "1<br>Significantly<br>Below Average", "2", "3", "4<br>Average",
       "5", "6", "7<br>Significantly<br>Above Average"
     ],
-    'SCALE_3': [
+    'EMOTIONS': [
       "1<br>Very Negative/<br>Unpleasant<br>Emotions ", "2", "3", "4",
       "5", "6", "7<br>Very Positive/<br>Pleasant<br>Emotions"
     ],
-    'SCALE_4': [
+    'ENERGY': [
       "1<br>Deactivated<br>and Have Very<br>Little Energy ", "2", "3", "4",
       "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"
     ],
-    'SCALE_5': [
+    'NOT_EXTREMELY': [
       "1<br>Not<br>at all", "2", "3", "4", "5", "6", "7<br>Extremely"
     ],
-    'SCALE_6': [
+    'SATISFACTION': [
       "1<br>Not at all<br>satisfied", "2", "3", "4", "5", "6",
       "7<br>Completely<br>satisfied"
     ],
-    'SCALE_7': [
+    'WILLINGNESS': [
       "1<br>Not at all<br>willing", "2", "3", "4", "5", "6",
       "7<br>Definitely<br>willing"
     ],
-    'SCALE_8': [
+    'TRUTH': [
       "1<br>Not at all<br>true", "2", "3", "4", "5", "6",
       "7<br>Very true"
     ],

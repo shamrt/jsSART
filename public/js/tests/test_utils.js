@@ -140,8 +140,8 @@ QUnit.test("generateConditions", function(assert) {
 
 QUnit.test("generateMultiChoiceSurvey", function(assert) {
   var questions = [
-    {question: "Question #1", likert_scale: "SCALE_1"},
-    {question: "Question #2", likert_scale: "SCALE_1"},
+    {question: "Question #1", likert_scale: "NONE_ALOT"},
+    {question: "Question #2", likert_scale: "NONE_ALOT"},
   ];
   var expected = {
     "type": "survey-multi-choice",
