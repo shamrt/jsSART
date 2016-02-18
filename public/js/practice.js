@@ -80,7 +80,7 @@ var practice_2_chunk = {
     if (num_correct >= practice_min_correct) {
       // end the practice loop
       return false;
-    } else if (practice_block_2_attempts > jsSART.PRACTICE.MAX_ATTEMPTS) {
+    } else if (practice_block_2_attempts >= jsSART.PRACTICE.MAX_ATTEMPTS) {
       // end the practice loop
       // also skip the experiment in order to go straight to demographics
       skip_experiment = true;
