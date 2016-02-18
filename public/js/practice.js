@@ -135,6 +135,5 @@ jsPsych.init({
 
     var redirect_url = url_path + '?' + $.param(url_params);
     postDataToDb(jsPsych.data.getData(), participant_id, redirect_url);
-  },
-  // fullscreen: true
+  }
 });

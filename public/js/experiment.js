@@ -51,6 +51,5 @@ jsPsych.init({
   on_finish: function() {
     var redirect_url = 'follow_up?pid=' + participant_id;
     postDataToDb(jsPsych.data.getData(), participant_id, redirect_url);
-  },
-  // fullscreen: true
+  }
 });

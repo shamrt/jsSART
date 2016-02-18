@@ -32,6 +32,5 @@ jsPsych.init({
   on_finish: function() {
     var redirect_url = 'practice?pid=' + participant_id;
     window.location = redirect_url;
-  },
-  // fullscreen: true
+  }
 });
