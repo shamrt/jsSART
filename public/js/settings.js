@@ -94,6 +94,32 @@ var jsSART = {
         question: "In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?",
         likert_scale: "SCALE_5"
       },
+    ],
+    'RETROSPECTIVE': [
+      {
+        question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>mental effort</u></strong> it required?",
+        likert_scale: "SCALE_1"
+      },
+      {
+        question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>discomfort or distress</u></strong> it caused? ",
+        likert_scale: "SCALE_1"
+      },
+      {
+        question: "How well did you <strong><u>perform</u></strong> on the <strong>sustained attention task</strong>?",
+        likert_scale: "SCALE_2"
+      },
+      {
+        question: "How willing would you be to do another <strong>sustained attention task</strong> right now?",
+        likert_scale: "SCALE_7"
+      },
+      {
+        question: "How <strong><u>satisfied</u></strong> are you with your performance on the <strong>sustained attention task</strong>?",
+        likert_scale: "SCALE_6"
+      },
+      {
+        question: "Considering the <strong>sustained attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>",
+        likert_scale: "SCALE_8"
+      },
     ]
   },
 
@@ -103,14 +129,30 @@ var jsSART = {
     'SCALE_1': ["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"],
     'SCALE_2': [
       "1<br>Significantly<br>Below Average", "2", "3", "4<br>Average",
-      "5", "6", "7<br>Significantly<br>Above Average"],
+      "5", "6", "7<br>Significantly<br>Above Average"
+    ],
     'SCALE_3': [
       "1<br>Very Negative/<br>Unpleasant<br>Emotions ", "2", "3", "4",
-      "5", "6", "7<br>Very Positive/<br>Pleasant<br>Emotions"],
+      "5", "6", "7<br>Very Positive/<br>Pleasant<br>Emotions"
+    ],
     'SCALE_4': [
       "1<br>Deactivated<br>and Have Very<br>Little Energy ", "2", "3", "4",
-      "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"],
+      "5", "6", "7<br>Activated and<br>Have a Great<br>Deal of Energy"
+    ],
     'SCALE_5': [
-      "1<br>Not<br>at all", "2", "3", "4", "5", "6", "7<br>Extremely"]
+      "1<br>Not<br>at all", "2", "3", "4", "5", "6", "7<br>Extremely"
+    ],
+    'SCALE_6': [
+      "1<br>Not at all<br>satisfied", "2", "3", "4", "5", "6",
+      "7<br>Completely<br>satisfied"
+    ],
+    'SCALE_7': [
+      "1<br>Not at all<br>willing", "2", "3", "4", "5", "6",
+      "7<br>Definitely<br>willing"
+    ],
+    'SCALE_8': [
+      "1<br>Not at all<br>true", "2", "3", "4", "5", "6",
+      "7<br>Very true"
+    ],
   }
 };

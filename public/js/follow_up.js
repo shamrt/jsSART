@@ -239,62 +239,12 @@ follow_up.push(
 
 
 // retrospective questions notice
-var retrospective_survey_text = "<p>Now we are going to ask you some questions about <strong>the sustained attention task</strong> you completed previously – that is, the task where numbers were presented to you on a computer screen one at a time and you had to add them up.</p>";
+var retrospective_survey_text = "<p>Now we are going to ask you some questions about <strong>the sustained attention task</strong> you completed previously – that is, the task where numbers were presented to you on a computer screen one at a time and you had to press the " + spacebar_html + " for every number except <code>" + jsSART.STIMULI.NO_GO_VALUE + "</code>.</p>";
 var retrospective_survey_notice = createTextBlock(retrospective_survey_text);
 
 // retrospective questions
-var retrospective_survey_timeline = [
-  {
-    questions: ["On this <strong>sustained attention task</strong>, what was " +
-                "your <u><strong>total amount of mental effort</strong></u>?"],
-    options: [jsSART.LIKERT.SCALE_1]
-  },
-  {
-    questions: ["On this <strong>sustained attention task</strong>, what was " +
-                "your total amount of <u><strong>discomfort or " +
-                "distress</strong></u>?"],
-    options: [jsSART.LIKERT.SCALE_1]
-  },
-  {
-    questions: ["How much did you <u><strong>enjoy</u></strong> doing this " +
-                "<strong>sustained attention task</strong>?"],
-    options: [jsSART.LIKERT.SCALE_1]
-  },
-  {
-    questions: ["How well did you <u><strong>perform</u></strong> on the " +
-                "<strong>sustained attention task</strong>?"],
-    options: [jsSART.LIKERT.SCALE_2]
-  },
-  {
-    questions: ["How much <u><strong>mental fatigue</u></strong> did you " +
-                "have during the <strong>sustained attention task</strong>?"],
-    options: [jsSART.LIKERT.SCALE_1]
-  },
-  {
-    questions: ["How <u><strong>satisfied</u></strong> are you with your " +
-                "performance on the <strong>sustained attention " +
-                "task</strong>?"],
-    options: [[
-      "1<br>Not at all<br>satisfied", "2", "3", "4", "5", "6",
-      "7<br>Completely<br>satisfied"
-    ]]
-  },
-  {
-    questions: ["How willing would you be to do <strong><u>another</u> sustained attention task</strong> right now?"],
-    options: [[
-      "1<br>Not at all<br>willing", "2", "3", "4", "5", "6",
-      "7<br>Definitely<br>willing"
-    ]]
-  }
-];
-var retrospective_survey = {
-  type: 'survey-multi-choice',
-  timeline: retrospective_survey_timeline,
-  required: _.map(retrospective_survey_timeline, function() {
-    return true;
-  }),
-  horizontal: true
-};
+var retrospective_survey = generateMultiChoiceSurvey(
+  jsSART.QUESTIONS.RETROSPECTIVE);
 
 // don't include retrospective questions if the experiment was skipped
 var url_params = getUrlParams();
