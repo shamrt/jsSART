@@ -81,7 +81,8 @@ app.post('/experiment-data', function(request, response) {
       "participant_id",
       "num_trials", "trials_per_block", "practice_condition",
       "stimulus", "key_press", "rt",
-      "correct", "response", "expected"
+      "correct", "response", "expected",
+      "responses"  // jspsych-survey-*
     ],
     file_path = ["data", request.body.pathname, request.body.filename + ".csv"].join('/');
   // devise data file path
