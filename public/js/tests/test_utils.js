@@ -316,9 +316,6 @@ QUnit.test("generatePracticeTrials, with time_duration condition", function(asse
 
 
 QUnit.test("getPracticeMinCorrect", function(assert) {
-  var min_correct = getPracticeMinCorrect(15, 0.10);
-  assert.equal(min_correct, 13);
-
-  var min_correct = getPracticeMinCorrect(72, 0.15);
-  assert.equal(min_correct, 61);
+  assert.equal(getPracticeMinCorrect(15, 0.10), 13);
+  assert.equal(getPracticeMinCorrect(72, 0.15), 61);
 });
