@@ -111,27 +111,27 @@ var demographics_4 = {
 var demographics_5_questions = [
   {
     questions: ["How many <u>statistics</u> courses <strong>in university</strong> have you taken (or are currently taking)?"],
-    options: ["None", "1", "2", "3", "4", "5", "More than 5"],
+    options: [["None", "1", "2", "3", "4", "5", "More than 5"]],
   },
   {
     questions: ["How many <u>statistics</u> courses did you take <strong>in high school</strong>?"],
-    options: ["None", "1", "2", "3", "4", "5", "More than 5"],
+    options: [["None", "1", "2", "3", "4", "5", "More than 5"]],
   },
   {
     questions: ["How many years of <strong>mathematics</strong> (algebra, geometry, calculus, etc.) did you take <strong>in high school</strong>?"],
-    options: ["None", "1", "2", "3", "4", "More than 4"],
+    options: [["None", "1", "2", "3", "4", "More than 4"]],
   },
   {
     questions: ["How many <u>mathematics</u> courses <strong>in university</strong> have you taken (or are currently taking)?"],
-    options: ["None", "1", "2", "3", "4", "5", "More than 5"],
+    options: [["None", "1", "2", "3", "4", "5", "More than 5"]],
   },
   {
     questions: ["On a scale of 1–7, how much do you like math?"],
-    options: jsSART.LIKERT.NONE_ALOT,
+    options: [jsSART.LIKERT.NONE_ALOT],
   },
   {
     questions: ["Have you been previously diagnosed with ADD or AD/HD?"],
-    options: ["Yes", "No"],
+    options: [["Yes", "No"]],
   },
 ];
 var demographics_5 = {
