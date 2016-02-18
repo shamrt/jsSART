@@ -71,27 +71,27 @@ var jsSART = {
     ],
     'ANTICIPATION': [
       {
-        question: ["In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> this task?"],
+        question: "In light of your experience so far, how much do you anticipate <strong><u>enjoying</u></strong> this task?",
          likert_scale: "SCALE_1"
       },
       {
-        question: ["In light of your experience so far, how well do you <strong><u>anticipate performing</strong></u> during this task?"],
+        question: "In light of your experience so far, how well do you <strong><u>anticipate performing</strong></u> during this task?",
         likert_scale: "SCALE_2"
       },
       {
-        question: ["In light of your experience so far, how much <strong><u>mental effort</strong></u> do you expect will be required to complete this task?"],
+        question: "In light of your experience so far, how much <strong><u>mental effort</strong></u> do you expect will be required to complete this task?",
         likert_scale: "SCALE_1"
       },
       {
-        question: ["In light of your experience so far, how much <strong><u>discomfort or distress</strong></u> do you expect to experience during this task?"],
+        question: "In light of your experience so far, how much <strong><u>discomfort or distress</strong></u> do you expect to experience during this task?",
         likert_scale: "SCALE_1"
       },
       {
-        question: ["In light of your experience so far, how much <strong><u>mental fatigue</strong></u> do you expect to have while completing this task?"],
+        question: "In light of your experience so far, how much <strong><u>mental fatigue</strong></u> do you expect to have while completing this task?",
         likert_scale: "SCALE_1"
       },
       {
-        question: ["In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?"],
+        question: "In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?",
         likert_scale: "SCALE_5"
       },
     ]
