@@ -15,6 +15,10 @@ Clone the jsPsych submodule:
     git submodule init
     git submodule update
 
+Install NodeJS packages:
+
+    npm install
+
 Copy the Upstart configuration file (in `etc/`) to `/etc/init`, edit it as necessary, and make it executable:
 
     cp etc/upstart.conf /etc/init/jssart.conf
