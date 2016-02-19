@@ -117,6 +117,10 @@ var jsSART = {
         likert_scale: "WILLINGNESS"
       },
       {
+        question: "Considering the <strong>sustained attention task</strong> in its entirety: How much <strong><u>mental fatigue</strong></u> did you experience?",
+        likert_scale: "NONE_ALOT"
+      },
+      {
         question: "How <strong><u>satisfied</u></strong> are you with your performance on the <strong>sustained attention task</strong>?",
         likert_scale: "SATISFACTION"
       },

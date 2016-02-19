@@ -6,7 +6,7 @@ var participant_id = getParticipantId();
 var conditions = generateConditions();
 
 // prospective survey notice and questions
-var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>sustained attention task</strong>. The <strong>sustained attention task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer.</p>";
+var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>sustained attention task</strong>. The <strong>sustained attention task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer, approximately 5-10 minutes.</p>";
 var prospective_survey_notice = createTextBlock(prospective_survey_text);
 var prospective_survey = generateMultiChoiceSurvey(
   jsSART.QUESTIONS.ANTICIPATION);
