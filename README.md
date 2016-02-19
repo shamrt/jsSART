@@ -27,6 +27,9 @@ Copy the Nginx configuration (modify it, too, as necessary):
 
     cp etc/nginx.conf /etc/nginx/sites-enabled/jssart
 
+Set file permissions:
+
+    chown -R www-data:www-data .
 
 Start the project:
 
@@ -64,3 +67,5 @@ A new file will be created/updated in the `data` directory.
 Unit tests for the data compilation code (along with mock data) can be run with the following:
 
     py.test scripts
+
+And for JavaScript unit testing, go to `/testing` in the browser.

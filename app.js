@@ -105,6 +105,6 @@ app.post('/experiment-data', function(request, response) {
 
 
 // start server
-var server = app.listen(3000, function(){
+var server = app.listen(3001, function(){
     console.log("Listening on port %d", server.address().port);
 });
