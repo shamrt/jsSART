@@ -28,7 +28,7 @@ QUnit.test("getParticipantId", function(assert) {
     assert.ok(pid === expected_pid);
   } else {
     // should be an 32-char alphanumeric string
-    var re = new RegEx('[a-z0-9]{32}');
+    var re = new RegExp('[a-z0-9]{32}');
     assert.ok(re.match(pid));
   }
 });
