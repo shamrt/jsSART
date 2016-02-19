@@ -10,4 +10,4 @@ permissions:
 	chown -R www-data:www-data .
 
 restart:
-	restart jspasat
+	restart jssart
