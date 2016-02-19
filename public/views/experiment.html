@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>jsSART</title>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css">
+    <link href="../../jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    <link href="../css/experiment.css" rel="stylesheet" type="text/css"></link>
+  </head>
+  <body>
+    <div class="container">
+      <div class="container-inner">
+        <div id="jspsych-target"></div>
+        <div id="jspsych-feedback"></div>
+      </div>
+    </div>
+  </body>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="../js/plugins/jquery-deparam.js"></script>
+  <script src="../js/underscore.js"></script>
+  <script src="../../jsPsych/jspsych.js"></script>
+  <% jspsych_plugins.forEach(function(plugin){ %>
+  <script src="../../jsPsych/plugins/jspsych-<%= plugin %>.js"></script>
+  <% }) %>
+  <script src="../js/settings.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/<%= js_filename %>.js"></script>
+</html>

@@ -1,0 +1,6 @@
+# Data
+pandas==0.16.2
+scipy==0.16.1
+
+# Unit tests
+pytest==2.8.2
