@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/jsPsych', express.static(__dirname + '/jsPsych'));
 
 // body parsing middleware
-app.use(body_parser.json());
+app.use(body_parser.json({limit: '10mb'}));
 
 // set template engine
 app.engine('html', require('ejs').renderFile);
