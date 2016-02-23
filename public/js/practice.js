@@ -99,7 +99,7 @@ practice.push(practice_2_chunk);
 // post-practice notice
 // note: skipped if practice block 2 not understood
 var post_practice_notice_block = createTextBlock(
-  "<p><strong>OK, looks like you've got it!</strong></p> <p>Do you have any questions at all? Remember, this is a challenging task. If you lose your place, just jump right back in. Watch for two numbers in a row, then add them up and keep going.</p> <p>Also note that, at several points during the task, you will pause briefly and be asked to report your experience before continuing on.</p>"
+  "<p><strong>OK, looks like you've got it!</strong></p> <p>Do you have any questions at all? Remember, this is a challenging task. If you lose your place, just jump right back in.</p> <p>Also note that, at several points during the task, you will pause briefly and be asked to report your experience before continuing on.</p>"
 );
 var post_practice_notice = {
   chunk_type: 'if',
