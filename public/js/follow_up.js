@@ -239,12 +239,12 @@ follow_up.push(
 
 
 // retrospective questions notice
-var retrospective_survey_text = "<p>Now we are going to ask you some questions about <strong>the sustained attention task</strong> you completed previously – that is, the task where numbers were presented to you on a computer screen one at a time and you had to press the " + spacebar_html + " for every number except <code>" + jsSART.STIMULI.NO_GO_VALUE + "</code>.</p>";
+var retrospective_survey_text = "<p>Now we are going to ask you some questions about <strong>the attention task</strong> you completed previously – that is, the task where numbers were presented to you on a computer screen one at a time and you had to press the " + spacebar_html + " for every number except <code>" + jsSART.STIMULI.NO_GO_VALUE + "</code>.</p>";
 var retrospective_survey_notice = createTextBlock(retrospective_survey_text);
 
 // retrospective questions
 var retrospective_survey = generateMultiChoiceSurvey(
-  jsSART.QUESTIONS.RETROSPECTIVE);
+  jsSART.QUESTIONS.RETROSPECTIVE, true);  // randomize order
 
 // don't include retrospective questions if the experiment was skipped
 var url_params = getUrlParams();

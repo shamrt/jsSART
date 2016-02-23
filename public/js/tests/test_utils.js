@@ -157,9 +157,10 @@ QUnit.test("generateMultiChoiceSurvey", function(assert) {
         "required": [true]
       },
     ],
+    "randomize_order": true,
     "horizontal": true
   };
-  assert.deepEqual(generateMultiChoiceSurvey(questions), expected);
+  assert.deepEqual(generateMultiChoiceSurvey(questions, true), expected);
 });
 
 

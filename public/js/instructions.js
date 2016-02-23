@@ -18,9 +18,7 @@ var instructions_block = {
     "<ol>",
 
     "<p>It’s important to be accurate and fast in this study.</p>" +
-    "<p>Use the index finger of your dominant hand when responding (e.g. if you are left-handed, use your left index finger to press the " + spacebar_html + ").</p>",
-
-    "<p>We will now continue to some practice trials.</p>"
+    "<p>Use the index finger of your dominant hand when responding (e.g. if you are left-handed, use your left index finger to press the " + spacebar_html + ").</p>"
   ],
   show_clickable_nav: true
 };
