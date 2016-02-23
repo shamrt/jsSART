@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""A script that parses raw data output by jsPASAT (jsPsych), compiles each
-participant's data and creates/updates a file in jsPASAT's ``data``
+"""A script that parses raw data output by jsSART (jsPsych), compiles each
+participant's data and creates/updates a file in jsSART's ``data``
 directory.
 """
 import os
@@ -40,7 +40,11 @@ def compile_practice_data(df):
     participant_id_col = df['participant_id'].values
     compiled_data['id'] = participant_id_col[0]
 
-    # was the second practice block completed successfully?
+    # participant ID
+    condition_col = df['practice_condition'].values
+    compiled_data['practice_condition'] = condition_col[0]
+
+    # was practice block #2 completed successfully?
     passed_practice = ('0.0-7.0-0.0' in df['internal_node_id'].values)
     compiled_data['passed_practice'] = passed_practice
 
@@ -73,8 +77,8 @@ def get_response_from_json(string, question_number=0):
     return resp
 
 
-def summarize_pasat_chunk(df):
-    """Take pandas dataframe representing raw PASAT chunk data and summarize.
+def summarize_sart_chunk(df):
+    """Take pandas dataframe representing raw SART chunk data and summarize.
     Return dict.
     """
     summary = {}
@@ -127,7 +131,7 @@ def compile_experiment_data(df):
         response = get_response_from_json(df.ix[i]['responses'])
         compiled_data[label] = int(response[0])
 
-    # PASAT accuracy and affective reports
+    # SART accuracy and affective reports
     hard_accuracy = None
     medium_accuracy = None
     easy_accuracy = None
@@ -148,10 +152,10 @@ def compile_experiment_data(df):
 
     # collect and organize experiment data from experimental blocks
     for i, block in enumerate(blocks, start=1):
-        # note: PASAT chunks start at chunk_id 0-0.3-0
+        # note: SART chunks start at chunk_id 0-0.3-0
         block_chunk_id = '0-0.{}-0'.format(i + 2)
         block = df.loc[df['internal_node_id'] == block_chunk_id]
-        block_summary = summarize_pasat_chunk(block)
+        block_summary = summarize_sart_chunk(block)
 
         # add block summaries to compiled data
         compiled_data['effort_{}'.format(i)] = block_summary['effort']

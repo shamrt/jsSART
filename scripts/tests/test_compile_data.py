@@ -20,7 +20,8 @@ def test_get_data_file_paths_returns_list_of_paths():
 def test_passing_compile_practice_data():
     df = compile_data.get_csv_as_dataframe(PRACTICE_CSV_003)
     data = compile_data.compile_practice_data(df)
-    assert data['id'] == 003
+    assert data['id'] == 3
+    assert data['practice_condition'] == 'num_trials'
     assert data['passed_practice'] == True
     # assert data['time_practice_blk1_ms'] == 33045
     # assert data['time_practice_blk2_ms'] == 83144
@@ -34,6 +35,7 @@ def test_failing_compile_practice_data():
     df = compile_data.get_csv_as_dataframe(csv_path)
     data = compile_data.compile_practice_data(df)
     assert data['id'] == pid
+    assert data['practice_condition'] == 'time_duration'
     assert data['passed_practice'] == False
     assert data['time_practice_ms'] == 469892
 
@@ -44,30 +46,31 @@ def test_get_response_from_json():
     assert response == "3"
 
 
-def get_csv_as_df(stage, id):
+def get_csv_as_df(stage, pid):
     """Take an experiment stage and participant ID and return a pandas
     data frame.
     """
     experiment_path = os.path.join(
-        MOCK_DATA_DIR, stage, '{}.csv'.format(id))
+        MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
     df = compile_data.get_csv_as_dataframe(experiment_path)
     return df
 
 
-def test_summarize_pasat_chunk():
-    df = get_csv_as_df('experiment', 1)
+def test_summarize_sart_chunk():
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
 
     # first block
-    pasat_block = df.loc[df['internal_chunk_id'] == '0-0.3-0']
-    block_summary = compile_data.summarize_pasat_chunk(pasat_block)
+    sart_block = df.loc[df['internal_node_id'] == '0-0.3-0']
+    block_summary = compile_data.summarize_sart_chunk(sart_block)
     assert block_summary['accuracy'] == 0.571428571
     assert block_summary['effort'] == 5
     assert block_summary['discomfort'] == 5
     assert block_summary['block_type'] == 'medium'
 
     # last block
-    pasat_block = df.loc[df['internal_chunk_id'] == '0-0.11-0']
-    block_summary = compile_data.summarize_pasat_chunk(pasat_block)
+    sart_block = df.loc[df['internal_node_id'] == '0-0.11-0']
+    block_summary = compile_data.summarize_sart_chunk(sart_block)
     assert block_summary['accuracy'] == 0.357142857
     assert block_summary['effort'] == 7
     assert block_summary['discomfort'] == 7
@@ -75,7 +78,8 @@ def test_summarize_pasat_chunk():
 
 
 def test_complete_compile_experiment_data():
-    df = get_csv_as_df('experiment', 1)
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
     data = compile_data.compile_experiment_data(df)
     assert data['condition'] == 5
 
@@ -166,7 +170,8 @@ def test_complete_compile_experiment_data():
 
 
 def test_complete_demographics_data():
-    df = get_csv_as_df('follow_up', 1)
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
     data = compile_data.compile_demographic_data(df)
     expected_answers = [
         ('age', '20'),
@@ -225,7 +230,8 @@ def test_complete_demographics_data():
 
 
 def test_complete_retrospective_data():
-    df = get_csv_as_df('follow_up', 1)
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
     data = compile_data.compile_retrospective_data(df)
     expected_answers = [
         ('pwmt_effort', 4),
