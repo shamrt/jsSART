@@ -101,31 +101,31 @@ var jsSART = {
     // Post-experiment retrospective evaluation
     'RETROSPECTIVE': [
       {
-        question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>mental effort</u></strong> it required?",
+        question: "Considering the <strong>attention task</strong> in its entirety: What was the total amount of <strong><u>mental effort</u></strong> it required?",
         likert_scale: "NONE_ALOT"
       },
       {
-        question: "Considering the <strong>sustained attention task</strong> in its entirety: What was the total amount of <strong><u>discomfort or distress</u></strong> it caused? ",
+        question: "Considering the <strong>attention task</strong> in its entirety: What was the total amount of <strong><u>discomfort or distress</u></strong> it caused? ",
         likert_scale: "NONE_ALOT"
       },
       {
-        question: "How well did you <strong><u>perform</u></strong> on the <strong>sustained attention task</strong>?",
+        question: "How well did you <strong><u>perform</u></strong> on the <strong>attention task</strong>?",
         likert_scale: "BELOW_ABOVE_AVG"
       },
       {
-        question: "How willing would you be to do another <strong>sustained attention task</strong> right now?",
+        question: "How willing would you be to do another <strong>attention task</strong> right now?",
         likert_scale: "WILLINGNESS"
       },
       {
-        question: "Considering the <strong>sustained attention task</strong> in its entirety: How much <strong><u>mental fatigue</strong></u> did you experience?",
+        question: "Considering the <strong>attention task</strong> in its entirety: How much <strong><u>mental fatigue</strong></u> did you experience?",
         likert_scale: "NONE_ALOT"
       },
       {
-        question: "How <strong><u>satisfied</u></strong> are you with your performance on the <strong>sustained attention task</strong>?",
+        question: "How <strong><u>satisfied</u></strong> are you with your performance on the <strong>attention task</strong>?",
         likert_scale: "SATISFACTION"
       },
       {
-        question: "Considering the <strong>sustained attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>.",
+        question: "Considering the <strong>attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>.",
         likert_scale: "TRUTH"
       },
     ]
