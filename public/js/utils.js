@@ -209,7 +209,11 @@ function createSartBlock(stimuli, options) {
 
 
 // generate a multiple choice survey trials object
-function generateMultiChoiceSurvey(questions) {
+function generateMultiChoiceSurvey(questions, randomize_order) {
+  // by default, do not randomize order
+  randomize_order = (typeof randomize_order !== "undefined") ?
+      randomize_order : false;
+
   return {
       type: 'survey-multi-choice',
       timeline: _.map(questions, function(q) {
@@ -219,6 +223,7 @@ function generateMultiChoiceSurvey(questions) {
           required: [true]
         };
       }),
+      randomize_order: randomize_order,
       horizontal: true
   };
 }

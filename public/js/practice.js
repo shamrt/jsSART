@@ -10,7 +10,9 @@ var practice_trials = generatePracticeTrials(practice_condition);
 // baseline evaluation questions
 var baseline_notice_text = "<p>Before we get started, we would like to ask you a couple of questions about how you're feeling right now.</p>";
 var baseline_notice = createTextBlock(baseline_notice_text);
-var baseline_questions = generateMultiChoiceSurvey(jsSART.QUESTIONS.AROUSAL);
+var baseline_questions = generateMultiChoiceSurvey(
+  jsSART.QUESTIONS.AROUSAL, true  // randomized order
+);
 practice.push(
   baseline_notice,
   baseline_questions
