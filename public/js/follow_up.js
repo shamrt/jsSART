@@ -244,7 +244,7 @@ var retrospective_survey_notice = createTextBlock(retrospective_survey_text);
 
 // retrospective questions
 var retrospective_survey = generateMultiChoiceSurvey(
-  jsSART.QUESTIONS.RETROSPECTIVE);
+  jsSART.QUESTIONS.RETROSPECTIVE, true);  // randomize order
 
 // don't include retrospective questions if the experiment was skipped
 var url_params = getUrlParams();

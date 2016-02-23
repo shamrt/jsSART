@@ -9,7 +9,7 @@ var conditions = generateConditions();
 var prospective_survey_text = "<p>Before we begin, we would like to know what you <strong>expect to experience</strong> on this <strong>attention task</strong>. The <strong>attention task</strong> that will follow is identical to the practice trial you have just completed, although it will be longer, approximately 5-10 minutes.</p>";
 var prospective_survey_notice = createTextBlock(prospective_survey_text);
 var prospective_survey = generateMultiChoiceSurvey(
-  jsSART.QUESTIONS.ANTICIPATION);
+  jsSART.QUESTIONS.ANTICIPATION, true);  // randomize order
 experiment.push(prospective_survey_notice);
 experiment.push(prospective_survey);
 
@@ -25,8 +25,10 @@ var formatted_block_stimuli = generateSartBlockStimuli(conditions);
 experiment = experiment.concat(formatted_block_stimuli);
 
 
-// post-experiment valance and arousal questions
-var valence_and_arousal = generateMultiChoiceSurvey(jsSART.QUESTIONS.AROUSAL);
+// post-experiment valance and arousal questions (randomized order)
+var valence_and_arousal = generateMultiChoiceSurvey(
+  jsSART.QUESTIONS.AROUSAL, true
+);
 experiment.push(valence_and_arousal);
 
 
