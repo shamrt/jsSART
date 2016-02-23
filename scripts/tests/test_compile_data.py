@@ -8,32 +8,34 @@ from scripts import compile_data
 
 TESTS_DIR = os.path.abspath(os.path.join(__file__, '..'))
 MOCK_DATA_DIR = os.path.join(TESTS_DIR, 'mock_data')
-PRACTICE_PATH_1 = os.path.join(MOCK_DATA_DIR, 'practice', '1.csv')
+PRACTICE_CSV_003 = os.path.join(MOCK_DATA_DIR, 'practice', '003.csv')
 
 
 def test_get_data_file_paths_returns_list_of_paths():
     mock_practice_csvs = compile_data.get_csv_paths(MOCK_DATA_DIR, 'practice')
-    assert len(mock_practice_csvs) == 7
-    assert PRACTICE_PATH_1 in mock_practice_csvs
+    assert len(mock_practice_csvs) == 4
+    assert PRACTICE_CSV_003 in mock_practice_csvs
 
 
 def test_passing_compile_practice_data():
-    df = compile_data.get_csv_as_dataframe(PRACTICE_PATH_1)
+    df = compile_data.get_csv_as_dataframe(PRACTICE_CSV_003)
     data = compile_data.compile_practice_data(df)
-    assert data['id'] == 1
+    assert data['id'] == 003
     assert data['passed_practice'] == True
-    assert data['time_practice_blk1_ms'] == 33045
-    assert data['time_practice_blk2_ms'] == 83144
-    assert data['time_practice_ms'] == 151671
+    # assert data['time_practice_blk1_ms'] == 33045
+    # assert data['time_practice_blk2_ms'] == 83144
+    assert data['time_practice_ms'] == 67198
 
 
 def test_failing_compile_practice_data():
-    practice_path_7 = os.path.join(MOCK_DATA_DIR, 'practice', '7.csv')
-    df = compile_data.get_csv_as_dataframe(practice_path_7)
+    pid = "fail1"
+    csv_path = os.path.join(
+        MOCK_DATA_DIR, 'practice', '{}.csv'.format(pid))
+    df = compile_data.get_csv_as_dataframe(csv_path)
     data = compile_data.compile_practice_data(df)
-    assert data['id'] == 7
+    assert data['id'] == pid
     assert data['passed_practice'] == False
-    assert data['time_practice_ms'] == 334489
+    assert data['time_practice_ms'] == 469892
 
 
 def test_get_response_from_json():

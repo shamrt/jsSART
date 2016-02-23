@@ -28,7 +28,7 @@ def get_csv_paths(basedir, exp_stage):
 def get_csv_as_dataframe(path):
     """Take CSV path. Return pandas dataframe.
     """
-    return pd.DataFrame.from_csv(path, index_col='trial_index_global')
+    return pd.DataFrame.from_csv(path, index_col='trial_index')
 
 
 def compile_practice_data(df):
@@ -41,7 +41,7 @@ def compile_practice_data(df):
     compiled_data['id'] = participant_id_col[0]
 
     # was the second practice block completed successfully?
-    passed_practice = ('0-0.5-0' in df['internal_chunk_id'].values)
+    passed_practice = ('0.0-7.0-0.0' in df['internal_node_id'].values)
     compiled_data['passed_practice'] = passed_practice
 
     # time taken to complete practice blocks
@@ -150,7 +150,7 @@ def compile_experiment_data(df):
     for i, block in enumerate(blocks, start=1):
         # note: PASAT chunks start at chunk_id 0-0.3-0
         block_chunk_id = '0-0.{}-0'.format(i + 2)
-        block = df.loc[df['internal_chunk_id'] == block_chunk_id]
+        block = df.loc[df['internal_node_id'] == block_chunk_id]
         block_summary = summarize_pasat_chunk(block)
 
         # add block summaries to compiled data
