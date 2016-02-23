@@ -8,7 +8,7 @@ var jsSART = {
   // --------------------------------
   'CONDITIONS': {
     // Total number of trials a participant will see during experiment
-    'NUM_TRIALS': [484, 560, 646, 731, 810],
+    'NUM_TRIALS': [483, 560, 646, 731, 810],
     // Number of trials before being shown real-time post-block questions
     'TRIALS_PER_BLOCK': [225, 82],
     // Practice blocks conditions
