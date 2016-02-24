@@ -53,10 +53,8 @@ def test_passing_compile_practice_data():
     assert data['id'] == 3
     assert data['practice_condition'] == 'num_trials'
     assert data['passed_practice'] == True
-    assert data['time_practice_blk1_ms'] == 33045
-    assert data['time_practice_blk2_1_ms'] == 83144
-    assert data['time_practice_blk2_2_ms'] == 83144
-    assert data['time_practice_blk2_3_ms'] == 83144
+    assert data['time_practice_blk1_ms'] == 6030
+    assert data['time_practice_blk2_1_ms'] == 16165
     assert data['time_practice_ms'] == 67198
 
 
@@ -68,10 +66,10 @@ def test_failing_compile_practice_data():
     assert data['id'] == pid
     assert data['practice_condition'] == 'time_duration'
     assert data['passed_practice'] == False
-    assert data['time_practice_blk1_ms'] == 33045
-    assert data['time_practice_blk2_1_ms'] == 83144
-    assert data['time_practice_blk2_2_ms'] == 83144
-    assert data['time_practice_blk2_3_ms'] == 83144
+    assert data['time_practice_blk1_ms'] == 42198
+    assert data['time_practice_blk2_1_ms'] == 120397
+    assert data['time_practice_blk2_2_ms'] == 140798
+    assert data['time_practice_blk2_3_ms'] == 125869
     assert data['time_practice_ms'] == 469892
 
 #

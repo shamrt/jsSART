@@ -35,7 +35,6 @@ def extract_sart_blocks(df):
     """Take pandas data frame and find SART trial blocks.
     Return list of pandas data frames.
     """
-    print
     blocks = []
     first_block_id = None
     last_block_id = None
@@ -49,11 +48,8 @@ def extract_sart_blocks(df):
             if first_block_id and last_block_id:
                 block = df.loc[first_block_id:last_block_id]
                 blocks.append(block)
-                print first_block_id, last_block_id
                 first_block_id = None
                 last_block_id = None
-
-    print len(blocks)
     return blocks
 
 
@@ -75,15 +71,18 @@ def compile_practice_data(df):
     compiled_data['passed_practice'] = passed_practice
 
     # time taken to complete practice blocks
-    time_block_1_start_ms = int(df.ix[1]['time_elapsed'])
-    time_block_1_end_ms = int(df.ix[7]['time_elapsed'])
-    time_practice_blk1_ms = time_block_1_end_ms - time_block_1_start_ms
-    compiled_data['time_practice_blk1_ms'] = time_practice_blk1_ms
-
-    time_block_2_start_ms = int(df.ix[10]['time_elapsed'])
-    time_block_2_end_ms = int(df.ix[26]['time_elapsed'])
-    time_practice_blk2_ms = time_block_2_end_ms - time_block_2_start_ms
-    compiled_data['time_practice_blk2_ms'] = time_practice_blk2_ms
+    practice_blocks = extract_sart_blocks(df)
+    for i, blk in enumerate(practice_blocks):
+        blk_start_ms = int(blk.ix[blk.first_valid_index()]['time_elapsed'])
+        blk_end_ms = int(blk.ix[blk.last_valid_index()]['time_elapsed'])
+        time_practice_blk_ms = blk_end_ms - blk_start_ms
+        if i > 0:
+            # record as practice block #2 trials
+            time_blk_key = 'time_practice_blk2_{}_ms'.format(i)
+            compiled_data[time_blk_key] = time_practice_blk_ms
+        else:
+            # record as practice block #1
+            compiled_data['time_practice_blk1_ms'] = time_practice_blk_ms
 
     # time taken to complete entire practice
     time_practice_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])
