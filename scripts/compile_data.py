@@ -31,6 +31,32 @@ def get_csv_as_dataframe(path):
     return pd.DataFrame.from_csv(path, index_col='trial_index')
 
 
+def extract_sart_blocks(df):
+    """Take pandas data frame and find SART trial blocks.
+    Return list of pandas data frames.
+    """
+    print
+    blocks = []
+    first_block_id = None
+    last_block_id = None
+    block_trial_type = "multi-stim-multi-response"
+    for index, series in df.iterrows():
+        if series['trial_type'] == block_trial_type:
+            if not first_block_id:
+                first_block_id = index
+            last_block_id = index
+        else:
+            if first_block_id and last_block_id:
+                block = df.loc[first_block_id:last_block_id]
+                blocks.append(block)
+                print first_block_id, last_block_id
+                first_block_id = None
+                last_block_id = None
+
+    print len(blocks)
+    return blocks
+
+
 def compile_practice_data(df):
     """Take pandas dataframe and compile key variables. Return dict.
     """
