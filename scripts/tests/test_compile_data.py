@@ -72,23 +72,23 @@ def test_failing_compile_practice_data():
     assert data['time_practice_blk2_3_ms'] == 125869
     assert data['time_practice_ms'] == 469892
 
-#
-# def test_get_response_from_json():
-#     mock_json_string = '{"Q0":"3"}'
-#     response = compile_data.get_response_from_json(mock_json_string)
-#     assert response == "3"
-#
-#
-# def get_csv_as_df(stage, pid):
-#     """Take an experiment stage and participant ID and return a pandas
-#     data frame.
-#     """
-#     experiment_path = os.path.join(
-#         MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
-#     df = compile_data.get_csv_as_dataframe(experiment_path)
-#     return df
-#
-#
+
+def test_get_response_from_json():
+    mock_json_string = '{"Q0":"3"}'
+    response = compile_data.get_response_from_json(mock_json_string)
+    assert response == "3"
+
+
+def get_csv_as_df(stage, pid):
+    """Take an experiment stage and participant ID and return a pandas
+    data frame.
+    """
+    experiment_path = os.path.join(
+        MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
+    df = compile_data.get_csv_as_dataframe(experiment_path)
+    return df
+
+
 # def test_summarize_sart_chunk():
 #     pid = "011"
 #     df = get_csv_as_df('experiment', pid)
