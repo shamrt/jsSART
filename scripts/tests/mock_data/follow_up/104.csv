@@ -54,3 +54,4 @@ internal_node_id,trial_index,trial_type,time_elapsed,participant_id,num_trials,t
 0.0-13.0-4.0,52,survey-multi-choice,348244,104,,,,,,19351,,,,,"{""Q0"":""4""}"
 0.0-13.0-5.0,53,survey-multi-choice,366499,104,,,,,,17244,,,,,"{""Q0"":""5""}"
 0.0-13.0-6.0,54,survey-multi-choice,375364,104,,,,,,7854,,,,,"{""Q0"":""4""}"
+0.0-13.0-7.0,55,survey-multi-choice,377364,104,,,,,,2000,,,,,"{""Q0"":""7""}"

@@ -128,6 +128,10 @@ var jsSART = {
         question: "Considering the <strong>attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>.",
         likert_scale: "TRUTH"
       },
+      {
+        question: "Considering the <strong>attention task</strong> in its entirety: How much <strong><u>enjoyment</u></strong> did you experience?",
+         likert_scale: "NONE_ALOT"
+      },
     ]
   },
 
