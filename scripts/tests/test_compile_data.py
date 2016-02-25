@@ -135,27 +135,29 @@ def test_get_response_from_node_id():
     assert resp2 == 'Female'
 
 
-# def test_summarize_sart_chunk():
-#     pid = "011"
-#     df = get_csv_as_df('experiment', pid)
-#
-#     # first block
-#     sart_block = df.loc[df['internal_node_id'] == '0-0.3-0']
-#     block_summary = compile_data.summarize_sart_chunk(sart_block)
-#     assert block_summary['accuracy'] == 0.571428571
-#     assert block_summary['effort'] == 5
-#     assert block_summary['discomfort'] == 5
-#     assert block_summary['block_type'] == 'medium'
-#
-#     # last block
-#     sart_block = df.loc[df['internal_node_id'] == '0-0.11-0']
-#     block_summary = compile_data.summarize_sart_chunk(sart_block)
-#     assert block_summary['accuracy'] == 0.357142857
-#     assert block_summary['effort'] == 7
-#     assert block_summary['discomfort'] == 7
-#     assert block_summary['block_type'] == 'medium'
-#
-#
+def test_summarize_sart_chunk():
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
+    blocks = compile_data.extract_sart_blocks(df, with_survey=True)
+
+
+    # first block
+    b1 = blocks[0]
+    b1_summary = compile_data.summarize_sart_chunk(b1)
+    assert b1_summary['num_trials'] == 82
+    assert b1_summary['accuracy'] == 0.731707317
+    assert b1_summary['effort'] == 4
+    assert b1_summary['discomfort'] == 5
+
+    # last block
+    lb = blocks[-1]
+    lb_summary = compile_data.summarize_sart_chunk(lb)
+    assert lb_summary['num_trials'] == 68
+    assert lb_summary['accuracy'] == 0.926470588
+    assert lb_summary['effort'] == 3
+    assert lb_summary['discomfort'] == 5
+
+
 # def test_complete_compile_experiment_data():
 #     pid = "011"
 #     df = get_csv_as_df('experiment', pid)
@@ -165,7 +167,7 @@ def test_get_response_from_node_id():
 #     assert data['block_order'] == ('medium,medium,hard,medium,easy,'
 #                                    'medium,medium,medium,medium')
 #     assert data['num_blocks'] == 9
-#
+
 #     assert data['anticipated_enjoyment'] == 3
 #     assert data['anticipated_performance'] == 4
 #     assert data['anticipated_effort'] == 4

@@ -144,21 +144,24 @@ def summarize_sart_chunk(df):
     """
     summary = {}
 
-    block_type_col = df['block_type'].dropna().values
-    summary['block_type'] = block_type_col[0]
-
     # summarize performance
-    raw_trials = df.loc[df['trial_type'] == 'multi-stim-multi-response']
-    trials = list(raw_trials['correct'].values)
-    trials.pop(0)  # remove fixation data
+    sart_trials = df.loc[df['trial_type'] == 'multi-stim-multi-response']
+    summary['num_trials'] = len(sart_trials.index.values)
+
+    trials = list(sart_trials['correct'].values)
     accuracy = float(trials.count(True)) / len(trials)
     summary['accuracy'] = round(accuracy, ROUND_NDIGITS)
 
     # affective ratings
-    ratings_json = df.ix[df.last_valid_index()]['responses']
-    raw_effort_rating = get_response_from_json(ratings_json)
+    survey_trials = df.loc[df['trial_type'] == 'survey-multi-choice'].\
+        copy().reset_index()
+
+    effort_rating_json = survey_trials.ix[0]['responses']
+    raw_effort_rating = get_response_from_json(effort_rating_json)
     summary['effort'] = int(raw_effort_rating[0])
-    raw_discomfort_rating = get_response_from_json(ratings_json, 1)
+
+    discomfort_rating_json = survey_trials.ix[1]['responses']
+    raw_discomfort_rating = get_response_from_json(discomfort_rating_json)
     summary['discomfort'] = int(raw_discomfort_rating[0])
 
     return summary
