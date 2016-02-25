@@ -10,10 +10,6 @@ TESTS_DIR = os.path.abspath(os.path.join(__file__, '..'))
 MOCK_DATA_DIR = os.path.join(TESTS_DIR, 'mock_data')
 
 
-def _csv_path(stage, pid):
-    return os.path.join(MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
-
-
 def test_get_data_file_paths_returns_list_of_paths():
     mock_practice_csvs = compile_data.get_csv_paths(MOCK_DATA_DIR, 'practice')
     assert len(mock_practice_csvs) == 5
@@ -21,6 +17,7 @@ def test_get_data_file_paths_returns_list_of_paths():
 
 
 def test_extract_sart_blocks_with_2_practice():
+    # NOTE: tests out get_csv_as_dataframe() from compile_data
     csv_path = _csv_path('practice', '003')
     df = compile_data.get_csv_as_dataframe(csv_path)
     blocks = compile_data.extract_sart_blocks(df)
@@ -32,9 +29,16 @@ def test_extract_sart_blocks_with_2_practice():
     assert len(blocks[1].index.values) == 15
 
 
+def get_csv_as_df(stage, pid):
+    """Take an experiment stage and participant ID and return a pandas
+    data frame.
+    """
+    csv_path = os.path.join(MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
+    df = compile_data.get_csv_as_dataframe(csv_path)return df
+
+
 def test_extract_sart_blocks_with_4_practice():
-    csv_path = _csv_path('practice', 'fail1')
-    df = compile_data.get_csv_as_dataframe(csv_path)
+    df = get_csv_as_df('practice', 'fail1')
     blocks = compile_data.extract_sart_blocks(df)
     assert len(blocks) == 4
     for b in blocks:
@@ -47,8 +51,7 @@ def test_extract_sart_blocks_with_4_practice():
 
 
 def test_passing_compile_practice_data():
-    csv_path = _csv_path('practice', '003')
-    df = compile_data.get_csv_as_dataframe(csv_path)
+    df = get_csv_as_df('practice', '003')
     data = compile_data.compile_practice_data(df)
     assert data['id'] == 3
     assert data['practice_condition'] == 'num_trials'
@@ -60,8 +63,7 @@ def test_passing_compile_practice_data():
 
 def test_failing_compile_practice_data():
     pid = "fail1"
-    csv_path = _csv_path('practice', pid)
-    df = compile_data.get_csv_as_dataframe(csv_path)
+    df = get_csv_as_df('practice', pid)
     data = compile_data.compile_practice_data(df)
     assert data['id'] == pid
     assert data['practice_condition'] == 'time_duration'
@@ -81,17 +83,6 @@ def test_get_response_from_json():
     json = '{"Q0":"2<br>Often or<br>very much"}'
     resp1 = compile_data.get_response_from_json(json)
     assert resp1 == "2<br>Often or<br>very much"
-
-
-def get_csv_as_df(stage, pid):
-    """Take an experiment stage and participant ID and return a pandas
-    data frame.
-    """
-    # TODO: replace other solution with this one
-    experiment_path = os.path.join(
-        MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
-    df = compile_data.get_csv_as_dataframe(experiment_path)
-    return df
 
 
 def test_get_response_from_node_id():
