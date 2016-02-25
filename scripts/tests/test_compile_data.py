@@ -10,6 +10,10 @@ TESTS_DIR = os.path.abspath(os.path.join(__file__, '..'))
 MOCK_DATA_DIR = os.path.join(TESTS_DIR, 'mock_data')
 
 
+def _csv_path(stage, pid):
+    return os.path.join(MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
+
+
 def test_get_data_file_paths_returns_list_of_paths():
     mock_practice_csvs = compile_data.get_csv_paths(MOCK_DATA_DIR, 'practice')
     assert len(mock_practice_csvs) == 5
