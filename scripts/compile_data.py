@@ -31,25 +31,43 @@ def get_csv_as_dataframe(path):
     return pd.DataFrame.from_csv(path, index_col='trial_index')
 
 
-def extract_sart_blocks(df):
+def extract_sart_blocks(df, with_survey=False):
     """Take pandas data frame and find SART trial blocks.
     Return list of pandas data frames.
     """
     blocks = []
-    first_block_id = None
-    last_block_id = None
-    block_trial_type = "multi-stim-multi-response"
+
+    # the type of trial(s) to target
+    mc_trial_type = "survey-multi-choice"
+    block_trial_types = ["multi-stim-multi-response"]
+    if with_survey:
+        block_trial_types.append(mc_trial_type)
+
+    # find and extract block rows
+    first_trial_idx = None
+    last_trial_idx = None
+    num_mc_trials = 0
     for index, series in df.iterrows():
-        if series['trial_type'] == block_trial_type:
-            if not first_block_id:
-                first_block_id = index
-            last_block_id = index
+        if not first_trial_idx and series['trial_type'] == mc_trial_type:
+            # skip if first trial type is a survey
+            continue
+        elif series['trial_type'] in block_trial_types and \
+                num_mc_trials < 2:
+            if not first_trial_idx:
+                first_trial_idx = index
+            last_trial_idx = index
+
+            # NOTE: limit to 2 survey trials, as per experiment specs
+            if series['trial_type'] == mc_trial_type:
+                num_mc_trials += 1
         else:
-            if first_block_id and last_block_id:
-                block = df.loc[first_block_id:last_block_id]
+            if first_trial_idx and last_trial_idx:
+                block = df.loc[first_trial_idx:last_trial_idx]
                 blocks.append(block)
-                first_block_id = None
-                last_block_id = None
+                first_trial_idx = None
+                last_trial_idx = None
+                num_mc_trials = 0
+
     return blocks
 
 

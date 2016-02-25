@@ -52,7 +52,37 @@ def test_extract_sart_blocks_with_4_practice():
     assert len(blocks[0].index.values) == 29
     assert len(blocks[1].index.values) == 72
     assert len(blocks[2].index.values) == 72
-    assert len(blocks[2].index.values) == 72
+    assert len(blocks[3].index.values) == 72
+
+
+def test_extract_sart_blocks_with_4_practice_and_survey():
+    df = get_csv_as_df('experiment', '104')
+    blocks = compile_data.extract_sart_blocks(df, with_survey=True)
+    # basic structure
+    assert len(blocks) == 8
+    for b in blocks:
+        assert isinstance(b, compile_data.pd.DataFrame)
+
+    # number of trials
+    assert len(blocks[0].index.values) == 84
+    assert len(blocks[1].index.values) == 84
+    assert len(blocks[2].index.values) == 84
+    assert len(blocks[3].index.values) == 84
+    assert len(blocks[4].index.values) == 84
+    assert len(blocks[5].index.values) == 84
+    assert len(blocks[6].index.values) == 84
+    assert len(blocks[7].index.values) == 74
+
+    # trial structure
+    trial_type_mc = 'survey-multi-choice'
+    trial_type_msmr = 'multi-stim-multi-response'
+
+    b7 = blocks[7]
+    b7_last_idx = b7.last_valid_index()
+    b7_first_idx = b7.first_valid_index()
+    assert b7.ix[b7_first_idx]['trial_type'] == trial_type_msmr
+    assert b7.ix[b7_last_idx-1]['trial_type'] == trial_type_mc
+    assert b7.ix[b7_last_idx]['trial_type'] == trial_type_mc
 
 
 def test_passing_compile_practice_data():
