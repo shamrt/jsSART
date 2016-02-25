@@ -34,7 +34,8 @@ def get_csv_as_df(stage, pid):
     data frame.
     """
     csv_path = os.path.join(MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
-    df = compile_data.get_csv_as_dataframe(csv_path)return df
+    df = compile_data.get_csv_as_dataframe(csv_path)
+    return df
 
 
 def test_extract_sart_blocks_with_4_practice():
