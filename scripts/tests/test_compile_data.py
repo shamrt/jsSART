@@ -46,13 +46,20 @@ def test_extract_sart_blocks_with_4_practice():
     df = get_csv_as_df('practice', 'fail1')
     blocks = compile_data.extract_sart_blocks(df)
     assert len(blocks) == 4
-    for b in blocks:
-        assert isinstance(b, compile_data.pd.DataFrame)
+
     # number of trials
     assert len(blocks[0].index.values) == 29
     assert len(blocks[1].index.values) == 72
     assert len(blocks[2].index.values) == 72
     assert len(blocks[3].index.values) == 72
+
+    for b in blocks:
+        # class
+        assert isinstance(b, compile_data.pd.DataFrame)
+
+        # trials
+        for idx, series in b.iterrows():
+            series['trial_type'] == 'multi-stim-multi-response'
 
 
 def test_extract_sart_blocks_with_4_practice_and_survey():
