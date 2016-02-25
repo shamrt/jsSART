@@ -15,6 +15,7 @@ from scipy import stats
 
 PROJECT_DIR = os.path.abspath(os.path.join(__file__, '..', '..'))
 DATA_DIR = os.path.join(PROJECT_DIR, 'data')
+DECODER = json.JSONDecoder()
 ROUND_NDIGITS = 9
 
 
@@ -113,8 +114,7 @@ def get_response_from_json(string, question_number=0):
     """Take JSON string representing a survey response and decode.
     Return target question answer string.
     """
-    decoder = json.JSONDecoder()
-    resp_json = decoder.decode(string)
+    resp_json = DECODER.decode(string)
     target_question = "Q{}".format(question_number)
     resp = resp_json[target_question] if target_question in resp_json else None
     return resp
@@ -138,9 +138,42 @@ def get_response_from_node_id(df, inid, is_likert=False):
     return response
 
 
+def _format_rts(rts):
+    """Take a pandas series of reaction times and return formatted array.
+    """
+    rt_arrays = map(lambda x: DECODER.decode(x), rts)
+    all_rts = np.ndarray.flatten(np.array(rt_arrays))
+    # exclude non-response RTs
+    rts = [rt for rt in all_rts if rt >= 0]
+
+    return list(rts)
+
+
+def summarize_block_performance(df):
+    """Take pandas dataframe representing raw SART trails data and
+    summarize performance. Return dict.
+    """
+    performance = {}
+
+    # average reaction time
+    rts = _format_rts(df['rt'].values)
+    performance['rt_avg'] = round(np.mean(rts), ROUND_NDIGITS)
+
+    # overall accuracy
+    corrects = list(df['correct'].values)
+    accuracy = float(corrects.count(True)) / len(corrects)
+    performance['accuracy'] = round(accuracy, ROUND_NDIGITS)
+
+    # number of go errors
+    # number of no-go errors
+    # number of anticipation errors
+
+    return performance
+
+
 def summarize_sart_chunk(df):
-    """Take pandas dataframe representing raw SART chunk data and
-    summarize. Return dict.
+    """Take pandas dataframe representing raw SART chunk data and create a
+    complete summary. Return dict.
     """
     summary = {}
 
@@ -148,9 +181,8 @@ def summarize_sart_chunk(df):
     sart_trials = df.loc[df['trial_type'] == 'multi-stim-multi-response']
     summary['num_trials'] = len(sart_trials.index.values)
 
-    trials = list(sart_trials['correct'].values)
-    accuracy = float(trials.count(True)) / len(trials)
-    summary['accuracy'] = round(accuracy, ROUND_NDIGITS)
+    performance = summarize_block_performance(sart_trials)
+    summary.update(performance)
 
     # affective ratings
     survey_trials = df.loc[df['trial_type'] == 'survey-multi-choice'].\

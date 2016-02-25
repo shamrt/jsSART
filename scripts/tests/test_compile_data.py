@@ -135,11 +135,38 @@ def test_get_response_from_node_id():
     assert resp2 == 'Female'
 
 
-def test_summarize_sart_chunk():
+def test__format_rts():
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
+    blocks = compile_data.extract_sart_blocks(df, with_survey=True)
+    # first block SART trials
+    b1 = blocks[0]
+    b1_sart = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
+
+    b1_rts = compile_data._format_rts(b1_sart['rt'])
+    assert isinstance(b1_rts, list)
+    assert len(b1_rts) == 59
+    for rt in b1_rts:
+        assert isinstance(rt, int)
+
+
+def test_summarize_block_performance():
     pid = "011"
     df = get_csv_as_df('experiment', pid)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
 
+    # first block
+    b1 = blocks[0]
+    b1_sart = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
+    p = compile_data.summarize_block_performance(b1_sart)
+    assert p['accuracy'] == 0.731707317
+    assert p['rt_avg'] == 477.610169492
+
+
+def test_summarize_sart_chunk():
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
+    blocks = compile_data.extract_sart_blocks(df, with_survey=True)
 
     # first block
     b1 = blocks[0]
