@@ -102,9 +102,27 @@ def get_response_from_json(string, question_number=0):
     return resp
 
 
+def get_response_from_node_id(df, inid, is_likert=False):
+    """Take a data frame and internal node ID (inid).
+    Return a jsPsych survey response string.
+    """
+    response = None
+
+    # get row and then response text
+    response_str = df[df['internal_node_id'] == inid]['responses'].values
+    if response_str:
+        response = get_response_from_json(response_str[0]).strip()
+
+    if is_likert and response[0].isdigit():
+        # we only want the numeric response
+        response = response[0]
+
+    return response
+
+
 def summarize_sart_chunk(df):
-    """Take pandas dataframe representing raw SART chunk data and summarize.
-    Return dict.
+    """Take pandas dataframe representing raw SART chunk data and
+    summarize. Return dict.
     """
     summary = {}
 
@@ -281,71 +299,74 @@ def compile_demographic_data(df):
 
     demographics_index = [
         # demographics questions
-        ('age', 1),
-        ('dob', 2),
-        ('sex', 3),
-        ('edu_year', 4),
-        ('edu_plan', 5),
-        ('first_lang', 6),
-        ('years_eng', 7),
-        ('mother_edu', 8),
-        ('mother_job', 9),
-        ('father_edu', 10),
-        ('father_job', 11),
-        ('high_school_avg', 12),
-        ('uni_avg', 13),
-        ('num_uni_stats', 14),
-        ('num_hs_stats', 15),
-        ('num_hs_math', 16),
-        ('num_uni_math', 17),
-        ('math_enjoy', 18),
-        ('adhd_diag', 19),
-        ('uni_major', 20),
+        ('age', '0.0-1.0-0.0'),
+        ('dob', '0.0-1.0-1.0'),
+
+        ('sex', '0.0-2.0-0.0'),
+        ('edu_year', '0.0-2.0-1.0'),
+        ('edu_plan', '0.0-2.0-2.0'),
+        ('eng_first_lang', '0.0-2.0-3.0'),
+        ('eng_years', '0.0-2.0-4.0'),
+        ('mother_edu', '0.0-2.0-5.0'),
+
+        ('mother_job', '0.0-3.0'),
+
+        ('father_edu', '0.0-4.0-0.0'),
+
+        ('father_job', '0.0-5.0-0.0'),
+        ('high_school_avg', '0.0-5.0-1.0'),
+        ('uni_avg', '0.0-5.0-2.0'),
+
+        ('num_uni_stats', '0.0-6.0-0.0'),
+        ('num_hs_stats', '0.0-6.0-1.0'),
+        ('num_hs_math', '0.0-6.0-2.0'),
+        ('num_uni_math', '0.0-6.0-3.0'),
+        ('math_enjoy', '0.0-6.0-4.0'),
+        ('adhd_diag', '0.0-6.0-5.0'),
+
+        ('uni_major', '0.0-7.0'),
 
         # electronics and Internet survey
-        ('elect_survey_1', 21),
-        ('elect_survey_2', 22),
-        ('elect_survey_3', 23),
-        ('elect_survey_4', 24),
-        ('elect_survey_5', 25),
-        ('elect_survey_6', 26),
-        ('elect_survey_7', 27),
+        ('elect_survey_1', '0.0-8.0-0.0'),
+        ('elect_survey_2', '0.0-8.0-1.0'),
+        ('elect_survey_3', '0.0-8.0-2.0'),
+        ('elect_survey_4', '0.0-8.0-3.0'),
+        ('elect_survey_5', '0.0-8.0-4.0'),
+        ('elect_survey_6', '0.0-8.0-5.0'),
+        ('elect_survey_7', '0.0-9.0')
     ]
-    for label, i in demographics_index:
-        response = get_response_from_json(df.ix[i]['responses'])
-        compiled_data[label] = response.strip()
+    for label, inid in demographics_index:
+        compiled_data[label] = get_response_from_node_id(df, inid)
 
     behavioural_survey = [
         # behavioural survey
-        ('behav_survey_1', 29),
-        ('behav_survey_2', 30),
-        ('behav_survey_3', 31),
-        ('behav_survey_4', 32),
-        ('behav_survey_5', 33),
-        ('behav_survey_6', 34),
-        ('behav_survey_7', 35),
-        ('behav_survey_8', 36),
-        ('behav_survey_9', 37),
-        ('behav_survey_10', 38),
-        ('behav_survey_11', 39),
-        ('behav_survey_12', 40),
-        ('behav_survey_13', 41),
-        ('behav_survey_14', 42),
-        ('behav_survey_15', 43),
-        ('behav_survey_16', 44),
-        ('behav_survey_17', 45),
-        ('behav_survey_18', 46),
+        ('behav_survey_1', '0.0-11.0-0.0'),
+        ('behav_survey_2', '0.0-11.0-1.0'),
+        ('behav_survey_3', '0.0-11.0-2.0'),
+        ('behav_survey_4', '0.0-11.0-3.0'),
+        ('behav_survey_5', '0.0-11.0-4.0'),
+        ('behav_survey_6', '0.0-11.0-5.0'),
+        ('behav_survey_7', '0.0-11.0-6.0'),
+        ('behav_survey_8', '0.0-11.0-7.0'),
+        ('behav_survey_9', '0.0-11.0-8.0'),
+        ('behav_survey_10', '0.0-11.0-9.0'),
+        ('behav_survey_11', '0.0-11.0-10.0'),
+        ('behav_survey_12', '0.0-11.0-11.0'),
+        ('behav_survey_13', '0.0-11.0-12.0'),
+        ('behav_survey_14', '0.0-11.0-13.0'),
+        ('behav_survey_15', '0.0-11.0-14.0'),
+        ('behav_survey_16', '0.0-11.0-15.0'),
+        ('behav_survey_17', '0.0-11.0-16.0'),
+        ('behav_survey_18', '0.0-11.0-17.0'),
 
     ]
-    for label, i in behavioural_survey:
-        response = get_response_from_json(df.ix[i]['responses'])
-        if response[0].isdigit():
-            response = response[0]
-        compiled_data[label] = response
+    for label, inid in behavioural_survey:
+        compiled_data[label] = get_response_from_node_id(
+            df, inid, is_likert=True)
 
     # post-working memory task delay
-    if 47 in df.index.values:
-        compiled_data['time_pwmt_delay_ms'] = int(df.ix[47]['time_elapsed'])
+    if 46 in df.index.values:
+        compiled_data['time_pwmt_delay_ms'] = int(df.ix[46]['time_elapsed'])
 
     # time taken for post-working memory task follow-up
     time_follow_up_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])

@@ -74,19 +74,32 @@ def test_failing_compile_practice_data():
 
 
 def test_get_response_from_json():
-    mock_json_string = '{"Q0":"3"}'
-    response = compile_data.get_response_from_json(mock_json_string)
-    assert response == "3"
+    json = '{"Q0":"3"}'
+    resp1 = compile_data.get_response_from_json(json)
+    assert resp1 == "3"
+
+    json = '{"Q0":"2<br>Often or<br>very much"}'
+    resp1 = compile_data.get_response_from_json(json)
+    assert resp1 == "2<br>Often or<br>very much"
 
 
 def get_csv_as_df(stage, pid):
     """Take an experiment stage and participant ID and return a pandas
     data frame.
     """
+    # TODO: replace other solution with this one
     experiment_path = os.path.join(
         MOCK_DATA_DIR, stage, '{}.csv'.format(pid))
     df = compile_data.get_csv_as_dataframe(experiment_path)
     return df
+
+
+def test_get_response_from_node_id():
+    df = get_csv_as_df('follow_up', '003')
+    resp1 = compile_data.get_response_from_node_id(df, '0.0-1.0-0.0')
+    assert resp1 == '22'
+    resp2 = compile_data.get_response_from_node_id(df, '0.0-2.0-0.0')
+    assert resp2 == 'Female'
 
 
 # def test_summarize_sart_chunk():
@@ -200,80 +213,80 @@ def get_csv_as_df(stage, pid):
 #     assert data['auc_discomfort'] == 32.0
 #
 #     assert data['time_experiment_ms'] == 831136
-#
-#
-# def test_complete_demographics_data():
-#     pid = "011"
-#     df = get_csv_as_df('experiment', pid)
-#     data = compile_data.compile_demographic_data(df)
-#     expected_answers = [
-#         ('age', '20'),
-#         ('dob', '01/1995'),
-#         ('sex', 'Male'),
-#         ('edu_year', 'Graduated'),
-#         ('edu_plan', 'PhD'),
-#         ('first_lang', 'Yes'),
-#         ('years_eng', 'All my life'),
-#         ('mother_edu', 'Professional degree (e.g., law)'),
-#         ('mother_job', 'lawyer'),
-#         ('father_edu', 'MA/MSc degree'),
-#         ('father_job', 'computer scientist'),
-#         ('high_school_avg', '85'),
-#         ('uni_avg', '85'),
-#         ('num_uni_stats', '1'),
-#         ('num_hs_stats', 'None'),
-#         ('num_hs_math', '4'),
-#         ('num_uni_math', 'None'),
-#         ('math_enjoy', '4'),
-#         ('adhd_diag', 'Yes'),
-#         ('uni_major', 'psych'),
-#
-#         ('elect_survey_1', 'No'),
-#         ('elect_survey_2', 'No'),
-#         ('elect_survey_3', 'No'),
-#         ('elect_survey_4', 'No'),
-#         ('elect_survey_5', 'No'),
-#         ('elect_survey_6', 'No'),
-#         ('elect_survey_7', '0'),
-#
-#         ('behav_survey_1', 'N/A'),
-#         ('behav_survey_2', 'N/A'),
-#         ('behav_survey_3', '3'),
-#         ('behav_survey_4', '2'),
-#         ('behav_survey_5', '1'),
-#         ('behav_survey_6', '0'),
-#         ('behav_survey_7', 'N/A'),
-#         ('behav_survey_8', '3'),
-#         ('behav_survey_9', '2'),
-#         ('behav_survey_10', '1'),
-#         ('behav_survey_11', '0'),
-#         ('behav_survey_12', 'N/A'),
-#         ('behav_survey_13', '3'),
-#         ('behav_survey_14', '2'),
-#         ('behav_survey_15', '1'),
-#         ('behav_survey_16', '0'),
-#         ('behav_survey_17', 'N/A'),
-#         ('behav_survey_18', '3'),
-#
-#         ('time_pwmt_delay_ms', 205396),
-#         ('time_follow_up_ms', 223823),
-#     ]
-#     for label, answer in expected_answers:
-#         assert data[label] == answer
-#
-#
-# def test_complete_retrospective_data():
-#     pid = "011"
-#     df = get_csv_as_df('experiment', pid)
-#     data = compile_data.compile_retrospective_data(df)
-#     expected_answers = [
-#         ('pwmt_effort', 4),
-#         ('pwmt_discomfort', 4),
-#         ('pwmt_enjoyment', 4),
-#         ('pwmt_performance', 4),
-#         ('pwmt_fatigue', 4),
-#         ('pwmt_satisfaction', 4),
-#         ('pwmt_willingtodowmt', 4),
-#     ]
-#     for label, answer in expected_answers:
-#         assert data[label] == answer
+
+
+def test_complete_demographics_data():
+    pid = "003"
+    df = get_csv_as_df('follow_up', pid)
+    data = compile_data.compile_demographic_data(df)
+    expected_answers = [
+        ('age', '22'),
+        ('dob', '03/1993'),
+        ('sex', 'Female'),
+        ('edu_year', 'Graduated'),
+        ('edu_plan', 'PhD'),
+        ('eng_first_lang', 'Yes'),
+        ('eng_years', 'All my life'),
+        ('mother_edu', 'Professional degree (e.g., law)'),
+        ('mother_job', 'lawyer'),
+        ('father_edu', 'MA/MSc degree'),
+        ('father_job', 'computer scientist'),
+        ('high_school_avg', '90'),
+        ('uni_avg', 'n/a'),
+        ('num_uni_stats', '1'),
+        ('num_hs_stats', 'None'),
+        ('num_hs_math', '4'),
+        ('num_uni_math', 'None'),
+        ('math_enjoy', '5'),
+        ('adhd_diag', 'Yes'),
+        ('uni_major', 'n/a'),
+
+        ('elect_survey_1', 'No'),
+        ('elect_survey_2', 'Yes'),
+        ('elect_survey_3', 'Yes'),
+        ('elect_survey_4', 'Yes'),
+        ('elect_survey_5', 'Yes'),
+        ('elect_survey_6', 'Yes'),
+        ('elect_survey_7', '1'),
+
+        ('behav_survey_1', 'N/A'),
+        ('behav_survey_2', 'N/A'),
+        ('behav_survey_3', '2'),
+        ('behav_survey_4', 'N/A'),
+        ('behav_survey_5', '2'),
+        ('behav_survey_6', 'N/A'),
+        ('behav_survey_7', 'N/A'),
+        ('behav_survey_8', 'N/A'),
+        ('behav_survey_9', 'N/A'),
+        ('behav_survey_10', 'N/A'),
+        ('behav_survey_11', 'N/A'),
+        ('behav_survey_12', 'N/A'),
+        ('behav_survey_13', 'N/A'),
+        ('behav_survey_14', 'N/A'),
+        ('behav_survey_15', 'N/A'),
+        ('behav_survey_16', 'N/A'),
+        ('behav_survey_17', 'N/A'),
+        ('behav_survey_18', 'N/A'),
+
+        ('time_pwmt_delay_ms', 196373),
+        ('time_follow_up_ms', 218848),
+    ]
+    for label, answer in expected_answers:
+        assert data[label] == answer
+
+
+def test_complete_retrospective_data():
+    pid = "011"
+    df = get_csv_as_df('experiment', pid)
+    data = compile_data.compile_retrospective_data(df)
+    expected_answers = [
+        ('pwmt_effort', 4),
+        ('pwmt_discomfort', 4),
+        ('pwmt_enjoyment', 4),
+        ('pwmt_performance', 4),
+        ('pwmt_fatigue', 4),
+        ('pwmt_satisfaction', 4),
+        ('pwmt_willingtodowmt', 4),
+    ]
+    for label, answer in expected_answers:
+        assert data[label] == answer
