@@ -113,7 +113,7 @@ def get_response_from_node_id(df, inid, is_likert=False):
     if response_str:
         response = get_response_from_json(response_str[0]).strip()
 
-    if is_likert and response[0].isdigit():
+    if is_likert and response and response[0].isdigit():
         # we only want the numeric response
         response = response[0]
 
@@ -383,17 +383,18 @@ def compile_retrospective_data(df):
 
     # retrospective questions
     retrospective_index = [
-        ('pwmt_effort', 48),
-        ('pwmt_discomfort', 49),
-        ('pwmt_enjoyment', 50),
-        ('pwmt_performance', 51),
-        ('pwmt_fatigue', 52),
-        ('pwmt_satisfaction', 53),
-        ('pwmt_willingtodowmt', 54),
+        ('pwmt_effort', '0.0-13.0-0.0'),
+        ('pwmt_discomfort', '0.0-13.0-1.0'),
+        ('pwmt_performance', '0.0-13.0-2.0'),
+        ('pwmt_willingtodowmt', '0.0-13.0-3.0'),
+        ('pwmt_fatigue', '0.0-13.0-4.0'),
+        ('pwmt_satisfaction', '0.0-13.0-5.0'),
+        ('pwmt_didmybest', '0.0-13.0-6.0'),
+        ('pwmt_enjoyment', '0.0-13.0-7.0'),
     ]
-    for label, i in retrospective_index:
-        response = get_response_from_json(df.ix[i]['responses'])
-        compiled_data[label] = int(response[0])
+    for label, inid in retrospective_index:
+        compiled_data[label] = get_response_from_node_id(
+            df, inid, is_likert=True)
 
     return compiled_data
 

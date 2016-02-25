@@ -269,24 +269,25 @@ def test_complete_demographics_data():
         ('behav_survey_18', 'N/A'),
 
         ('time_pwmt_delay_ms', 196373),
-        ('time_follow_up_ms', 218848),
+        ('time_follow_up_ms', 220848),
     ]
     for label, answer in expected_answers:
         assert data[label] == answer
 
 
 def test_complete_retrospective_data():
-    pid = "011"
-    df = get_csv_as_df('experiment', pid)
+    pid = "003"
+    df = get_csv_as_df('follow_up', pid)
     data = compile_data.compile_retrospective_data(df)
     expected_answers = [
-        ('pwmt_effort', 4),
-        ('pwmt_discomfort', 4),
-        ('pwmt_enjoyment', 4),
-        ('pwmt_performance', 4),
-        ('pwmt_fatigue', 4),
-        ('pwmt_satisfaction', 4),
-        ('pwmt_willingtodowmt', 4),
+        ('pwmt_effort', '4'),
+        ('pwmt_discomfort', '4'),
+        ('pwmt_performance', '4'),
+        ('pwmt_willingtodowmt', '4'),
+        ('pwmt_fatigue', '4'),
+        ('pwmt_satisfaction', '4'),
+        ('pwmt_didmybest', '4'),
+        ('pwmt_enjoyment', '7'),
     ]
     for label, answer in expected_answers:
         assert data[label] == answer
