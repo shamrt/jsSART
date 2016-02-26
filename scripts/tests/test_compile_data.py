@@ -97,6 +97,7 @@ def test_passing_compile_practice_data():
     data = compile_data.compile_practice_data(df)
     assert data['id'] == 3
     assert data['practice_condition'] == 'num_trials'
+    assert data['num_practice_blk2s'] == 1
     assert data['passed_practice'] == True
     assert data['time_practice_blk1_ms'] == 6030
     assert data['time_practice_blk2_1_ms'] == 16165
@@ -109,6 +110,7 @@ def test_failing_compile_practice_data():
     data = compile_data.compile_practice_data(df)
     assert data['id'] == pid
     assert data['practice_condition'] == 'time_duration'
+    assert data['num_practice_blk2s'] == 3
     assert data['passed_practice'] == False
     assert data['time_practice_blk1_ms'] == 42198
     assert data['time_practice_blk2_1_ms'] == 120397

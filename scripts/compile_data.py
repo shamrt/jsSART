@@ -90,6 +90,7 @@ def compile_practice_data(df):
     compiled_data['passed_practice'] = passed_practice
 
     # time taken to complete practice blocks
+    num_practice_blk2s = 0
     practice_blocks = extract_sart_blocks(df)
     for i, blk in enumerate(practice_blocks):
         blk_start_ms = int(blk.ix[blk.first_valid_index()]['time_elapsed'])
@@ -99,9 +100,13 @@ def compile_practice_data(df):
             # record as practice block #2 trials
             time_blk_key = 'time_practice_blk2_{}_ms'.format(i)
             compiled_data[time_blk_key] = time_practice_blk_ms
+            num_practice_blk2s += 1
         else:
             # record as practice block #1
             compiled_data['time_practice_blk1_ms'] = time_practice_blk_ms
+
+    # number of practice 2 blocks required to reach criterion
+    compiled_data['num_practice_blk2s'] = num_practice_blk2s
 
     # time taken to complete entire practice
     time_practice_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])
