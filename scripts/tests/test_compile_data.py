@@ -170,13 +170,31 @@ def test__is_anticipation_error():
     assert not compile_data._is_anticipation_error('[-1]')
 
 
+def test__add_anticipation_errors_to_df():
+    pid = "104"
+    df = get_sart_trial_block(pid)
+    df_anticip = compile_data._add_anticipation_errors(df)
+    assert 'anticipate_error' in df_anticip
+    anticipated = list(df_anticip.anticipate_error)
+    assert anticipated.count(True) == 6
+
+
 def test___calculate_go_errors():
     pid = "104"
-    sart_block = get_sart_trial_block(pid)
-    assert list(sart_block.correct.values).count(False) == 5
-    go_errors = compile_data._calculate_go_errors(sart_block, 'go')
+    df = get_sart_trial_block(pid)
+
+    # check known values
+    assert list(df.correct.values).count(False) == 5
+
+    df = compile_data._add_anticipation_errors(df)
+
+    # check known values
+    assert list(df.anticipate_error.values).count(True) == 6
+    assert list(df.correct.values).count(False) == 11
+
+    go_errors = compile_data._calculate_go_errors(df, 'go')
     assert go_errors.count(True) == 1
-    no_go_errors = compile_data._calculate_go_errors(sart_block, 'no_go')
+    no_go_errors = compile_data._calculate_go_errors(df, 'no_go')
     assert no_go_errors.count(True) == 4
 
 
@@ -187,9 +205,14 @@ def test_summarize_block_performance():
     assert p['num_trials'] == 82
     assert p['rt_avg'] == 272.790123457
     assert p['anticipated'] == 0.073170732  # 6 anticipation errors
-    assert p['go_errors'] == 0.01219512  # 1 go error
-    assert p['no_go_errors'] == 0.04878049  # 4 no-go errors
+    assert p['go_errors'] == 0.012195122  # 1 go error
+    assert p['no_go_errors'] == 0.048780488  # 4 no-go errors
     assert p['accuracy'] == 0.865853659  # 71/82
+    total_error_prop = (p['anticipated'] + p['go_errors'] + p['no_go_errors'])
+
+    # ensure that calculations match up
+    rnd = compile_data.ROUND_NDIGITS
+    assert round(total_error_prop, rnd-1) == round(1 - p['accuracy'], rnd-1)
 
 
 def test_summarize_sart_chunk():

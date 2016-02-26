@@ -160,13 +160,24 @@ def _is_anticipation_error(rt):
     return is_error
 
 
+def _add_anticipation_errors(df):
+    """Add anticipation errors to pandas data frame and re-calculate
+    `correct` column.
+    """
+    df['anticipate_error'] = pd.Series(
+        df['rt'].apply(_is_anticipation_error), index=df.index)
+    df.ix[df.anticipate_error, 'correct'] = False
+    return df
+
+
 def _calculate_go_errors(df, err_type):
     """Take pandas data frame and return boolean list (true if go error).
     """
     errors = []
     for idx, series in df.iterrows():
         error = False
-        if series['stimulus'].isdigit() and not series['correct']:
+        if series['stimulus'].isdigit() and not series['correct'] and \
+                not series['anticipate_error']:
             if err_type == 'go' and series['stimulus'] != '3':
                 error = True
             elif err_type == 'no_go' and series['stimulus'] == '3':
@@ -190,32 +201,26 @@ def summarize_block_performance(df):
     performance['rt_avg'] = round(np.mean(rts), ROUND_NDIGITS)
 
     # add anticipation errors and re-calculate `correct` column
-    df['anticipate_error'] = pd.Series(
-        df['rt'].apply(_is_anticipation_error), index=df.index)
-    df.ix[df.anticipate_error, 'correct'] = False
+    df = _add_anticipation_errors(df)
 
     # number of anticipation errors
     antipations = list(df['anticipate_error'].values)
     anticipated = float(antipations.count(True)) / num_trials
-    print 'anticipated', float(antipations.count(True)), num_trials
     performance['anticipated'] = round(anticipated, ROUND_NDIGITS)
 
     # overall accuracy
     corrects = list(df['correct'].values)
     accuracy = float(corrects.count(True)) / num_trials
-    print 'accuracy', float(corrects.count(True)), num_trials
     performance['accuracy'] = round(accuracy, ROUND_NDIGITS)
 
     # number of go errors
     go_errors = _calculate_go_errors(df, 'go')
     go_errors_prop = float(go_errors.count(True)) / num_trials
-    print 'go_errors', float(go_errors.count(True)), num_trials
     performance['go_errors'] = round(go_errors_prop, ROUND_NDIGITS)
 
     # number of no-go errors
     no_go_errors = _calculate_go_errors(df, 'no_go')
     no_go_errors_prop = float(no_go_errors.count(True)) / num_trials
-    print 'no_go_errors', float(no_go_errors.count(True)), num_trials
     performance['no_go_errors'] = round(no_go_errors_prop, ROUND_NDIGITS)
 
     return performance
