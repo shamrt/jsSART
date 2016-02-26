@@ -136,31 +136,60 @@ def test_get_response_from_node_id():
 
 
 def test__format_rts():
-    pid = "011"
-    df = get_csv_as_df('experiment', pid)
-    blocks = compile_data.extract_sart_blocks(df, with_survey=True)
-    # first block SART trials
-    b1 = blocks[0]
-    b1_sart = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
-
-    b1_rts = compile_data._format_rts(b1_sart['rt'])
-    assert isinstance(b1_rts, list)
-    assert len(b1_rts) == 59
-    for rt in b1_rts:
+    rts = ['[667]']
+    rts_strf = compile_data._format_rts(rts)
+    assert isinstance(rts_strf, list)
+    assert len(rts_strf) == 1
+    for rt in rts_strf:
         assert isinstance(rt, int)
 
 
-def test_summarize_block_performance():
-    pid = "011"
+def get_sart_trial_block(pid, block_index=0):
     df = get_csv_as_df('experiment', pid)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
+    b1 = blocks[block_index]
+    trial_block = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
+    return trial_block
 
-    # first block
-    b1 = blocks[0]
-    b1_sart = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
-    p = compile_data.summarize_block_performance(b1_sart)
-    assert p['accuracy'] == 0.731707317
-    assert p['rt_avg'] == 477.610169492
+
+def test__format_rts_with_data():
+    pid = "011"
+    sart_block = get_sart_trial_block(pid)
+    rt_strf = compile_data._format_rts(sart_block['rt'])
+    assert isinstance(rt_strf, list)
+    assert len(rt_strf) == 59
+    for rt in rt_strf:
+        assert isinstance(rt, int)
+
+
+def test__is_anticipation_error():
+    assert not compile_data._is_anticipation_error('[667]')
+    assert not compile_data._is_anticipation_error('[100]')
+    assert compile_data._is_anticipation_error('[99]')
+    assert compile_data._is_anticipation_error('[15]')
+    assert not compile_data._is_anticipation_error('[-1]')
+
+
+def test___calculate_go_errors():
+    pid = "104"
+    sart_block = get_sart_trial_block(pid)
+    assert list(sart_block.correct.values).count(False) == 5
+    go_errors = compile_data._calculate_go_errors(sart_block, 'go')
+    assert go_errors.count(True) == 1
+    no_go_errors = compile_data._calculate_go_errors(sart_block, 'no_go')
+    assert no_go_errors.count(True) == 4
+
+
+def test_summarize_block_performance():
+    pid = "104"
+    sart_block = get_sart_trial_block(pid)
+    p = compile_data.summarize_block_performance(sart_block)
+    assert p['num_trials'] == 82
+    assert p['rt_avg'] == 272.790123457
+    assert p['anticipated'] == 0.073170732  # 6 anticipation errors
+    assert p['go_errors'] == 0.01219512  # 1 go error
+    assert p['no_go_errors'] == 0.04878049  # 4 no-go errors
+    assert p['accuracy'] == 0.865853659  # 71/82
 
 
 def test_summarize_sart_chunk():
@@ -172,6 +201,7 @@ def test_summarize_sart_chunk():
     b1 = blocks[0]
     b1_summary = compile_data.summarize_sart_chunk(b1)
     assert b1_summary['num_trials'] == 82
+    assert b1_summary['anticipated'] == 0.0
     assert b1_summary['accuracy'] == 0.731707317
     assert b1_summary['effort'] == 4
     assert b1_summary['discomfort'] == 5
@@ -180,7 +210,8 @@ def test_summarize_sart_chunk():
     lb = blocks[-1]
     lb_summary = compile_data.summarize_sart_chunk(lb)
     assert lb_summary['num_trials'] == 68
-    assert lb_summary['accuracy'] == 0.926470588
+    assert lb_summary['anticipated'] == 0.014705882
+    assert lb_summary['accuracy'] == 0.911764706
     assert lb_summary['effort'] == 3
     assert lb_summary['discomfort'] == 5
 

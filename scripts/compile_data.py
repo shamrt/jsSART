@@ -142,11 +142,37 @@ def _format_rts(rts):
     """Take a pandas series of reaction times and return formatted array.
     """
     rt_arrays = map(lambda x: DECODER.decode(x), rts)
-    all_rts = np.ndarray.flatten(np.array(rt_arrays))
+    all_rts_strf = np.ndarray.flatten(np.array(rt_arrays))
     # exclude non-response RTs
-    rts = [rt for rt in all_rts if rt >= 0]
+    rts_strf = [rt for rt in all_rts_strf if rt >= 0]
 
-    return list(rts)
+    return list(rts_strf)
+
+
+def _is_anticipation_error(rt):
+    """Take reaction time JSON string and determine whether it represents an
+    anticipation error (<100ms response).
+    """
+    is_error = False
+    rt_ms = _format_rts([rt])
+    if rt_ms and rt_ms[0] < 100 and rt_ms[0] > -1:
+        is_error = True
+    return is_error
+
+
+def _calculate_go_errors(df, err_type):
+    """Take pandas data frame and return boolean list (true if go error).
+    """
+    errors = []
+    for idx, series in df.iterrows():
+        error = False
+        if series['stimulus'].isdigit() and not series['correct']:
+            if err_type == 'go' and series['stimulus'] != '3':
+                error = True
+            elif err_type == 'no_go' and series['stimulus'] == '3':
+                error = True
+        errors.append(error)
+    return errors
 
 
 def summarize_block_performance(df):
@@ -155,18 +181,42 @@ def summarize_block_performance(df):
     """
     performance = {}
 
+    # number of trials
+    num_trials = len(df.index.values)
+    performance['num_trials'] = num_trials
+
     # average reaction time
     rts = _format_rts(df['rt'].values)
     performance['rt_avg'] = round(np.mean(rts), ROUND_NDIGITS)
 
+    # add anticipation errors and re-calculate `correct` column
+    df['anticipate_error'] = pd.Series(
+        df['rt'].apply(_is_anticipation_error), index=df.index)
+    df.ix[df.anticipate_error, 'correct'] = False
+
+    # number of anticipation errors
+    antipations = list(df['anticipate_error'].values)
+    anticipated = float(antipations.count(True)) / num_trials
+    print 'anticipated', float(antipations.count(True)), num_trials
+    performance['anticipated'] = round(anticipated, ROUND_NDIGITS)
+
     # overall accuracy
     corrects = list(df['correct'].values)
-    accuracy = float(corrects.count(True)) / len(corrects)
+    accuracy = float(corrects.count(True)) / num_trials
+    print 'accuracy', float(corrects.count(True)), num_trials
     performance['accuracy'] = round(accuracy, ROUND_NDIGITS)
 
     # number of go errors
+    go_errors = _calculate_go_errors(df, 'go')
+    go_errors_prop = float(go_errors.count(True)) / num_trials
+    print 'go_errors', float(go_errors.count(True)), num_trials
+    performance['go_errors'] = round(go_errors_prop, ROUND_NDIGITS)
+
     # number of no-go errors
-    # number of anticipation errors
+    no_go_errors = _calculate_go_errors(df, 'no_go')
+    no_go_errors_prop = float(no_go_errors.count(True)) / num_trials
+    print 'no_go_errors', float(no_go_errors.count(True)), num_trials
+    performance['no_go_errors'] = round(no_go_errors_prop, ROUND_NDIGITS)
 
     return performance
 
@@ -179,8 +229,6 @@ def summarize_sart_chunk(df):
 
     # summarize performance
     sart_trials = df.loc[df['trial_type'] == 'multi-stim-multi-response']
-    summary['num_trials'] = len(sart_trials.index.values)
-
     performance = summarize_block_performance(sart_trials)
     summary.update(performance)
 
