@@ -188,7 +188,68 @@ def _calculate_go_errors(df, err_type):
             elif err_type == 'no_go' and series['stimulus'] == '3':
                 error = True
         errors.append(error)
-    return errors
+    return pd.Series(errors, index=df.index)
+
+
+def _calculate_nogo_error_rt_avgs(df):
+    """Take pandas dataframe representing raw SART trails data,
+    calculate reaction time average before and after no-go errors and
+    return before and after RT averages.
+    """
+    MAX_ADJACENT_ROWS = 4
+
+    def get_adjacent_row_rts(idx, direction):
+        row_idx = idx
+        next_num_rows = 0
+
+        if direction == 'next':
+            break_row_idx = df.last_valid_index()
+        if direction == 'prev':
+            break_row_idx = df.first_valid_index()
+
+        row_rts = []
+        while next_num_rows < MAX_ADJACENT_ROWS and row_idx != break_row_idx:
+            # adjacent row index
+            if direction == 'next':
+                row_idx += 1
+            if direction == 'prev':
+                row_idx -= 1
+
+            row = df[df.index == row_idx]
+            rts = row['rt'].values
+
+            # stop collecting rows if no trial response (rt = [-1])
+            if rts == ['[-1]']:
+                break
+
+            row_rt = _format_rts(rts)
+            if row_rt:
+                row_rts.append(row_rt[0])
+            next_num_rows += 1
+        return row_rts
+
+    # find all no-go errors
+    nogo_error_rows = []
+    for row in df.iterrows():
+        if row[1]['nogo_error'] == True:
+            nogo_error_rows.append(row)
+
+    # find all row (trial) RTs before and after no-go error rows
+    prev_row_rts = []
+    next_row_rts = []
+    for nogo_row in nogo_error_rows:
+        idx = nogo_row[0]
+        prev_nogo_row_rts = get_adjacent_row_rts(idx, 'prev')
+        prev_row_rts.append(prev_nogo_row_rts)
+        next_nogo_row_rts = get_adjacent_row_rts(idx, 'next')
+        next_row_rts.append(next_nogo_row_rts)
+
+    prev4_rts = [rt for sublist in prev_row_rts for rt in sublist]
+    prev4_avg = np.mean(prev4_rts)
+    next4_rts = [rt for sublist in next_row_rts for rt in sublist]
+    next4_avg = np.mean(next4_rts)
+
+    return prev4_avg, next4_avg
 
 
 def summarize_block_performance(df):
@@ -210,23 +271,30 @@ def summarize_block_performance(df):
 
     # number of anticipation errors
     antipations = list(df['anticipate_error'].values)
-    anticipated = float(antipations.count(True)) / num_trials
+    anticipated = (float(antipations.count(True)) / num_trials)
     performance['anticipated'] = round(anticipated, ROUND_NDIGITS)
 
     # overall accuracy
     corrects = list(df['correct'].values)
-    accuracy = float(corrects.count(True)) / num_trials
+    accuracy = (float(corrects.count(True)) / num_trials)
     performance['accuracy'] = round(accuracy, ROUND_NDIGITS)
 
     # number of go errors
-    go_errors = _calculate_go_errors(df, 'go')
-    go_errors_prop = float(go_errors.count(True)) / num_trials
+    df['go_error'] = _calculate_go_errors(df, 'go')
+    go_errors = list(df['go_error'].values)
+    go_errors_prop = (float(go_errors.count(True)) / num_trials)
     performance['go_errors'] = round(go_errors_prop, ROUND_NDIGITS)
 
     # number of no-go errors
-    no_go_errors = _calculate_go_errors(df, 'no_go')
-    no_go_errors_prop = float(no_go_errors.count(True)) / num_trials
-    performance['no_go_errors'] = round(no_go_errors_prop, ROUND_NDIGITS)
+    df['nogo_error'] = _calculate_go_errors(df, 'no_go')
+    nogo_errors = list(df['nogo_error'].values)
+    nogo_errors_prop = (float(nogo_errors.count(True)) / num_trials)
+    performance['nogo_errors'] = round(nogo_errors_prop, ROUND_NDIGITS)
+
+    # average RTs before and after no-go errors
+    nogo_prev4_avg, nogo_next4_avg = _calculate_nogo_error_rt_avgs(df)
+    performance['nogo_prev4_avg'] = nogo_prev4_avg
+    performance['nogo_next4_avg'] = nogo_next4_avg
 
     return performance
 

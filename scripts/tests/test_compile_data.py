@@ -195,9 +195,21 @@ def test___calculate_go_errors():
     assert list(df.correct.values).count(False) == 11
 
     go_errors = compile_data._calculate_go_errors(df, 'go')
-    assert go_errors.count(True) == 1
-    no_go_errors = compile_data._calculate_go_errors(df, 'no_go')
-    assert no_go_errors.count(True) == 4
+    assert isinstance(go_errors, compile_data.pd.Series)
+    assert list(go_errors).count(True) == 1
+    nogo_errors = compile_data._calculate_go_errors(df, 'no_go')
+    assert isinstance(nogo_errors, compile_data.pd.Series)
+    assert list(nogo_errors).count(True) == 4
+
+
+def test__calculate_nogo_error_rt_avgs():
+    pid = "104"
+    df = get_sart_trial_block(pid)
+    df = compile_data._add_anticipation_errors(df)
+    df['nogo_error'] = compile_data._calculate_go_errors(df, 'no_go')
+    prev4_avg, next4_avg = compile_data._calculate_nogo_error_rt_avgs(df)
+    assert prev4_avg == 254.4375
+    assert next4_avg == 224.1875
 
 
 def test_summarize_block_performance():
@@ -208,9 +220,13 @@ def test_summarize_block_performance():
     assert p['rt_avg'] == 272.790123457
     assert p['anticipated'] == 0.073170732  # 6 anticipation errors
     assert p['go_errors'] == 0.012195122  # 1 go error
-    assert p['no_go_errors'] == 0.048780488  # 4 no-go errors
+    assert p['nogo_errors'] == 0.048780488  # 4 no-go errors
     assert p['accuracy'] == 0.865853659  # 71/82
-    total_error_prop = (p['anticipated'] + p['go_errors'] + p['no_go_errors'])
+    total_error_prop = (p['anticipated'] + p['go_errors'] + p['nogo_errors'])
+
+    # average RTs before and after no-go errors
+    assert p['nogo_prev4_avg'] == 254.4375
+    assert p['nogo_next4_avg'] == 224.1875
 
     # ensure that calculations match up
     rnd = compile_data.ROUND_NDIGITS
@@ -224,21 +240,21 @@ def test_summarize_sart_chunk():
 
     # first block
     b1 = blocks[0]
-    b1_summary = compile_data.summarize_sart_chunk(b1)
-    assert b1_summary['num_trials'] == 82
-    assert b1_summary['anticipated'] == 0.0
-    assert b1_summary['accuracy'] == 0.731707317
-    assert b1_summary['effort'] == 4
-    assert b1_summary['discomfort'] == 5
+    b1s = compile_data.summarize_sart_chunk(b1)
+    assert b1s['num_trials'] == 82
+    assert b1s['anticipated'] == 0.0
+    assert b1s['accuracy'] == 0.731707317
+    assert b1s['effort'] == 4
+    assert b1s['discomfort'] == 5
 
     # last block
     lb = blocks[-1]
-    lb_summary = compile_data.summarize_sart_chunk(lb)
-    assert lb_summary['num_trials'] == 68
-    assert lb_summary['anticipated'] == 0.014705882
-    assert lb_summary['accuracy'] == 0.911764706
-    assert lb_summary['effort'] == 3
-    assert lb_summary['discomfort'] == 5
+    lbs = compile_data.summarize_sart_chunk(lb)
+    assert lbs['num_trials'] == 68
+    assert lbs['anticipated'] == 0.014705882
+    assert lbs['accuracy'] == 0.911764706
+    assert lbs['effort'] == 3
+    assert lbs['discomfort'] == 5
 
 
 # def test_complete_compile_experiment_data():
