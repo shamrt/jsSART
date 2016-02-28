@@ -241,11 +241,15 @@ def test_summarize_sart_chunk():
     # first block
     b1 = blocks[0]
     b1s = compile_data.summarize_sart_chunk(b1)
-    assert b1s['num_trials'] == 82
     assert b1s['anticipated'] == 0.0
     assert b1s['accuracy'] == 0.731707317
     assert b1s['effort'] == 4
     assert b1s['discomfort'] == 5
+
+    assert b1s['num_trials'] == 82
+
+    assert b1s['nogo_prev4_avg'] == 347.142857143
+    assert b1s['nogo_next4_avg'] == 391.875
 
     # last block
     lb = blocks[-1]

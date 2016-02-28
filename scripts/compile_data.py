@@ -245,9 +245,9 @@ def _calculate_nogo_error_rt_avgs(df):
         next_row_rts.append(next_nogo_row_rts)
 
     prev4_rts = [rt for sublist in prev_row_rts for rt in sublist]
-    prev4_avg = np.mean(prev4_rts)
+    prev4_avg = round(np.mean(prev4_rts), ROUND_NDIGITS)
     next4_rts = [rt for sublist in next_row_rts for rt in sublist]
-    next4_avg = np.mean(next4_rts)
+    next4_avg = round(np.mean(next4_rts), ROUND_NDIGITS)
 
     return prev4_avg, next4_avg
 
