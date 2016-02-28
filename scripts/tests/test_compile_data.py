@@ -277,8 +277,19 @@ def test_complete_compile_experiment_data():
     assert ed['anticipated_fatigue'] == 2
     assert ed['anticipated_motivation'] == 4
 
-    # real-time data for each block
-    # TODO
+    # check keys for each block's real-time data
+    blk_summary_keys = [
+        'anticipated', 'nogo_next4_avg', 'nogo_prev4_avg', 'go_errors',
+        'effort', 'num_trials', 'discomfort', 'rt_avg', 'nogo_errors',
+        'accuracy'
+        ]
+    for i in range(1, 9):
+        blk_key_prefix = "blk{}".format(i)
+        blk_keys = [k for k in ed.keys() if k.startswith(blk_key_prefix)]
+        assert len(blk_keys) == 10
+        for k in blk_summary_keys:
+            expected_blk_key = "{}_{}".format(blk_key_prefix, k)
+            assert expected_blk_key in blk_keys
 
     # peak-end calculations
     assert ed['start_effort'] == 2

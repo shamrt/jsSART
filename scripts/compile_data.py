@@ -362,11 +362,9 @@ def compile_experiment_data(df):
         blk_name = "blk{}".format(i)
 
         # add block summaries to compiled data
-        compiled_data['{}_effort'.format(blk_name)] = blk_summary['effort']
-        discomfort_key = '{}_discomfort'.format(blk_name)
-        compiled_data[discomfort_key] = blk_summary['discomfort']
-        accuracy_key = '{}_accuracy'.format(blk_name)
-        compiled_data[accuracy_key] = blk_summary['accuracy']
+        for key in blk_summary.keys():
+            blk_key = "{}_{}".format(blk_name, key)
+            compiled_data[blk_key] = blk_summary[key]
 
         # identify and organize data by block type
         effort_ratings.append(blk_summary['effort'])
