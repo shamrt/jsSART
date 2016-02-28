@@ -568,21 +568,6 @@ def main():
     compiled_csv_path = os.path.join(DATA_DIR, 'compiled.csv')
     participants_df.to_csv(compiled_csv_path, encoding='utf-8')
 
-    # create list of columns for alternative analysis
-    first_columns = ['id', 'num_blocks']
-    block_columns = []
-    for i in range(1, 10):
-        block_columns.append('accuracy_{}'.format(i))
-        block_columns.append('discomfort_{}'.format(i))
-        block_columns.append('effort_{}'.format(i))
-    columns = (first_columns + sorted(block_columns))
-
-    # export data for alternative analysis to CSV
-    alt_analysis_df = participants_df[columns].copy()
-    alt_analysis_df.sort(columns=['num_blocks'], inplace=True)
-    alt_analysis_csv_path = os.path.join(DATA_DIR, 'alt_compiled.csv')
-    alt_analysis_df.to_csv(alt_analysis_csv_path, encoding='utf-8')
-
 
 if __name__ == '__main__':
     main()
