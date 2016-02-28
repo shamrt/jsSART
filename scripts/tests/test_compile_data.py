@@ -95,7 +95,7 @@ def test_extract_sart_blocks_with_4_practice_and_survey():
 def test_passing_compile_practice_data():
     df = get_csv_as_df('practice', '003')
     data = compile_data.compile_practice_data(df)
-    assert data['id'] == 3
+    assert data['id'] == "003"
     assert data['practice_condition'] == 'num_trials'
     assert data['num_practice_blk2s'] == 1
     assert data['passed_practice'] == True

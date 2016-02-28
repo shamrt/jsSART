@@ -29,7 +29,10 @@ def get_csv_paths(basedir, exp_stage):
 def get_csv_as_dataframe(path):
     """Take CSV path. Return pandas dataframe.
     """
-    return pd.DataFrame.from_csv(path, index_col='trial_index')
+    return pd.read_csv(path,
+                       index_col='trial_index',
+                       converters={'participant_id': lambda x: str(x)}
+                       )
 
 
 def extract_sart_blocks(df, with_survey=False):
