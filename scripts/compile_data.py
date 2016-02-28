@@ -330,15 +330,12 @@ def compile_experiment_data(df):
     """
     compiled_data = {}
 
-    # condition
-    condition_col = df['condition'].values
-    compiled_data['condition'] = condition_col[0]
+    # conditions
+    compiled_data['num_trials'] = df['num_trials'].values[0]
+    compiled_data['trials_per_block'] = df['trials_per_block'].values[0]
 
     # blocks and block order
-    block_order_col = df['block_order'].values
-    block_order = block_order_col[0]
-    blocks = block_order.split(',')
-    compiled_data['block_order'] = block_order
+    blocks = extract_sart_blocks(df, with_survey=True)
     compiled_data['num_blocks'] = len(blocks)
 
     # anticipated questions
@@ -347,95 +344,36 @@ def compile_experiment_data(df):
         ('anticipated_performance', 2),
         ('anticipated_effort', 3),
         ('anticipated_discomfort', 4),
-        ('anticipated_fatigue', 5)
+        ('anticipated_fatigue', 5),
+        ('anticipated_motivation', 6)
     ]
     for label, i in anticipated_questions_index:
         response = get_response_from_json(df.ix[i]['responses'])
         compiled_data[label] = int(response[0])
 
     # SART accuracy and affective reports
-    hard_accuracy = None
-    medium_accuracy = None
-    easy_accuracy = None
-    hard_effort = None
-    medium_effort = None
-    easy_effort = None
-    hard_discomfort = None
-    medium_discomfort = None
-    easy_discomfort = None
-
     effort_ratings = []
     discomfort_ratings = []
     accuracies = []
-    medium_effort_ratings = []
-    medium_discomfort_ratings = []
-    medium_accuracies = []
-    medium_blocks_order = []
 
     # collect and organize experiment data from experimental blocks
     for i, block in enumerate(blocks, start=1):
-        # note: SART chunks start at chunk_id 0-0.3-0
-        block_chunk_id = '0-0.{}-0'.format(i + 2)
-        block = df.loc[df['internal_node_id'] == block_chunk_id]
-        block_summary = summarize_sart_chunk(block)
+        blk_summary = summarize_sart_chunk(block)
+        blk_name = "blk{}".format(i)
 
         # add block summaries to compiled data
-        compiled_data['effort_{}'.format(i)] = block_summary['effort']
-        discomfort_key = 'discomfort_{}'.format(i)
-        compiled_data[discomfort_key] = block_summary['discomfort']
-        accuracy_key = 'accuracy_{}'.format(i)
-        compiled_data[accuracy_key] = block_summary['accuracy']
+        compiled_data['{}_effort'.format(blk_name)] = blk_summary['effort']
+        discomfort_key = '{}_discomfort'.format(blk_name)
+        compiled_data[discomfort_key] = blk_summary['discomfort']
+        accuracy_key = '{}_accuracy'.format(blk_name)
+        compiled_data[accuracy_key] = blk_summary['accuracy']
 
         # identify and organize data by block type
-        effort_ratings.append(block_summary['effort'])
-        discomfort_ratings.append(block_summary['discomfort'])
-        accuracies.append(block_summary['accuracy'])
-
-        if block_summary['block_type'] == 'medium':
-            medium_blocks_order.append(i)
-            medium_accuracies.append(block_summary['accuracy'])
-            medium_effort_ratings.append(block_summary['effort'])
-            medium_discomfort_ratings.append(
-                block_summary['discomfort'])
-        elif block_summary['block_type'] == 'hard':
-            hard_accuracy = block_summary['accuracy']
-            hard_effort = block_summary['effort']
-            hard_discomfort = block_summary['discomfort']
-        elif block_summary['block_type'] == 'easy':
-            easy_accuracy = block_summary['accuracy']
-            easy_effort = block_summary['effort']
-            easy_discomfort = block_summary['discomfort']
-
-    # compute medium block averages
-    medium_accuracy = np.mean(medium_accuracies)
-    compiled_data['medium_accuracy'] = round(medium_accuracy, ROUND_NDIGITS)
-    medium_effort = np.mean(medium_effort_ratings)
-    compiled_data['medium_effort'] = round(medium_effort, ROUND_NDIGITS)
-    medium_discomfort = np.mean(medium_discomfort_ratings)
-    compiled_data['medium_discomfort'] = round(
-        medium_discomfort, ROUND_NDIGITS)
-
-    # compute regression variables for medium blocks
-    medium_block_measures = [
-        ('medium_accuracy', medium_accuracies),
-        ('medium_effort', medium_effort_ratings),
-        ('medium_discomfort', medium_discomfort_ratings)
-    ]
-    for measure_name, measure_values in medium_block_measures:
-        measure_regress = stats.linregress(medium_blocks_order, measure_values)
-        compiled_data['{}_slope'.format(measure_name)] = round(
-            measure_regress.slope, ROUND_NDIGITS)
-        compiled_data['{}_intercept'.format(measure_name)] = round(
-            measure_regress.intercept, ROUND_NDIGITS)
+        effort_ratings.append(blk_summary['effort'])
+        discomfort_ratings.append(blk_summary['discomfort'])
+        accuracies.append(blk_summary['accuracy'])
 
     # assign other variables
-    compiled_data['hard_accuracy'] = hard_accuracy
-    compiled_data['hard_effort'] = hard_effort
-    compiled_data['hard_discomfort'] = hard_discomfort
-    compiled_data['easy_accuracy'] = easy_accuracy
-    compiled_data['easy_effort'] = easy_effort
-    compiled_data['easy_discomfort'] = easy_discomfort
-
     compiled_data['start_effort'] = effort_ratings[0]
     compiled_data['peak_effort'] = max(effort_ratings)
     compiled_data['end_effort'] = effort_ratings[-1]

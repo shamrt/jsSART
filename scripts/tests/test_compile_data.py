@@ -261,96 +261,47 @@ def test_summarize_sart_chunk():
     assert lbs['discomfort'] == 5
 
 
-# def test_complete_compile_experiment_data():
-#     pid = "011"
-#     df = get_csv_as_df('experiment', pid)
-#     data = compile_data.compile_experiment_data(df)
-#     assert data['condition'] == 5
-#
-#     assert data['block_order'] == ('medium,medium,hard,medium,easy,'
-#                                    'medium,medium,medium,medium')
-#     assert data['num_blocks'] == 9
+def test_complete_compile_experiment_data():
+    pid = "104"
+    df = get_csv_as_df('experiment', pid)
+    ed = compile_data.compile_experiment_data(df)
 
-#     assert data['anticipated_enjoyment'] == 3
-#     assert data['anticipated_performance'] == 4
-#     assert data['anticipated_effort'] == 4
-#     assert data['anticipated_discomfort'] == 4
-#     assert data['anticipated_fatigue'] == 4
-#
-#     # real-time data for each block
-#     assert data['accuracy_1'] == 0.571428571
-#     assert data['accuracy_2'] == 0.428571429
-#     assert data['accuracy_3'] == 0.357142857
-#     assert data['accuracy_4'] == 0.5
-#     assert data['accuracy_5'] == 0.571428571
-#     assert data['accuracy_6'] == 0.285714286
-#     assert data['accuracy_7'] == 0.357142857
-#     assert data['accuracy_8'] == 0.428571429
-#     assert data['accuracy_9'] == 0.357142857
-#     assert 'accuracy_10' not in data.keys()
-#
-#     assert data['effort_1'] == 5
-#     assert data['effort_2'] == 4
-#     assert data['effort_3'] == 4
-#     assert data['effort_4'] == 4
-#     assert data['effort_5'] == 4
-#     assert data['effort_6'] == 7
-#     assert data['effort_7'] == 1
-#     assert data['effort_8'] == 2
-#     assert data['effort_9'] == 7
-#     assert 'effort_10' not in data.keys()
-#
-#     assert data['discomfort_1'] == 5
-#     assert data['discomfort_2'] == 4
-#     assert data['discomfort_3'] == 4
-#     assert data['discomfort_4'] == 4
-#     assert data['discomfort_5'] == 4
-#     assert data['discomfort_6'] == 7
-#     assert data['discomfort_7'] == 1
-#     assert data['discomfort_8'] == 2
-#     assert data['discomfort_9'] == 7
-#     assert 'discomfort_10' not in data.keys()
-#
-#     # real-time data by block type
-#     assert data['medium_accuracy'] == 0.418367347
-#     assert data['medium_effort'] == 4.285714286
-#     assert data['medium_discomfort'] == 4.285714286
-#
-#     assert data['medium_accuracy_slope'] == -0.021539028
-#     assert data['medium_accuracy_intercept'] == 0.532216495
-#     assert data['medium_effort_slope'] == -0.028350515
-#     assert data['medium_effort_intercept'] == 4.43556701
-#     assert data['medium_discomfort_slope'] == -0.028350515
-#     assert data['medium_discomfort_intercept'] == 4.43556701
-#
-#     assert data['hard_accuracy'] == 0.357142857
-#     assert data['hard_effort'] == 4
-#     assert data['hard_discomfort'] == 4
-#     assert data['easy_accuracy'] == 0.571428571
-#     assert data['easy_effort'] == 4
-#     assert data['easy_discomfort'] == 4
-#
-#     assert data['start_discomfort'] == 5
-#     assert data['peak_discomfort'] == 7
-#     assert data['end_discomfort'] == 7
-#     assert data['avg_discomfort'] == 4.222222222
-#
-#     assert data['start_effort'] == 5
-#     assert data['peak_effort'] == 7
-#     assert data['end_effort'] == 7
-#     assert data['avg_effort'] == 4.222222222
-#
-#     assert data['avg_accuracy'] == 0.428571429
-#     assert data['max_accuracy'] == 0.571428571
-#     assert data['min_accuracy'] == 0.285714286
-#     assert data['start_accuracy'] == 0.571428571
-#     assert data['end_accuracy'] == 0.357142857
-#
-#     assert data['auc_accuracy'] == 3.392857143
-#     assert data['auc_effort'] == 32.0
-#     assert data['auc_discomfort'] == 32.0
-#
-#     assert data['time_experiment_ms'] == 831136
+    assert ed['num_trials'] == 646
+    assert ed['trials_per_block'] == 82
+    assert ed['num_blocks'] == 8
+
+    assert ed['anticipated_enjoyment'] == 5
+    assert ed['anticipated_performance'] == 4
+    assert ed['anticipated_effort'] == 6
+    assert ed['anticipated_discomfort'] == 5
+    assert ed['anticipated_fatigue'] == 2
+    assert ed['anticipated_motivation'] == 4
+
+    # real-time data for each block
+    # TODO
+
+    # peak-end calculations
+    assert ed['start_effort'] == 2
+    assert ed['peak_effort'] == 7
+    assert ed['end_effort'] == 3
+    assert ed['avg_effort'] == 4.125
+
+    assert ed['start_discomfort'] == 4
+    assert ed['peak_discomfort'] == 7
+    assert ed['end_discomfort'] == 6
+    assert ed['avg_discomfort'] == 5
+
+    assert ed['avg_accuracy'] == 0.851753049
+    assert ed['max_accuracy'] == 0.951219512
+    assert ed['min_accuracy'] == 0.62195122
+    assert ed['start_accuracy'] == 0.865853659
+    assert ed['end_accuracy'] == 0.875
+
+    assert ed['auc_accuracy'] == 5.943597561
+    assert ed['auc_effort'] == 30.5
+    assert ed['auc_discomfort'] == 35.0
+
+    assert ed['time_experiment_ms'] == 940644
 
 
 def test_complete_demographics_data():
