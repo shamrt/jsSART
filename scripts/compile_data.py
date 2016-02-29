@@ -252,7 +252,12 @@ def _calculate_nogo_error_rt_avgs(df):
     next4_rts = [rt for sublist in next_row_rts for rt in sublist]
     next4_avg = round(np.mean(next4_rts), ROUND_NDIGITS)
 
-    return prev4_avg, next4_avg
+    return {
+        "prev4_avg": prev4_avg,
+        "num_prev4_rts": len(prev4_rts),
+        "next4_avg": next4_avg,
+        "num_next4_rts": len(next4_rts)
+    }
 
 
 def summarize_block_performance(df):
@@ -295,9 +300,11 @@ def summarize_block_performance(df):
     performance['nogo_errors'] = round(nogo_errors_prop, ROUND_NDIGITS)
 
     # average RTs before and after no-go errors
-    nogo_prev4_avg, nogo_next4_avg = _calculate_nogo_error_rt_avgs(df)
-    performance['nogo_prev4_avg'] = nogo_prev4_avg
-    performance['nogo_next4_avg'] = nogo_next4_avg
+    nogo_adjacent_rts = _calculate_nogo_error_rt_avgs(df)
+    performance['nogo_prev4_avg'] = nogo_adjacent_rts['prev4_avg']
+    performance['nogo_num_prev4_rts'] = nogo_adjacent_rts['num_prev4_rts']
+    performance['nogo_next4_avg'] = nogo_adjacent_rts['next4_avg']
+    performance['nogo_num_next4_rts'] = nogo_adjacent_rts['num_next4_rts']
 
     return performance
 

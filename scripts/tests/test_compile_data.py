@@ -202,14 +202,32 @@ def test___calculate_go_errors():
     assert list(nogo_errors).count(True) == 4
 
 
-def test__calculate_nogo_error_rt_avgs():
+def test__calculate_nogo_error_rt_avgs_104():
     pid = "104"
     df = get_sart_trial_block(pid)
     df = compile_data._add_anticipation_errors(df)
     df['nogo_error'] = compile_data._calculate_go_errors(df, 'no_go')
-    prev4_avg, next4_avg = compile_data._calculate_nogo_error_rt_avgs(df)
-    assert prev4_avg == 254.4375
-    assert next4_avg == 224.1875
+    assert list(df['nogo_error']).count(True) == 4
+
+    adjacent_rts = compile_data._calculate_nogo_error_rt_avgs(df)
+    assert adjacent_rts['prev4_avg'] == 254.4375
+    assert adjacent_rts['num_prev4_rts'] == 16
+    assert adjacent_rts['next4_avg'] == 224.1875
+    assert adjacent_rts['num_next4_rts'] == 16
+
+
+def test__calculate_nogo_error_rt_avgs_011():
+    pid = "011"
+    df = get_sart_trial_block(pid)
+    df = compile_data._add_anticipation_errors(df)
+    df['nogo_error'] = compile_data._calculate_go_errors(df, 'no_go')
+    assert list(df['nogo_error']).count(True) == 4
+
+    adjacent_rts = compile_data._calculate_nogo_error_rt_avgs(df)
+    assert adjacent_rts['prev4_avg'] == 347.142857143
+    assert adjacent_rts['num_prev4_rts'] == 7
+    assert adjacent_rts['next4_avg'] == 391.875
+    assert adjacent_rts['num_next4_rts'] == 8
 
 
 def test_summarize_block_performance():
@@ -286,7 +304,7 @@ def test_complete_compile_experiment_data():
     for i in range(1, 9):
         blk_key_prefix = "blk{}".format(i)
         blk_keys = [k for k in ed.keys() if k.startswith(blk_key_prefix)]
-        assert len(blk_keys) == 10
+        assert len(blk_keys) == 12
         for k in blk_summary_keys:
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
