@@ -366,6 +366,12 @@ def compile_experiment_data(df):
     discomfort_ratings = []
     accuracies = []
 
+    # for calculating no-go error averages
+    nogo_prev4_avgs = []
+    nogo_next4_avgs = []
+    nogo_num_next4_rts = []
+    nogo_num_prev4_rts = []
+
     # collect and organize experiment data from experimental blocks
     for i, block in enumerate(blocks, start=1):
         blk_summary = summarize_sart_chunk(block)
@@ -376,10 +382,21 @@ def compile_experiment_data(df):
             blk_key = "{}_{}".format(blk_name, key)
             compiled_data[blk_key] = blk_summary[key]
 
-        # identify and organize data by block type
+        # collect data for later averaging
         effort_ratings.append(blk_summary['effort'])
         discomfort_ratings.append(blk_summary['discomfort'])
         accuracies.append(blk_summary['accuracy'])
+
+        nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
+        nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
+        nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
+        nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
+
+    # weighted averages for RTs before and after no-go errors
+    compiled_data['nogo_error_prev_rt_avg'] = np.average(
+        nogo_prev4_avgs, weights=nogo_num_prev4_rts)
+    compiled_data['nogo_error_next_rt_avg'] = np.average(
+        nogo_next4_avgs, weights=nogo_num_next4_rts)
 
     # assign other variables
     compiled_data['start_effort'] = effort_ratings[0]

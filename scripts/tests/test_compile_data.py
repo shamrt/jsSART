@@ -309,6 +309,10 @@ def test_complete_compile_experiment_data():
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
 
+    # no-go error variable weighted averages
+    assert ed['nogo_error_prev_rt_avg'] == 340.17721518987344
+    assert ed['nogo_error_next_rt_avg'] == 336.77181208063763
+
     # peak-end calculations
     assert ed['start_effort'] == 2
     assert ed['peak_effort'] == 7
