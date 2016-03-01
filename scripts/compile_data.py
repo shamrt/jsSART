@@ -12,12 +12,16 @@ import re
 import pandas as pd
 import numpy as np
 from scipy import stats
+from tqdm import tqdm
 
 
 PROJECT_DIR = os.path.abspath(os.path.join(__file__, '..', '..'))
 DATA_DIR = os.path.join(PROJECT_DIR, 'data')
 DECODER = json.JSONDecoder()
 ROUND_NDIGITS = 9
+
+# pandas options
+pd.options.mode.chained_assignment = None  # no false-positive warnings
 
 
 def get_csv_paths(basedir, exp_stage):
@@ -593,7 +597,7 @@ def main():
 
     # create list of compiled participant data
     compiled_participants = []
-    for practice_csv in raw_data_csvs['practice']:
+    for practice_csv in tqdm(raw_data_csvs['practice']):
         participant = {
             'missing_data': False
         }
