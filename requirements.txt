@@ -4,3 +4,6 @@ scipy==0.16.1
 
 # Unit tests
 pytest==2.8.2
+
+# Misc
+tqdm==3.8.0
