@@ -180,6 +180,21 @@ QUnit.test("divideStimuliIntoBlocks with 10 stimuli and 2 trials per block", fun
 });
 
 
+QUnit.test("divideStimuliIntoBlocks with 900 generated stimuli and 75 trials per block", function(assert) {
+  // number of blocks expected
+  assert.expect(12);
+
+  var stimuli = generateStimuli(900);
+  var trials_per_block = 75;
+  var blocks = divideStimuliIntoBlocks(stimuli, trials_per_block);
+
+  // check that blocks come out in equal lengths
+  for (var i=0; i < blocks.length; i++) {
+    assert.equal(blocks[i].length, 75);
+  }
+});
+
+
 QUnit.test("divideStimuliIntoBlocks with 12 stimuli and 5 trials per block", function(assert) {
   // expect three blocks
   assert.expect(3);
