@@ -435,76 +435,81 @@ def compile_experiment_data(df):
     return compiled_data
 
 
+DEMOGRAPHICS_INDEX = [
+    # demographics questions
+    ('age', '0.0-1.0-0.0'),
+    ('dob', '0.0-1.0-1.0'),
+
+    ('sex', '0.0-2.0-0.0'),
+    ('edu_year', '0.0-2.0-1.0'),
+    ('edu_plan', '0.0-2.0-2.0'),
+    ('eng_first_lang', '0.0-2.0-3.0'),
+    ('eng_years', '0.0-2.0-4.0'),
+    ('mother_edu', '0.0-2.0-5.0'),
+
+    ('mother_job', '0.0-3.0'),
+
+    ('father_edu', '0.0-4.0-0.0'),
+
+    ('father_job', '0.0-5.0-0.0'),
+    ('high_school_avg', '0.0-5.0-1.0'),
+    ('uni_avg', '0.0-5.0-2.0'),
+
+    ('num_uni_stats', '0.0-6.0-0.0'),
+    ('num_hs_stats', '0.0-6.0-1.0'),
+    ('num_hs_math', '0.0-6.0-2.0'),
+    ('num_uni_math', '0.0-6.0-3.0'),
+    ('math_enjoy', '0.0-6.0-4.0'),
+    ('adhd_diag', '0.0-6.0-5.0'),
+
+    ('uni_major', '0.0-7.0'),
+
+    # electronics and Internet survey
+    ('elect_survey_1', '0.0-8.0-0.0'),
+    ('elect_survey_2', '0.0-8.0-1.0'),
+    ('elect_survey_3', '0.0-8.0-2.0'),
+    ('elect_survey_4', '0.0-8.0-3.0'),
+    ('elect_survey_5', '0.0-8.0-4.0'),
+    ('elect_survey_6', '0.0-8.0-5.0'),
+    ('elect_survey_7', '0.0-9.0')
+    ]
+
+BEHAVIOURAL_SURVEY_INDEX = [
+    # behavioural survey
+    ('behav_survey_1', '0.0-11.0-0.0'),
+    ('behav_survey_2', '0.0-11.0-1.0'),
+    ('behav_survey_3', '0.0-11.0-2.0'),
+    ('behav_survey_4', '0.0-11.0-3.0'),
+    ('behav_survey_5', '0.0-11.0-4.0'),
+    ('behav_survey_6', '0.0-11.0-5.0'),
+    ('behav_survey_7', '0.0-11.0-6.0'),
+    ('behav_survey_8', '0.0-11.0-7.0'),
+    ('behav_survey_9', '0.0-11.0-8.0'),
+    ('behav_survey_10', '0.0-11.0-9.0'),
+    ('behav_survey_11', '0.0-11.0-10.0'),
+    ('behav_survey_12', '0.0-11.0-11.0'),
+    ('behav_survey_13', '0.0-11.0-12.0'),
+    ('behav_survey_14', '0.0-11.0-13.0'),
+    ('behav_survey_15', '0.0-11.0-14.0'),
+    ('behav_survey_16', '0.0-11.0-15.0'),
+    ('behav_survey_17', '0.0-11.0-16.0'),
+    ('behav_survey_18', '0.0-11.0-17.0'),
+
+]
+
+
 def compile_demographic_data(df):
     """Take pandas dataframe and compile key variables. Return dict.
     """
     compiled_data = {}
     responses = list(df['responses'].dropna().values)
 
-    demographics_index = [
-        # demographics questions
-        ('age', '0.0-1.0-0.0'),
-        ('dob', '0.0-1.0-1.0'),
-
-        ('sex', '0.0-2.0-0.0'),
-        ('edu_year', '0.0-2.0-1.0'),
-        ('edu_plan', '0.0-2.0-2.0'),
-        ('eng_first_lang', '0.0-2.0-3.0'),
-        ('eng_years', '0.0-2.0-4.0'),
-        ('mother_edu', '0.0-2.0-5.0'),
-
-        ('mother_job', '0.0-3.0'),
-
-        ('father_edu', '0.0-4.0-0.0'),
-
-        ('father_job', '0.0-5.0-0.0'),
-        ('high_school_avg', '0.0-5.0-1.0'),
-        ('uni_avg', '0.0-5.0-2.0'),
-
-        ('num_uni_stats', '0.0-6.0-0.0'),
-        ('num_hs_stats', '0.0-6.0-1.0'),
-        ('num_hs_math', '0.0-6.0-2.0'),
-        ('num_uni_math', '0.0-6.0-3.0'),
-        ('math_enjoy', '0.0-6.0-4.0'),
-        ('adhd_diag', '0.0-6.0-5.0'),
-
-        ('uni_major', '0.0-7.0'),
-
-        # electronics and Internet survey
-        ('elect_survey_1', '0.0-8.0-0.0'),
-        ('elect_survey_2', '0.0-8.0-1.0'),
-        ('elect_survey_3', '0.0-8.0-2.0'),
-        ('elect_survey_4', '0.0-8.0-3.0'),
-        ('elect_survey_5', '0.0-8.0-4.0'),
-        ('elect_survey_6', '0.0-8.0-5.0'),
-        ('elect_survey_7', '0.0-9.0')
-    ]
-    for label, inid in demographics_index:
+    # demographics
+    for label, inid in DEMOGRAPHICS_INDEX:
         compiled_data[label] = get_response_from_node_id(df, inid)
 
-    behavioural_survey = [
-        # behavioural survey
-        ('behav_survey_1', '0.0-11.0-0.0'),
-        ('behav_survey_2', '0.0-11.0-1.0'),
-        ('behav_survey_3', '0.0-11.0-2.0'),
-        ('behav_survey_4', '0.0-11.0-3.0'),
-        ('behav_survey_5', '0.0-11.0-4.0'),
-        ('behav_survey_6', '0.0-11.0-5.0'),
-        ('behav_survey_7', '0.0-11.0-6.0'),
-        ('behav_survey_8', '0.0-11.0-7.0'),
-        ('behav_survey_9', '0.0-11.0-8.0'),
-        ('behav_survey_10', '0.0-11.0-9.0'),
-        ('behav_survey_11', '0.0-11.0-10.0'),
-        ('behav_survey_12', '0.0-11.0-11.0'),
-        ('behav_survey_13', '0.0-11.0-12.0'),
-        ('behav_survey_14', '0.0-11.0-13.0'),
-        ('behav_survey_15', '0.0-11.0-14.0'),
-        ('behav_survey_16', '0.0-11.0-15.0'),
-        ('behav_survey_17', '0.0-11.0-16.0'),
-        ('behav_survey_18', '0.0-11.0-17.0'),
-
-    ]
-    for label, inid in behavioural_survey:
+    # behavioursal surveys
+    for label, inid in BEHAVIOURAL_SURVEY_INDEX:
         compiled_data[label] = get_response_from_node_id(
             df, inid, is_likert=True)
 
@@ -520,6 +525,18 @@ def compile_demographic_data(df):
     return compiled_data
 
 
+RETROSPECTIVE_INDEX = [
+    ('retrospective_effort', '0.0-13.0-0.0'),
+    ('retrospective_discomfort', '0.0-13.0-1.0'),
+    ('retrospective_performance', '0.0-13.0-2.0'),
+    ('retrospective_willingtodowmt', '0.0-13.0-3.0'),
+    ('retrospective_fatigue', '0.0-13.0-4.0'),
+    ('retrospective_satisfaction', '0.0-13.0-5.0'),
+    ('retrospective_didmybest', '0.0-13.0-6.0'),
+    ('retrospective_enjoyment', '0.0-13.0-7.0'),
+]
+
+
 def compile_retrospective_data(df):
     """Take pandas dataframe and compile key variables. Return dict.
     """
@@ -527,17 +544,7 @@ def compile_retrospective_data(df):
     responses = list(df['responses'].dropna().values)
 
     # retrospective questions
-    retrospective_index = [
-        ('retrospective_effort', '0.0-13.0-0.0'),
-        ('retrospective_discomfort', '0.0-13.0-1.0'),
-        ('retrospective_performance', '0.0-13.0-2.0'),
-        ('retrospective_willingtodowmt', '0.0-13.0-3.0'),
-        ('retrospective_fatigue', '0.0-13.0-4.0'),
-        ('retrospective_satisfaction', '0.0-13.0-5.0'),
-        ('retrospective_didmybest', '0.0-13.0-6.0'),
-        ('retrospective_enjoyment', '0.0-13.0-7.0'),
-    ]
-    for label, inid in retrospective_index:
+    for label, inid in RETROSPECTIVE_INDEX:
         compiled_data[label] = get_response_from_node_id(
             df, inid, is_likert=True)
 
@@ -590,10 +597,42 @@ def main():
         # append compiled participant data to master list
         compiled_participants.append(participant)
 
+    # create unordered data frame
+    compiled_df = pd.DataFrame.from_dict(compiled_participants)
+
+    # organize variable names
+    compiled_var_names = list(compiled_df.columns.values)
+    ordered_columns = []
+
+    first_columns = [
+        'id',
+        'passed_practice',
+        'missing_data',
+        'practice_condition',
+        'num_trials',
+        'trials_per_block',
+        'num_blocks',
+    ]
+    for var_name in first_columns:
+        if var_name in compiled_var_names:
+            var_index = compiled_var_names.index(var_name)
+            ordered_columns.append(compiled_var_names.pop(var_index))
+
+    demographic_columns = []
+    indices = [DEMOGRAPHICS_INDEX, BEHAVIOURAL_SURVEY_INDEX,
+               RETROSPECTIVE_INDEX]
+    for index in indices:
+        for var_name, idx in index:
+            if var_name in compiled_var_names:
+                var_index = compiled_var_names.index(var_name)
+                demographic_columns.append(compiled_var_names.pop(var_index))
+
+    ordered_columns += compiled_var_names + demographic_columns
+    ordered_compiled_df = compiled_df.reindex_axis(ordered_columns, axis=1)
+
     # export complete data set to CSV
-    participants_df = pd.DataFrame.from_dict(compiled_participants)
     compiled_csv_path = os.path.join(DATA_DIR, 'compiled.csv')
-    participants_df.to_csv(compiled_csv_path, encoding='utf-8')
+    ordered_compiled_df.to_csv(compiled_csv_path, encoding='utf-8')
 
 
 if __name__ == '__main__':
