@@ -288,12 +288,12 @@ def test_complete_compile_experiment_data():
     assert ed['trials_per_block'] == 82
     assert ed['num_blocks'] == 8
 
-    assert ed['anticipated_enjoyment'] == 5
-    assert ed['anticipated_performance'] == 4
-    assert ed['anticipated_effort'] == 6
-    assert ed['anticipated_discomfort'] == 5
-    assert ed['anticipated_fatigue'] == 2
-    assert ed['anticipated_motivation'] == 4
+    assert ed['forecasted_enjoyment'] == 5
+    assert ed['forecasted_performance'] == 4
+    assert ed['forecasted_effort'] == 6
+    assert ed['forecasted_discomfort'] == 5
+    assert ed['forecasted_fatigue'] == 2
+    assert ed['forecasted_motivation'] == 4
 
     # check keys for each block's real-time data
     blk_summary_keys = [
@@ -390,7 +390,7 @@ def test_complete_demographics_data():
         ('behav_survey_17', 'N/A'),
         ('behav_survey_18', 'N/A'),
 
-        ('time_pwmt_delay_ms', 196373),
+        ('time_delay_b4_retrospect_ms', 196373),
         ('time_follow_up_ms', 220848),
     ]
     for label, answer in expected_answers:
@@ -402,14 +402,14 @@ def test_complete_retrospective_data():
     df = get_csv_as_df('follow_up', pid)
     data = compile_data.compile_retrospective_data(df)
     expected_answers = [
-        ('pwmt_effort', '4'),
-        ('pwmt_discomfort', '4'),
-        ('pwmt_performance', '4'),
-        ('pwmt_willingtodowmt', '4'),
-        ('pwmt_fatigue', '4'),
-        ('pwmt_satisfaction', '4'),
-        ('pwmt_didmybest', '4'),
-        ('pwmt_enjoyment', '7'),
+        ('retrospective_effort', '4'),
+        ('retrospective_discomfort', '4'),
+        ('retrospective_performance', '4'),
+        ('retrospective_willingtodowmt', '4'),
+        ('retrospective_fatigue', '4'),
+        ('retrospective_satisfaction', '4'),
+        ('retrospective_didmybest', '4'),
+        ('retrospective_enjoyment', '7'),
     ]
     for label, answer in expected_answers:
         assert data[label] == answer

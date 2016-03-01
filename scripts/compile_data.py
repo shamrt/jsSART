@@ -350,12 +350,12 @@ def compile_experiment_data(df):
 
     # anticipated questions
     anticipated_questions_index = [
-        ('anticipated_enjoyment', 1),
-        ('anticipated_performance', 2),
-        ('anticipated_effort', 3),
-        ('anticipated_discomfort', 4),
-        ('anticipated_fatigue', 5),
-        ('anticipated_motivation', 6)
+        ('forecasted_enjoyment', 1),
+        ('forecasted_performance', 2),
+        ('forecasted_effort', 3),
+        ('forecasted_discomfort', 4),
+        ('forecasted_fatigue', 5),
+        ('forecasted_motivation', 6)
     ]
     for label, i in anticipated_questions_index:
         response = get_response_from_json(df.ix[i]['responses'])
@@ -508,7 +508,8 @@ def compile_demographic_data(df):
 
     # post-working memory task delay
     if 46 in df.index.values:
-        compiled_data['time_pwmt_delay_ms'] = int(df.ix[46]['time_elapsed'])
+        delay_b4_retrospect_ms = int(df.ix[46]['time_elapsed'])
+        compiled_data['time_delay_b4_retrospect_ms'] = delay_b4_retrospect_ms
 
     # time taken for post-working memory task follow-up
     time_follow_up_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])
@@ -525,14 +526,14 @@ def compile_retrospective_data(df):
 
     # retrospective questions
     retrospective_index = [
-        ('pwmt_effort', '0.0-13.0-0.0'),
-        ('pwmt_discomfort', '0.0-13.0-1.0'),
-        ('pwmt_performance', '0.0-13.0-2.0'),
-        ('pwmt_willingtodowmt', '0.0-13.0-3.0'),
-        ('pwmt_fatigue', '0.0-13.0-4.0'),
-        ('pwmt_satisfaction', '0.0-13.0-5.0'),
-        ('pwmt_didmybest', '0.0-13.0-6.0'),
-        ('pwmt_enjoyment', '0.0-13.0-7.0'),
+        ('retrospective_effort', '0.0-13.0-0.0'),
+        ('retrospective_discomfort', '0.0-13.0-1.0'),
+        ('retrospective_performance', '0.0-13.0-2.0'),
+        ('retrospective_willingtodowmt', '0.0-13.0-3.0'),
+        ('retrospective_fatigue', '0.0-13.0-4.0'),
+        ('retrospective_satisfaction', '0.0-13.0-5.0'),
+        ('retrospective_didmybest', '0.0-13.0-6.0'),
+        ('retrospective_enjoyment', '0.0-13.0-7.0'),
     ]
     for label, inid in retrospective_index:
         compiled_data[label] = get_response_from_node_id(
