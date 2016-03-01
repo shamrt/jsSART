@@ -12,6 +12,7 @@ import re
 import pandas as pd
 import numpy as np
 from scipy import stats
+from tqdm import tqdm
 
 
 PROJECT_DIR = os.path.abspath(os.path.join(__file__, '..', '..'))
@@ -596,7 +597,7 @@ def main():
 
     # create list of compiled participant data
     compiled_participants = []
-    for practice_csv in raw_data_csvs['practice']:
+    for practice_csv in tqdm(raw_data_csvs['practice']):
         participant = {
             'missing_data': False
         }
