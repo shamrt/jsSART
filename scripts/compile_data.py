@@ -19,6 +19,9 @@ DATA_DIR = os.path.join(PROJECT_DIR, 'data')
 DECODER = json.JSONDecoder()
 ROUND_NDIGITS = 9
 
+# pandas options
+pd.set_option('mode.chained_assignment') = None  # no false-positive warnings
+
 
 def get_csv_paths(basedir, exp_stage):
     """Take base data directory and experiment stage. Return list of file paths.
