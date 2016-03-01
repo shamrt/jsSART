@@ -20,7 +20,7 @@ DECODER = json.JSONDecoder()
 ROUND_NDIGITS = 9
 
 # pandas options
-pd.set_option('mode.chained_assignment') = None  # no false-positive warnings
+pd.options.mode.chained_assignment = None  # no false-positive warnings
 
 
 def get_csv_paths(basedir, exp_stage):
