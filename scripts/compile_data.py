@@ -365,6 +365,7 @@ def compile_experiment_data(df):
     effort_ratings = []
     discomfort_ratings = []
     accuracies = []
+    num_block_trials = []
 
     # for calculating no-go error averages
     nogo_prev4_avgs = []
@@ -386,6 +387,7 @@ def compile_experiment_data(df):
         effort_ratings.append(blk_summary['effort'])
         discomfort_ratings.append(blk_summary['discomfort'])
         accuracies.append(blk_summary['accuracy'])
+        num_block_trials.append(blk_summary['num_trials'])
 
         nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
         nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
@@ -411,7 +413,7 @@ def compile_experiment_data(df):
     avg_discomfort = np.mean(discomfort_ratings)
     compiled_data['avg_discomfort'] = round(avg_discomfort, ROUND_NDIGITS)
 
-    average_accuracy = np.mean(accuracies)
+    average_accuracy = np.average(accuracies, weights=num_block_trials)
     compiled_data['avg_accuracy'] = round(average_accuracy, ROUND_NDIGITS)
     compiled_data['max_accuracy'] = max(accuracies)
     compiled_data['min_accuracy'] = min(accuracies)

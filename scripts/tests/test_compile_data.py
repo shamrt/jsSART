@@ -324,7 +324,7 @@ def test_complete_compile_experiment_data():
     assert ed['end_discomfort'] == 6
     assert ed['avg_discomfort'] == 5
 
-    assert ed['avg_accuracy'] == 0.851753049
+    assert ed['avg_accuracy'] == 0.851393189
     assert ed['max_accuracy'] == 0.951219512
     assert ed['min_accuracy'] == 0.62195122
     assert ed['start_accuracy'] == 0.865853659
