@@ -8,9 +8,9 @@ var jsSART = {
   // --------------------------------
   'CONDITIONS': {
     // Total number of trials a participant will see during experiment
-    'NUM_TRIALS': [483, 560, 646, 731, 810],
+    'NUM_TRIALS': [450, 675, 900],
     // Number of trials before being shown real-time post-block questions
-    'TRIALS_PER_BLOCK': [225, 82],
+    'TRIALS_PER_BLOCK': [225, 75],
     // Practice blocks conditions
     'PRACTICE': ['num_trials', 'time_duration']
   },
@@ -127,6 +127,10 @@ var jsSART = {
       {
         question: "Considering the <strong>attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>.",
         likert_scale: "TRUTH"
+      },
+      {
+        question: "Considering the <strong>attention task</strong> in its entirety: How much <strong><u>enjoyment</u></strong> did you experience?",
+         likert_scale: "NONE_ALOT"
       },
     ]
   },
