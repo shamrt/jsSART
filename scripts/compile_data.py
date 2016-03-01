@@ -607,6 +607,7 @@ def main():
     first_columns = [
         'id',
         'passed_practice',
+        'num_practice_blk2s',
         'missing_data',
         'practice_condition',
         'num_trials',
