@@ -116,6 +116,11 @@ def test_failing_compile_practice_data():
     assert data['time_practice_blk2_1_ms'] == 120397
     assert data['time_practice_blk2_2_ms'] == 140798
     assert data['time_practice_blk2_3_ms'] == 125869
+
+    # baseline evaluation of valence and arousal
+    assert data['arousal_baseline_mind_body'] == '2'
+    assert data['arousal_baseline_feeling'] == '6'
+
     assert data['time_practice_ms'] == 469892
 
 
@@ -333,6 +338,10 @@ def test_complete_compile_experiment_data():
     assert ed['auc_accuracy'] == 5.943597561
     assert ed['auc_effort'] == 30.5
     assert ed['auc_discomfort'] == 35.0
+
+    # post-experiment evaluation of valence and arousal
+    assert ed['arousal_post_mind_body'] == '2'
+    assert ed['arousal_post_feeling'] == '5'
 
     assert ed['time_experiment_ms'] == 940644
 

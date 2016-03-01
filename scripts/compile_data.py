@@ -7,6 +7,7 @@ directory.
 import os
 import glob
 import json
+import re
 
 import pandas as pd
 import numpy as np
@@ -33,6 +34,34 @@ def get_csv_as_dataframe(path):
                        index_col='trial_index',
                        converters={'participant_id': lambda x: str(x)}
                        )
+
+
+def get_response_from_json(string, question_number=0):
+    """Take JSON string representing a survey response and decode.
+    Return target question answer string.
+    """
+    resp_json = DECODER.decode(string)
+    target_question = "Q{}".format(question_number)
+    resp = resp_json[target_question] if target_question in resp_json else None
+    return resp
+
+
+def get_response_from_node_id(df, inid, is_likert=False):
+    """Take a data frame and internal node ID (inid).
+    Return a jsPsych survey response string.
+    """
+    response = None
+
+    # get row and then response text
+    response_str = df[df['internal_node_id'] == inid]['responses'].values
+    if response_str:
+        response = get_response_from_json(response_str[0]).strip()
+
+    if is_likert and response and response[0].isdigit():
+        # we only want the numeric response
+        response = response[0]
+
+    return response
 
 
 def extract_sart_blocks(df, with_survey=False):
@@ -75,6 +104,27 @@ def extract_sart_blocks(df, with_survey=False):
     return blocks
 
 
+def _get_arousal_ratings(df):
+    """Take 2-row pandas data frame and return mind-and-body and feeling
+    ratings for evaluation of valence and arousal questions.
+    """
+    mind_body = None
+    feeling = None
+
+    re_prefix = r'\d+\.\d+\-\d+\.\d+\-'
+    mind_body_inid_pattern = r'{}0\.0'.format(re_prefix)
+    feeling_inid_pattern = r'{}1\.0'.format(re_prefix)
+
+    for i, d in df.iterrows():
+        inid = d['internal_node_id']
+        if re.match(mind_body_inid_pattern, inid):
+            mind_body = get_response_from_node_id(df, inid, is_likert=True)
+        elif re.match(feeling_inid_pattern, inid):
+            feeling = get_response_from_node_id(df, inid, is_likert=True)
+
+    return mind_body, feeling
+
+
 def compile_practice_data(df):
     """Take pandas dataframe and compile key variables. Return dict.
     """
@@ -87,6 +137,12 @@ def compile_practice_data(df):
     # participant ID
     condition_col = df['practice_condition'].values
     compiled_data['practice_condition'] = condition_col[0]
+
+    # baseline evaluation of valence and arousal
+    arousal_df = df.ix[1:2]
+    mind_body, feeling = _get_arousal_ratings(arousal_df)
+    compiled_data['arousal_baseline_mind_body'] = mind_body
+    compiled_data['arousal_baseline_feeling'] = feeling
 
     # was practice block #2 completed successfully?
     passed_practice = ('0.0-7.0-0.0' in df['internal_node_id'].values)
@@ -116,34 +172,6 @@ def compile_practice_data(df):
     compiled_data['time_practice_ms'] = time_practice_ms
 
     return compiled_data
-
-
-def get_response_from_json(string, question_number=0):
-    """Take JSON string representing a survey response and decode.
-    Return target question answer string.
-    """
-    resp_json = DECODER.decode(string)
-    target_question = "Q{}".format(question_number)
-    resp = resp_json[target_question] if target_question in resp_json else None
-    return resp
-
-
-def get_response_from_node_id(df, inid, is_likert=False):
-    """Take a data frame and internal node ID (inid).
-    Return a jsPsych survey response string.
-    """
-    response = None
-
-    # get row and then response text
-    response_str = df[df['internal_node_id'] == inid]['responses'].values
-    if response_str:
-        response = get_response_from_json(response_str[0]).strip()
-
-    if is_likert and response and response[0].isdigit():
-        # we only want the numeric response
-        response = response[0]
-
-    return response
 
 
 def _format_rts(rts):
@@ -427,6 +455,12 @@ def compile_experiment_data(df):
         np.trapz(effort_ratings), ROUND_NDIGITS)
     compiled_data['auc_discomfort'] = round(
         np.trapz(discomfort_ratings), ROUND_NDIGITS)
+
+    # post-experiment evaluation of valence and arousal
+    arousal_df = df.ix[df.last_valid_index()-2:df.last_valid_index()-1]
+    mind_body, feeling = _get_arousal_ratings(arousal_df)
+    compiled_data['arousal_post_mind_body'] = mind_body
+    compiled_data['arousal_post_feeling'] = feeling
 
     # time taken to complete working memory task
     time_experiment_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])
