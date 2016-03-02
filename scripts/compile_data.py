@@ -328,6 +328,7 @@ def summarize_block_performance(df):
     # number of no-go errors
     df['nogo_error'] = _calculate_go_errors(df, 'no_go')
     nogo_errors = list(df['nogo_error'].values)
+    performance['nogo_num_errors'] = nogo_errors.count(True)
     nogo_errors_prop = (float(nogo_errors.count(True)) / num_trials)
     performance['nogo_errors'] = round(nogo_errors_prop, ROUND_NDIGITS)
 
@@ -400,6 +401,7 @@ def compile_experiment_data(df):
     num_block_trials = []
 
     # for calculating no-go error averages
+    nogo_num_errors = 0
     nogo_prev4_avgs = []
     nogo_next4_avgs = []
     nogo_num_next4_rts = []
@@ -421,12 +423,14 @@ def compile_experiment_data(df):
         accuracies.append(blk_summary['accuracy'])
         num_block_trials.append(blk_summary['num_trials'])
 
+        nogo_num_errors += blk_summary['nogo_num_errors']
         nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
         nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
         nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
         nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
 
     # weighted averages for RTs before and after no-go errors
+    compiled_data['nogo_num_errors'] = nogo_num_errors
     compiled_data['nogo_error_prev_rt_avg'] = np.average(
         nogo_prev4_avgs, weights=nogo_num_prev4_rts)
     compiled_data['nogo_error_next_rt_avg'] = np.average(

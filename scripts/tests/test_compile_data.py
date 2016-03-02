@@ -243,6 +243,7 @@ def test_summarize_block_performance():
     assert p['rt_avg'] == 272.790123457
     assert p['anticipated'] == 0.073170732  # 6 anticipation errors
     assert p['go_errors'] == 0.012195122  # 1 go error
+    assert p['nogo_num_errors'] == 4
     assert p['nogo_errors'] == 0.048780488  # 4 no-go errors
     assert p['accuracy'] == 0.865853659  # 71/82
     total_error_prop = (p['anticipated'] + p['go_errors'] + p['nogo_errors'])
@@ -309,12 +310,13 @@ def test_complete_compile_experiment_data():
     for i in range(1, 9):
         blk_key_prefix = "blk{}".format(i)
         blk_keys = [k for k in ed.keys() if k.startswith(blk_key_prefix)]
-        assert len(blk_keys) == 12
+        assert len(blk_keys) == 13
         for k in blk_summary_keys:
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
 
     # no-go error variable weighted averages
+    assert ed['nogo_num_errors'] == 43
     assert ed['nogo_error_prev_rt_avg'] == 340.17721518987344
     assert ed['nogo_error_next_rt_avg'] == 336.77181208063763
 
