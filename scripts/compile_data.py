@@ -254,12 +254,11 @@ def _calculate_nogo_error_rt_avgs(df):
             rts = row['rt'].values
 
             # stop collecting rows if no trial response (rt = [-1])
-            if rts == ['[-1]']:
-                break
+            if not rts == ['[-1]']:
+                row_rt = _format_rts(rts)
+                if row_rt:
+                    row_rts.append(row_rt[0])
 
-            row_rt = _format_rts(rts)
-            if row_rt:
-                row_rts.append(row_rt[0])
             next_num_rows += 1
         return row_rts
 

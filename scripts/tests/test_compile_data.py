@@ -229,8 +229,8 @@ def test__calculate_nogo_error_rt_avgs_011():
     assert list(df['nogo_error']).count(True) == 4
 
     adjacent_rts = compile_data._calculate_nogo_error_rt_avgs(df)
-    assert adjacent_rts['prev4_avg'] == 347.142857143
-    assert adjacent_rts['num_prev4_rts'] == 7
+    assert adjacent_rts['prev4_avg'] == 381.444444444
+    assert adjacent_rts['num_prev4_rts'] == 9
     assert adjacent_rts['next4_avg'] == 391.875
     assert adjacent_rts['num_next4_rts'] == 8
 
@@ -272,7 +272,7 @@ def test_summarize_sart_chunk():
 
     assert b1s['num_trials'] == 82
 
-    assert b1s['nogo_prev4_avg'] == 347.142857143
+    assert b1s['nogo_prev4_avg'] == 381.444444444
     assert b1s['nogo_next4_avg'] == 391.875
 
     # last block
@@ -317,8 +317,8 @@ def test_complete_compile_experiment_data():
 
     # no-go error variable weighted averages
     assert ed['nogo_num_errors'] == 43
-    assert ed['nogo_error_prev_rt_avg'] == 340.17721518987344
-    assert ed['nogo_error_next_rt_avg'] == 336.77181208063763
+    assert ed['nogo_error_prev_rt_avg'] == 346.66257668704293
+    assert ed['nogo_error_next_rt_avg'] == 336.88535031840127
 
     # peak-end calculations
     assert ed['start_effort'] == 2
