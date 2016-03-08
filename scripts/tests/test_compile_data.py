@@ -154,8 +154,8 @@ def test__format_rts():
 def get_sart_trial_block(pid, block_index=0):
     df = get_csv_as_df('experiment', pid)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
-    b1 = blocks[block_index]
-    trial_block = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
+    b = blocks[block_index]
+    trial_block = b.loc[b['trial_type'] == 'multi-stim-multi-response']
     return trial_block
 
 
@@ -235,12 +235,30 @@ def test__calculate_nogo_error_rt_avgs_011():
     assert adjacent_rts['num_next4_rts'] == 8
 
 
+def test__get_correct_rts_blk1():
+    pid = "104"
+    sart_block = get_sart_trial_block(pid)
+    df = compile_data._add_anticipation_errors(sart_block)
+    rts = compile_data._get_correct_rts(df)
+    assert len(rts) == 71
+    assert compile_data.np.mean(rts) == 288.6056338028169
+
+
+def test__get_correct_rts_blk4():
+    pid = "104"
+    sart_block = get_sart_trial_block(pid, 3)
+    df = compile_data._add_anticipation_errors(sart_block)
+    rts = compile_data._get_correct_rts(df)
+    assert len(rts) == 49
+    assert compile_data.np.mean(rts) == 353.36734693877548
+
+
 def test_summarize_block_performance():
     pid = "104"
     sart_block = get_sart_trial_block(pid)
     p = compile_data.summarize_block_performance(sart_block)
     assert p['num_trials'] == 82
-    assert p['rt_avg'] == 272.790123457
+    assert p['rt_avg'] == 288.605633803
     assert p['anticipated'] == 0.073170732  # 6 anticipation errors
     assert p['go_errors'] == 0.012195122  # 1 go error
     assert p['nogo_num_errors'] == 4

@@ -291,6 +291,19 @@ def _calculate_nogo_error_rt_avgs(df):
     }
 
 
+def _get_correct_rts(df):
+    """Take pandas dataframe representing raw SART trails data and
+    return array of RTs for correct trials.
+    """
+    rts = []
+    for idx, series in df.iterrows():
+        if series['correct']:
+            rt = _format_rts([series['rt']])
+            if rt:
+                rts.append(rt[0])
+    return rts
+
+
 def summarize_block_performance(df):
     """Take pandas dataframe representing raw SART trails data and
     summarize performance. Return dict.
@@ -300,10 +313,6 @@ def summarize_block_performance(df):
     # number of trials
     num_trials = len(df.index.values)
     performance['num_trials'] = num_trials
-
-    # average reaction time
-    rts = _format_rts(df['rt'].values)
-    performance['rt_avg'] = round(np.mean(rts), ROUND_NDIGITS)
 
     # add anticipation errors and re-calculate `correct` column
     df = _add_anticipation_errors(df)
@@ -330,6 +339,10 @@ def summarize_block_performance(df):
     performance['nogo_num_errors'] = nogo_errors.count(True)
     nogo_errors_prop = (float(nogo_errors.count(True)) / num_trials)
     performance['nogo_errors'] = round(nogo_errors_prop, ROUND_NDIGITS)
+
+    # average reaction time (RT)
+    correct_rts = _get_correct_rts(df)
+    performance['rt_avg'] = round(np.mean(correct_rts), ROUND_NDIGITS)
 
     # average RTs before and after no-go errors
     nogo_adjacent_rts = _calculate_nogo_error_rt_avgs(df)
