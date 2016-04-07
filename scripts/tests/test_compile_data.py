@@ -154,8 +154,8 @@ def test__format_rts():
 def get_sart_trial_block(pid, block_index=0):
     df = get_csv_as_df('experiment', pid)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
-    b1 = blocks[block_index]
-    trial_block = b1.loc[b1['trial_type'] == 'multi-stim-multi-response']
+    b = blocks[block_index]
+    trial_block = b.loc[b['trial_type'] == 'multi-stim-multi-response']
     return trial_block
 
 
@@ -229,10 +229,28 @@ def test__calculate_nogo_error_rt_avgs_011():
     assert list(df['nogo_error']).count(True) == 4
 
     adjacent_rts = compile_data._calculate_nogo_error_rt_avgs(df)
-    assert adjacent_rts['prev4_avg'] == 347.142857143
-    assert adjacent_rts['num_prev4_rts'] == 7
+    assert adjacent_rts['prev4_avg'] == 381.444444444
+    assert adjacent_rts['num_prev4_rts'] == 9
     assert adjacent_rts['next4_avg'] == 391.875
     assert adjacent_rts['num_next4_rts'] == 8
+
+
+def test__get_correct_rts_blk1():
+    pid = "104"
+    sart_block = get_sart_trial_block(pid)
+    df = compile_data._add_anticipation_errors(sart_block)
+    rts = compile_data._get_correct_rts(df)
+    assert len(rts) == 71
+    assert compile_data.np.mean(rts) == 288.6056338028169
+
+
+def test__get_correct_rts_blk4():
+    pid = "104"
+    sart_block = get_sart_trial_block(pid, 3)
+    df = compile_data._add_anticipation_errors(sart_block)
+    rts = compile_data._get_correct_rts(df)
+    assert len(rts) == 49
+    assert compile_data.np.mean(rts) == 353.36734693877548
 
 
 def test_summarize_block_performance():
@@ -240,9 +258,10 @@ def test_summarize_block_performance():
     sart_block = get_sart_trial_block(pid)
     p = compile_data.summarize_block_performance(sart_block)
     assert p['num_trials'] == 82
-    assert p['rt_avg'] == 272.790123457
+    assert p['rt_avg'] == 288.605633803
     assert p['anticipated'] == 0.073170732  # 6 anticipation errors
     assert p['go_errors'] == 0.012195122  # 1 go error
+    assert p['nogo_num_errors'] == 4
     assert p['nogo_errors'] == 0.048780488  # 4 no-go errors
     assert p['accuracy'] == 0.865853659  # 71/82
     total_error_prop = (p['anticipated'] + p['go_errors'] + p['nogo_errors'])
@@ -271,7 +290,7 @@ def test_summarize_sart_chunk():
 
     assert b1s['num_trials'] == 82
 
-    assert b1s['nogo_prev4_avg'] == 347.142857143
+    assert b1s['nogo_prev4_avg'] == 381.444444444
     assert b1s['nogo_next4_avg'] == 391.875
 
     # last block
@@ -282,6 +301,15 @@ def test_summarize_sart_chunk():
     assert lbs['accuracy'] == 0.911764706
     assert lbs['effort'] == 3
     assert lbs['discomfort'] == 5
+
+
+def test__calculate_ratings_proportions():
+    ratings = [5, 2, 3, 7, 6, 4, 3, 3]  # 8 ratings, 7 possible changes
+    # ratings proportions
+    rp = compile_data._calculate_ratings_proportions(ratings)
+    assert rp['ups'] == 0.285714286  # 2 of 7
+    assert rp['downs'] == 0.571428571  # 4 of 7
+    assert rp['sames'] == 0.142857143  # 1 of 7
 
 
 def test_complete_compile_experiment_data():
@@ -309,14 +337,24 @@ def test_complete_compile_experiment_data():
     for i in range(1, 9):
         blk_key_prefix = "blk{}".format(i)
         blk_keys = [k for k in ed.keys() if k.startswith(blk_key_prefix)]
-        assert len(blk_keys) == 12
+        assert len(blk_keys) == 13
         for k in blk_summary_keys:
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
 
+    # effort and discomfort ratings
+    assert ed['prop_effort_ups'] == 0.428571429  # 3/7
+    assert ed['prop_effort_downs'] == 0.571428571  # 4/7
+    assert ed['prop_effort_sames'] == 0.0  # 0/7
+
+    assert ed['prop_discomfort_ups'] == 0.285714286  # 2/7
+    assert ed['prop_discomfort_downs'] == 0.142857143  # 1/7
+    assert ed['prop_discomfort_sames'] == 0.571428571  # 4/7
+
     # no-go error variable weighted averages
-    assert ed['nogo_error_prev_rt_avg'] == 340.17721518987344
-    assert ed['nogo_error_next_rt_avg'] == 336.77181208063763
+    assert ed['nogo_num_errors'] == 43
+    assert ed['nogo_error_prev_rt_avg'] == 346.66257668704293
+    assert ed['nogo_error_next_rt_avg'] == 336.88535031840127
 
     # peak-end calculations
     assert ed['start_effort'] == 2
