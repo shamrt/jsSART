@@ -303,6 +303,15 @@ def test_summarize_sart_chunk():
     assert lbs['discomfort'] == 5
 
 
+def test__calculate_ratings_proportions():
+    ratings = [5, 2, 3, 7, 6, 4, 3, 3]  # 8 ratings, 7 possible changes
+    # ratings proportions
+    rp = compile_data._calculate_ratings_proportions(ratings)
+    assert rp['ups'] == 0.285714286  # 2 of 7
+    assert rp['downs'] == 0.571428571  # 4 of 7
+    assert rp['sames'] == 0.142857143  # 1 of 7
+
+
 def test_complete_compile_experiment_data():
     pid = "104"
     df = get_csv_as_df('experiment', pid)
@@ -332,6 +341,15 @@ def test_complete_compile_experiment_data():
         for k in blk_summary_keys:
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
+
+    # effort and discomfort ratings
+    assert ed['prop_effort_ups'] == 0.428571429  # 3/7
+    assert ed['prop_effort_downs'] == 0.571428571  # 4/7
+    assert ed['prop_effort_sames'] == 0.0  # 0/7
+
+    assert ed['prop_discomfort_ups'] == 0.285714286  # 2/7
+    assert ed['prop_discomfort_downs'] == 0.142857143  # 1/7
+    assert ed['prop_discomfort_sames'] == 0.571428571  # 4/7
 
     # no-go error variable weighted averages
     assert ed['nogo_num_errors'] == 43
