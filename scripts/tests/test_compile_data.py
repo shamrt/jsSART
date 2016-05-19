@@ -356,6 +356,14 @@ def test_complete_compile_experiment_data():
     assert ed['nogo_error_prev_rt_avg'] == 346.66257668704293
     assert ed['nogo_error_next_rt_avg'] == 336.88535031840127
 
+    # regression variables for blocks
+    assert ed['accuracy_slope'] == 0.004246516
+    assert ed['accuracy_intercept'] == 0.832643729
+    assert ed['effort_slope'] == 0.035714286
+    assert ed['effort_intercept'] == 3.964285714
+    assert ed['discomfort_slope'] == 0.357142857
+    assert ed['discomfort_intercept'] == 3.392857143
+
     # peak-end calculations
     assert ed['start_effort'] == 2
     assert ed['peak_effort'] == 7
