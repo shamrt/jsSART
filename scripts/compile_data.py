@@ -482,12 +482,14 @@ def compile_experiment_data(df):
     # assign other variables
     compiled_data['start_effort'] = effort_ratings[0]
     compiled_data['peak_effort'] = max(effort_ratings)
+    compiled_data['min_effort'] = min(effort_ratings)
     compiled_data['end_effort'] = effort_ratings[-1]
     avg_effort = np.mean(effort_ratings)
     compiled_data['avg_effort'] = round(avg_effort, ROUND_NDIGITS)
 
     compiled_data['start_discomfort'] = discomfort_ratings[0]
     compiled_data['peak_discomfort'] = max(discomfort_ratings)
+    compiled_data['min_discomfort'] = min(discomfort_ratings)
     compiled_data['end_discomfort'] = discomfort_ratings[-1]
     avg_discomfort = np.mean(discomfort_ratings)
     compiled_data['avg_discomfort'] = round(avg_discomfort, ROUND_NDIGITS)
@@ -509,6 +511,22 @@ def compile_experiment_data(df):
     compiled_data['prop_effort_ups'] = effort_props['ups']
     compiled_data['prop_effort_downs'] = effort_props['downs']
     compiled_data['prop_effort_sames'] = effort_props['sames']
+
+    # compute regression variables for blocks
+    block_measures = [
+        ('accuracy', accuracies),
+        ('effort', effort_ratings),
+        ('discomfort', discomfort_ratings)
+    ]
+    for measure_name, measure_values in block_measures:
+        measure_order = range(1, len(measure_values) + 1)
+        linregress = stats.linregress(measure_order, measure_values)
+
+        slope_key = '{}_slope'.format(measure_name)
+        compiled_data[slope_key] = round(linregress.slope, ROUND_NDIGITS)
+        intercept_key = '{}_intercept'.format(measure_name)
+        compiled_data[intercept_key] = round(
+            linregress.intercept, ROUND_NDIGITS)
 
     # area under the curve calculations
     compiled_data['auc_accuracy'] = round(
