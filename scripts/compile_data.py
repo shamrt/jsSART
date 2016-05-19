@@ -482,12 +482,14 @@ def compile_experiment_data(df):
     # assign other variables
     compiled_data['start_effort'] = effort_ratings[0]
     compiled_data['peak_effort'] = max(effort_ratings)
+    compiled_data['min_effort'] = min(effort_ratings)
     compiled_data['end_effort'] = effort_ratings[-1]
     avg_effort = np.mean(effort_ratings)
     compiled_data['avg_effort'] = round(avg_effort, ROUND_NDIGITS)
 
     compiled_data['start_discomfort'] = discomfort_ratings[0]
     compiled_data['peak_discomfort'] = max(discomfort_ratings)
+    compiled_data['min_discomfort'] = min(discomfort_ratings)
     compiled_data['end_discomfort'] = discomfort_ratings[-1]
     avg_discomfort = np.mean(discomfort_ratings)
     compiled_data['avg_discomfort'] = round(avg_discomfort, ROUND_NDIGITS)

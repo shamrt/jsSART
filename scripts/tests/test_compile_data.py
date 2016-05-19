@@ -359,11 +359,13 @@ def test_complete_compile_experiment_data():
     # peak-end calculations
     assert ed['start_effort'] == 2
     assert ed['peak_effort'] == 7
+    assert ed['min_effort'] == 2
     assert ed['end_effort'] == 3
     assert ed['avg_effort'] == 4.125
 
     assert ed['start_discomfort'] == 4
     assert ed['peak_discomfort'] == 7
+    assert ed['min_discomfort'] == 4
     assert ed['end_discomfort'] == 6
     assert ed['avg_discomfort'] == 5
 
