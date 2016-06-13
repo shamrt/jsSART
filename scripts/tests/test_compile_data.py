@@ -287,6 +287,7 @@ def test_summarize_sart_chunk():
     assert b1s['accuracy'] == 0.731707317
     assert b1s['effort'] == 4
     assert b1s['discomfort'] == 5
+    assert b1s['ratings_time_min'] == 26.783333333
 
     assert b1s['num_trials'] == 82
 
@@ -301,6 +302,7 @@ def test_summarize_sart_chunk():
     assert lbs['accuracy'] == 0.911764706
     assert lbs['effort'] == 3
     assert lbs['discomfort'] == 5
+    assert lbs['ratings_time_min'] == 37.7
 
 
 def test__calculate_ratings_proportions():
@@ -357,12 +359,12 @@ def test_complete_compile_experiment_data():
     assert ed['nogo_error_next_rt_avg'] == 336.88535031840127
 
     # regression variables for blocks
-    assert ed['accuracy_slope'] == 0.004246516
-    assert ed['accuracy_intercept'] == 0.832643729
-    assert ed['effort_slope'] == 0.035714286
-    assert ed['effort_intercept'] == 3.964285714
-    assert ed['discomfort_slope'] == 0.357142857
-    assert ed['discomfort_intercept'] == 3.392857143
+    assert ed['accuracy_slope'] == 0.002454737
+    assert ed['accuracy_intercept'] == 0.829650186
+    assert ed['effort_slope'] == 0.022726243
+    assert ed['effort_intercept'] == 3.92036912
+    assert ed['discomfort_slope'] == 0.202292011
+    assert ed['discomfort_intercept'] == 3.178529021
 
     # peak-end calculations
     assert ed['start_effort'] == 2
