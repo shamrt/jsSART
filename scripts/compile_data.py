@@ -377,6 +377,11 @@ def summarize_sart_chunk(df):
     raw_discomfort_rating = get_response_from_json(discomfort_rating_json)
     summary['discomfort'] = int(raw_discomfort_rating[0])
 
+    # get time elapsed (in minutes) at ratings for later slope calculations
+    ratings_time_min = survey_trials.ix[0]['time_elapsed']
+    summary['ratings_time_min'] = round(
+        ratings_time_min / 1000 / 60.0, ROUND_NDIGITS)
+
     return summary
 
 
@@ -441,6 +446,7 @@ def compile_experiment_data(df):
     effort_ratings = []
     discomfort_ratings = []
     accuracies = []
+    rating_times = []
     num_block_trials = []
 
     # for calculating no-go error averages
@@ -454,6 +460,10 @@ def compile_experiment_data(df):
     for i, block in enumerate(blocks, start=1):
         blk_summary = summarize_sart_chunk(block)
         blk_name = "blk{}".format(i)
+
+        # pop block summary rating times, and add to list for later slope
+        # calculations
+        rating_times.append(blk_summary.pop('ratings_time_min'))
 
         # add block summaries to compiled data
         for key in blk_summary.keys():
@@ -520,7 +530,7 @@ def compile_experiment_data(df):
     ]
     for measure_name, measure_values in block_measures:
         measure_order = range(1, len(measure_values) + 1)
-        linregress = stats.linregress(measure_order, measure_values)
+        linregress = stats.linregress(rating_times, measure_values)
 
         slope_key = '{}_slope'.format(measure_name)
         compiled_data[slope_key] = round(linregress.slope, ROUND_NDIGITS)
