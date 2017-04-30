@@ -70,6 +70,10 @@ var jsSART = {
         question: "How much discomfort or distress is this task currently causing?",
         likert_scale: "NONE_ALOT"
       },
+      {
+        question: "How much boredom are you currently experiencing?",
+        likert_scale: "NONE_ALOT"
+      },
     ],
     // Self-report anticipated effort, discomfort, etc
     'ANTICIPATION': [
@@ -96,6 +100,10 @@ var jsSART = {
       {
         question: "In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?",
         likert_scale: "NOT_EXTREMELY"
+      },
+      {
+        question: "How much boredom are you currently experiencing?",
+        likert_scale: "NONE_ALOT"
       },
     ],
     // Post-experiment retrospective evaluation
@@ -131,6 +139,10 @@ var jsSART = {
       {
         question: "Considering the <strong>attention task</strong> in its entirety: How much <strong><u>enjoyment</u></strong> did you experience?",
          likert_scale: "NONE_ALOT"
+      },
+      {
+        question: "How much boredom are you currently experiencing?",
+        likert_scale: "NONE_ALOT"
       },
     ]
   },
