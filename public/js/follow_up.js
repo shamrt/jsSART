@@ -29,8 +29,8 @@ timeline: [
 // part 1
 var demographics_1_questions = [
 {
-  questions: ["Please indicate your sex:"],
-  options: [["Male", "Female"]]
+  questions: ["Please indicate your gender:"],
+  options: [["Male", "Female", "Other"]]
 },
 {
   questions: ["Which year of university are you currently in?"],
