@@ -259,10 +259,12 @@ def test_summarize_block_performance():
     p = compile_data.summarize_block_performance(sart_block)
     assert p['num_trials'] == 82
     assert p['rt_avg'] == 288.605633803
-    assert p['anticipated'] == 0.073170732  # 6 anticipation errors
-    assert p['go_errors'] == 0.012195122  # 1 go error
+    assert p['anticipated_num_errors'] == 6
+    assert p['anticipated'] == 0.073170732
+    assert p['go_num_errors'] == 1
+    assert p['go_errors'] == 0.012195122
     assert p['nogo_num_errors'] == 4
-    assert p['nogo_errors'] == 0.048780488  # 4 no-go errors
+    assert p['nogo_errors'] == 0.048780488
     assert p['accuracy'] == 0.865853659  # 71/82
     total_error_prop = (p['anticipated'] + p['go_errors'] + p['nogo_errors'])
 
@@ -339,7 +341,7 @@ def test_complete_compile_experiment_data():
     for i in range(1, 9):
         blk_key_prefix = "blk{}".format(i)
         blk_keys = [k for k in ed.keys() if k.startswith(blk_key_prefix)]
-        assert len(blk_keys) == 13
+        assert len(blk_keys) == 15
         for k in blk_summary_keys:
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
@@ -353,10 +355,17 @@ def test_complete_compile_experiment_data():
     assert ed['prop_discomfort_downs'] == 0.142857143  # 1/7
     assert ed['prop_discomfort_sames'] == 0.571428571  # 4/7
 
-    # no-go error variable weighted averages
+    # go, no-go, and anticipated error variable weighted averages
     assert ed['nogo_num_errors'] == 43
     assert ed['nogo_error_prev_rt_avg'] == 346.66257668704293
     assert ed['nogo_error_next_rt_avg'] == 336.88535031840127
+
+    # proportion of go, no-go, and anticipated errors across all trials
+    # also proportion of trials that were completed accurately
+    assert ed['avg_go_errors'] == 0.035603715
+    assert ed['avg_nogo_errors'] == 0.066563467
+    assert ed['avg_anticipation_errors'] == 0.046439628
+    assert ed['avg_accuracy'] == 0.851393189
 
     # regression variables for blocks
     assert ed['accuracy_slope'] == 0.002454737
@@ -379,11 +388,11 @@ def test_complete_compile_experiment_data():
     assert ed['end_discomfort'] == 6
     assert ed['avg_discomfort'] == 5
 
-    assert ed['avg_accuracy'] == 0.851393189
-    assert ed['max_accuracy'] == 0.951219512
-    assert ed['min_accuracy'] == 0.62195122
-    assert ed['start_accuracy'] == 0.865853659
-    assert ed['end_accuracy'] == 0.875
+    assert ed['avg_blk_accuracy'] == 0.851393189
+    assert ed['max_blk_accuracy'] == 0.951219512
+    assert ed['min_blk_accuracy'] == 0.62195122
+    assert ed['start_blk_accuracy'] == 0.865853659
+    assert ed['end_blk_accuracy'] == 0.875
 
     assert ed['auc_accuracy'] == 5.943597561
     assert ed['auc_effort'] == 30.5
