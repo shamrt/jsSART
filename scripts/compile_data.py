@@ -319,6 +319,7 @@ def summarize_block_performance(df):
 
     # number of anticipation errors
     antipations = list(df['anticipate_error'].values)
+    performance['anticipated_num_errors'] = antipations.count(True)
     anticipated = (float(antipations.count(True)) / num_trials)
     performance['anticipated'] = round(anticipated, ROUND_NDIGITS)
 
@@ -330,6 +331,7 @@ def summarize_block_performance(df):
     # number of go errors
     df['go_error'] = _calculate_go_errors(df, 'go')
     go_errors = list(df['go_error'].values)
+    performance['go_num_errors'] = go_errors.count(True)
     go_errors_prop = (float(go_errors.count(True)) / num_trials)
     performance['go_errors'] = round(go_errors_prop, ROUND_NDIGITS)
 
@@ -422,7 +424,8 @@ def compile_experiment_data(df):
     compiled_data = {}
 
     # conditions
-    compiled_data['num_trials'] = df['num_trials'].values[0]
+    num_trials = df['num_trials'].values[0]
+    compiled_data['num_trials'] = num_trials
     compiled_data['trials_per_block'] = df['trials_per_block'].values[0]
 
     # blocks and block order
@@ -450,7 +453,9 @@ def compile_experiment_data(df):
     num_block_trials = []
 
     # for calculating no-go error averages
-    nogo_num_errors = 0
+    num_anticipation_errors = 0
+    num_go_errors = 0
+    num_nogo_errors = 0
     nogo_prev4_avgs = []
     nogo_next4_avgs = []
     nogo_num_next4_rts = []
@@ -476,18 +481,32 @@ def compile_experiment_data(df):
         accuracies.append(blk_summary['accuracy'])
         num_block_trials.append(blk_summary['num_trials'])
 
-        nogo_num_errors += blk_summary['nogo_num_errors']
+        num_anticipation_errors += blk_summary['anticipated_num_errors']
+        num_go_errors += blk_summary['go_num_errors']
+        num_nogo_errors += blk_summary['nogo_num_errors']
         nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
         nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
         nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
         nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
 
     # weighted averages for RTs before and after no-go errors
-    compiled_data['nogo_num_errors'] = nogo_num_errors
+    compiled_data['nogo_num_errors'] = num_nogo_errors
     compiled_data['nogo_error_prev_rt_avg'] = np.average(
         nogo_prev4_avgs, weights=nogo_num_prev4_rts)
     compiled_data['nogo_error_next_rt_avg'] = np.average(
         nogo_next4_avgs, weights=nogo_num_next4_rts)
+
+    # average of go, no-go, and anticipation errors, as well as accuracy
+    avg_go_errors = (num_go_errors / float(num_trials))
+    compiled_data['avg_go_errors'] = round(avg_go_errors, ROUND_NDIGITS)
+    avg_nogo_errors = (num_nogo_errors / float(num_trials))
+    compiled_data['avg_nogo_errors'] = round(avg_nogo_errors, ROUND_NDIGITS)
+    avg_anticipation_errors = (num_anticipation_errors / float(num_trials))
+    compiled_data['avg_anticipation_errors'] = round(
+        avg_anticipation_errors, ROUND_NDIGITS)
+    avg_accuracy = (1 - avg_go_errors - avg_nogo_errors -
+                    avg_anticipation_errors)
+    compiled_data['avg_accuracy'] = round(avg_accuracy, ROUND_NDIGITS)
 
     # assign other variables
     compiled_data['start_effort'] = effort_ratings[0]
@@ -505,11 +524,11 @@ def compile_experiment_data(df):
     compiled_data['avg_discomfort'] = round(avg_discomfort, ROUND_NDIGITS)
 
     average_accuracy = np.average(accuracies, weights=num_block_trials)
-    compiled_data['avg_accuracy'] = round(average_accuracy, ROUND_NDIGITS)
-    compiled_data['max_accuracy'] = max(accuracies)
-    compiled_data['min_accuracy'] = min(accuracies)
-    compiled_data['start_accuracy'] = accuracies[0]
-    compiled_data['end_accuracy'] = accuracies[-1]
+    compiled_data['avg_blk_accuracy'] = round(average_accuracy, ROUND_NDIGITS)
+    compiled_data['max_blk_accuracy'] = max(accuracies)
+    compiled_data['min_blk_accuracy'] = min(accuracies)
+    compiled_data['start_blk_accuracy'] = accuracies[0]
+    compiled_data['end_blk_accuracy'] = accuracies[-1]
 
     # proportion of effort and discomfort ratings that increase or decrease
     discomfort_props = _calculate_ratings_proportions(discomfort_ratings)
