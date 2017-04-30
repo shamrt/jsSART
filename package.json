@@ -4,6 +4,7 @@
   "description": "A customizable Sustained Attention to Response Task (SART) measure built with jsPsych and deployable to Heroku",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Shane Martin",
