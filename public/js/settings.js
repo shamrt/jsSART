@@ -22,11 +22,11 @@ var jsSART = {
     'VALUES': _.range(1, 10),  // 1--9
     // No-go value
     'NO_GO_VALUE': 3,
+    // No-go values per block
+    'NO_GOS_PER_BLOCK': 25,
     // Font sizes
     // NOTE: approx. 48px, 72px, 94px, 100px and 120px
     'FONT_SIZES': ["12mm", "17.4mm", "22.717mm", "24.17mm", "29mm"],
-    // Second level quasi-random counter range
-    'QUASI_RANDOM_RANGE': _.range(4),  // 0-3
     // Allow keys 1--9 and numpad 1--9
     'ALLOW_KEYCODES': [32, 13],
     // Pace of PASAT trial presentation

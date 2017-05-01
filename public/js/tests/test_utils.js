@@ -114,14 +114,38 @@ QUnit.test("formatBlockStimuli, single stimulus with incorrect possible font siz
 
 QUnit.test("generateStimuli length", function(assert) {
   var num_stimuli = 25;
-  var stimuli = generateStimuli(num_stimuli);
-  assert.deepEqual(stimuli.length, num_stimuli);
+  var num_no_gos = 5;
+  var stimuli = generateStimuli(num_stimuli, num_no_gos);
+  assert.equal(stimuli.length, num_stimuli);
+});
+
+QUnit.test("generateStimuli has no zeros", function(assert) {
+  var num_stimuli = 25;
+  var num_no_gos = 5;
+  var stimuli = generateStimuli(num_stimuli, num_no_gos);
+  assert.ok(stimuli.indexOf(0) === -1);
+});
+
+QUnit.test("generateStimuli has no side-by-side 3s", function(assert) {
+  var num_stimuli = 225;
+  var num_no_gos = 25;
+  var stimuli = generateStimuli(num_stimuli, num_no_gos);
+  assert.ok(stimuli.join('').indexOf(33) === -1);
+});
+
+QUnit.test("generateStimuli has the correct number of 3s", function(assert) {
+  var num_stimuli = 225;
+  var num_no_gos = 25;
+  var stimuli = generateStimuli(num_stimuli, num_no_gos);
+  var stimuli_3s = stimuli.filter(function(value) { return value === 3 });
+  assert.ok(stimuli_3s.length === num_no_gos);
 });
 
 QUnit.test("generateStimuli stimuli values", function(assert) {
   // check that all stimuli are expected possible value set
   var num_stimuli = 25;
-  var stimuli = generateStimuli(num_stimuli);
+  var num_no_gos = 5;
+  var stimuli = generateStimuli(num_stimuli, num_no_gos);
   for (var i=0; i < stimuli.length; i++) {
     var is_expected_value = _.contains(jsSART.STIMULI.VALUES, stimuli[i]);
     assert.ok(is_expected_value);
@@ -355,12 +379,25 @@ QUnit.test("generatePracticeTrials, with num_trials condition", function(assert)
 
 QUnit.test("generatePracticeTrials, with time_duration condition", function(assert) {
   var trials = generatePracticeTrials('time_duration');
-  assert.ok(trials.BLOCK_1_STIMULI.length === 29);
-  assert.ok(trials.BLOCK_2_STIMULI.length === 72);
+  assert.ok(trials.BLOCK_1_STIMULI.length === 18);
+  assert.ok(trials.BLOCK_2_STIMULI.length === 18);
 });
 
 
 QUnit.test("getPracticeMinCorrect", function(assert) {
   assert.equal(getPracticeMinCorrect(15, 0.10), 13);
   assert.equal(getPracticeMinCorrect(72, 0.15), 61);
+  assert.equal(getPracticeMinCorrect(18, 0.10), 16);
+});
+
+
+QUnit.test("generateNoGoItems", function(assert) {
+    assert.deepEqual(generateNoGoItems(3), [3, 3, 3]);
+    assert.deepEqual(generateNoGoItems(5), [3, 3, 3, 3, 3]);
+});
+
+
+QUnit.test("generateGoItems", function(assert) {
+    assert.ok(generateGoItems(100).length === 100);
+    assert.ok(generateGoItems(100).indexOf(3) === -1);
 });

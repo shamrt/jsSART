@@ -270,30 +270,58 @@ function generateSartBlockStimuli(conditions) {
 }
 
 
+// generate n-length array of no-go items
+function generateNoGoItems(n) {
+  return Array.apply(null, Array(n))
+    .map(function() { return jsSART.STIMULI.NO_GO_VALUE; })
+}
+
+
+// generate n-length array of go (non-no-go) items
+function generateGoItems(n) {
+  var go_items = [];
+
+  while (go_items.length < n) {
+    var stimulus = _.sample(jsSART.STIMULI.VALUES);
+    if (stimulus === jsSART.STIMULI.NO_GO_VALUE) continue;
+    go_items.push(stimulus);
+  }
+
+  return go_items;
+}
+
+
 // generate quasi-random stimuli for SART blocks
 // return list of trial values
-function generateStimuli(num_trials) {
-  var stimuli = [];
-  var quasi_random_counter = -1;
-  var last_trial;
+function generateStimuli(num_trials, _num_no_gos) {
+  var num_no_gos = _num_no_gos || jsSART.STIMULI.NO_GOS_PER_BLOCK;
 
-  while (stimuli.length < num_trials) {
-    // prohibit 3s unless quasi-random counter equals zero
-    if (last_trial === 3 && quasi_random_counter < 0) {
-      // select a random countdown number from list
-      quasi_random_counter = _.sample(jsSART.STIMULI.QUASI_RANDOM_RANGE);
+  var no_go_val = jsSART.STIMULI.NO_GO_VALUE;
+
+  var goStimuli = generateGoItems((num_trials - num_no_gos));
+  var noGoStimuli = generateNoGoItems(num_no_gos);
+  var unshuffledStimuli = goStimuli.concat(noGoStimuli);
+  var stimuliIndexes = _.range(num_trials);
+  var stimuli = Array.apply(null, Array(num_trials)).map(function() { return 0; });  // an array of `num_trials` 0s
+
+  while (stimuliIndexes.length) {
+    var random_index = _.sample(stimuliIndexes);
+    var trial = unshuffledStimuli.pop();
+
+    // add trial to stimuli if not a no-go value...
+    if (trial !== no_go_val ||
+        // ...or if the surrounding trials are not no-go values
+        (stimuli[random_index + 1] !== no_go_val && stimuli[random_index - 1] !== no_go_val)
+        ) {
+      // replace zeroed stimulus
+      stimuli[random_index] = trial;
+      // remove index
+      stimuliIndexes.splice(stimuliIndexes.indexOf(random_index), 1);
+    } else {
+      // put trial value back
+      unshuffledStimuli.push(trial);
     }
 
-    // select random stimuli
-    var trial = _.sample(jsSART.STIMULI.VALUES);
-
-    // add trial to stimuli if allowable
-    if (quasi_random_counter < 0 ||
-        (quasi_random_counter >= 0 && trial !== 3)) {
-      stimuli.push(trial);
-      last_trial = trial;
-      if (quasi_random_counter > -1) quasi_random_counter--;
-    }
   }
 
   return stimuli;
