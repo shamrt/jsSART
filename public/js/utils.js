@@ -208,6 +208,17 @@ function createSartBlock(stimuli, options) {
 }
 
 
+// generate a set of multi-choice questions based on a standard scale (which
+// uses the same likert scale for each item)
+// @param {array} questions - Array of item/question strings
+// @param {array} likert_scale - Array of Likert scale anchors
+function createScaleQuestionSet(questions, likert_scale) {
+return questions.map(function(question) {
+  return { question: question, likert_scale: likert_scale };
+});
+}
+
+
 // generate a multiple choice survey trials object
 function generateMultiChoiceSurvey(questions, randomize_order) {
   // by default, do not randomize order
@@ -270,30 +281,58 @@ function generateSartBlockStimuli(conditions) {
 }
 
 
+// generate n-length array of no-go items
+function generateNoGoItems(n) {
+  return Array.apply(null, Array(n))
+    .map(function() { return jsSART.STIMULI.NO_GO_VALUE; })
+}
+
+
+// generate n-length array of go (non-no-go) items
+function generateGoItems(n) {
+  var go_items = [];
+
+  while (go_items.length < n) {
+    var stimulus = _.sample(jsSART.STIMULI.VALUES);
+    if (stimulus === jsSART.STIMULI.NO_GO_VALUE) continue;
+    go_items.push(stimulus);
+  }
+
+  return go_items;
+}
+
+
 // generate quasi-random stimuli for SART blocks
 // return list of trial values
-function generateStimuli(num_trials) {
-  var stimuli = [];
-  var quasi_random_counter = -1;
-  var last_trial;
+function generateStimuli(num_trials, _num_no_gos) {
+  var num_no_gos = _num_no_gos || jsSART.STIMULI.NO_GOS_PER_BLOCK;
 
-  while (stimuli.length < num_trials) {
-    // prohibit 3s unless quasi-random counter equals zero
-    if (last_trial === 3 && quasi_random_counter < 0) {
-      // select a random countdown number from list
-      quasi_random_counter = _.sample(jsSART.STIMULI.QUASI_RANDOM_RANGE);
+  var no_go_val = jsSART.STIMULI.NO_GO_VALUE;
+
+  var goStimuli = generateGoItems((num_trials - num_no_gos));
+  var noGoStimuli = generateNoGoItems(num_no_gos);
+  var unshuffledStimuli = goStimuli.concat(noGoStimuli);
+  var stimuliIndexes = _.range(num_trials);
+  var stimuli = Array.apply(null, Array(num_trials)).map(function() { return 0; });  // an array of `num_trials` 0s
+
+  while (stimuliIndexes.length) {
+    var random_index = _.sample(stimuliIndexes);
+    var trial = unshuffledStimuli.pop();
+
+    // add trial to stimuli if not a no-go value...
+    if (trial !== no_go_val ||
+        // ...or if the surrounding trials are not no-go values
+        (stimuli[random_index + 1] !== no_go_val && stimuli[random_index - 1] !== no_go_val)
+        ) {
+      // replace zeroed stimulus
+      stimuli[random_index] = trial;
+      // remove index
+      stimuliIndexes.splice(stimuliIndexes.indexOf(random_index), 1);
+    } else {
+      // put trial value back
+      unshuffledStimuli.push(trial);
     }
 
-    // select random stimuli
-    var trial = _.sample(jsSART.STIMULI.VALUES);
-
-    // add trial to stimuli if allowable
-    if (quasi_random_counter < 0 ||
-        (quasi_random_counter >= 0 && trial !== 3)) {
-      stimuli.push(trial);
-      last_trial = trial;
-      if (quasi_random_counter > -1) quasi_random_counter--;
-    }
   }
 
   return stimuli;
@@ -327,30 +366,6 @@ function divideStimuliIntoBlocks(stimuli, trials_per_block) {
 // generate random practice condition
 function generatePracticeCondition() {
   return _.sample(jsSART.CONDITIONS.PRACTICE);
-}
-
-
-// generate practice trials from a random condition
-function generatePracticeTrials(condition) {
-  var trials;
-  switch (condition) {
-    case 'num_trials':
-      // NOTE: Pre-set practice block trials for mirrored number of trials
-      // condition
-      trials = {
-        'BLOCK_1_STIMULI': _.shuffle([9, 1, 3, 5, 6]),
-        'BLOCK_2_STIMULI': _.shuffle(
-          [4, 5, 7, 2, 8, 4, 5, 9, 3, 6, 9, 2, 7, 3, 8]
-        )
-      };
-      break;
-    default:
-      trials = {
-        'BLOCK_1_STIMULI': generateStimuli(29),
-        'BLOCK_2_STIMULI': generateStimuli(72)
-      };
-  }
-  return trials;
 }
 
 

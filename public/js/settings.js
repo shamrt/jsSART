@@ -8,9 +8,9 @@ var jsSART = {
   // --------------------------------
   'CONDITIONS': {
     // Total number of trials a participant will see during experiment
-    'NUM_TRIALS': [450, 675, 900],
+    'NUM_TRIALS': [1125],
     // Number of trials before being shown real-time post-block questions
-    'TRIALS_PER_BLOCK': [225, 75],
+    'TRIALS_PER_BLOCK': [225],
     // Practice blocks conditions
     'PRACTICE': ['num_trials', 'time_duration']
   },
@@ -22,11 +22,11 @@ var jsSART = {
     'VALUES': _.range(1, 10),  // 1--9
     // No-go value
     'NO_GO_VALUE': 3,
+    // No-go values per block
+    'NO_GOS_PER_BLOCK': 25,
     // Font sizes
     // NOTE: approx. 48px, 72px, 94px, 100px and 120px
     'FONT_SIZES': ["12mm", "17.4mm", "22.717mm", "24.17mm", "29mm"],
-    // Second level quasi-random counter range
-    'QUASI_RANDOM_RANGE': _.range(4),  // 0-3
     // Allow keys 1--9 and numpad 1--9
     'ALLOW_KEYCODES': [32, 13],
     // Pace of PASAT trial presentation
@@ -70,6 +70,10 @@ var jsSART = {
         question: "How much discomfort or distress is this task currently causing?",
         likert_scale: "NONE_ALOT"
       },
+      {
+        question: "How much boredom are you currently experiencing?",
+        likert_scale: "NONE_ALOT"
+      },
     ],
     // Self-report anticipated effort, discomfort, etc
     'ANTICIPATION': [
@@ -97,40 +101,64 @@ var jsSART = {
         question: "In light of your experience so far, how <strong><u>motivated</strong></u> are you to perform to the best of your ability on this task?",
         likert_scale: "NOT_EXTREMELY"
       },
+      {
+        question: "How much boredom are you currently experiencing?",
+        likert_scale: "NONE_ALOT"
+      },
     ],
     // Post-experiment retrospective evaluation
     'RETROSPECTIVE': [
       {
-        question: "Considering the <strong>attention task</strong> in its entirety: What was the total amount of <strong><u>mental effort</u></strong> it required?",
+        question: "How mentally demanding was the task?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How physically demanding was the task?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How hurried or rushed was the pace of the task?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How successful were you in accomplishing what you were asked to do?",
+        likert_scale: "PERFORMANCE"
+      },
+      {
+        question: "How hard did you have to work to accomplish your level of performance?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How insecure, discouraged, irritated, stressed, and annoyed were you?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How distressed or uncomfortable were you?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How bored were you?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How mentally fatigued were you?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How much did you enjoy the task?",
+        likert_scale: "LOW_HIGH"
+      },
+      {
+        question: "How much did you enjoy the task?",
         likert_scale: "NONE_ALOT"
       },
       {
-        question: "Considering the <strong>attention task</strong> in its entirety: What was the total amount of <strong><u>discomfort or distress</u></strong> it caused? ",
-        likert_scale: "NONE_ALOT"
+        question: "How hard did you try to do you best?",
+        likert_scale: "NOT_EXTREMELY"
       },
       {
-        question: "How well did you <strong><u>perform</u></strong> on the <strong>attention task</strong>?",
-        likert_scale: "BELOW_ABOVE_AVG"
-      },
-      {
-        question: "How willing would you be to do another <strong>attention task</strong> right now?",
-        likert_scale: "WILLINGNESS"
-      },
-      {
-        question: "Considering the <strong>attention task</strong> in its entirety: How much <strong><u>mental fatigue</strong></u> did you experience?",
-        likert_scale: "NONE_ALOT"
-      },
-      {
-        question: "How <strong><u>satisfied</u></strong> are you with your performance on the <strong>attention task</strong>?",
+        question: "How satisfied are you with your performance?",
         likert_scale: "SATISFACTION"
-      },
-      {
-        question: "Considering the <strong>attention task</strong> in its entirety: I feel that <strong><u>I tried as hard as I could have to do my best</u></strong>.",
-        likert_scale: "TRUTH"
-      },
-      {
-        question: "Considering the <strong>attention task</strong> in its entirety: How much <strong><u>enjoyment</u></strong> did you experience?",
-         likert_scale: "NONE_ALOT"
       },
     ]
   },
@@ -139,6 +167,8 @@ var jsSART = {
   // --------------------------------
   'LIKERT': {
     'NONE_ALOT': ["1<br>None", "2", "3", "4", "5", "6", "7<br>A Lot"],
+    'LOW_HIGH': ["1<br>Very Low", "2", "3", "4", "5", "6", "7<br>Very High"],
+    'PERFORMANCE': ["1<br>Perfect", "2", "3", "4", "5", "6", "7<br>Failure"],
     'BELOW_ABOVE_AVG': [
       "1<br>Significantly<br>Below Average", "2", "3", "4<br>Average",
       "5", "6", "7<br>Significantly<br>Above Average"
@@ -154,6 +184,9 @@ var jsSART = {
     'NOT_EXTREMELY': [
       "1<br>Not<br>at all", "2", "3", "4", "5", "6", "7<br>Extremely"
     ],
+    'NOT_WELL': [
+      "1<br>Not at all", "2<br>A little", "3<br>Somewhat", "4<br>Well", "5<br>Very well"
+    ],
     'SATISFACTION': [
       "1<br>Not at all<br>satisfied", "2", "3", "4", "5", "6",
       "7<br>Completely<br>satisfied"
@@ -165,6 +198,11 @@ var jsSART = {
     'TRUTH': [
       "1<br>Not at all<br>true", "2", "3", "4", "5", "6",
       "7<br>Very true"
+    ],
+    'AGREE_DISAGREE': [
+      "1<br>Strongly<br>disagree", "2<br>Disagree",
+      "3<br>Somewhat<br>disagree", "4<br>Neutral", "5<br>Somewhat<br>agree",
+      "6<br>Agree", "7<br>Strongly<br>agree"
     ],
   }
 };
