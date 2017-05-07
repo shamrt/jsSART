@@ -15,8 +15,8 @@
 
       "<p>Your task is to either:</p> " +
       "<ol>" +
-        "<li>Press the " + spacebar_html + " when you see any digit other than <code>3</code>.</li>" +
-        "<li>Don’t do anything (press no key) when you see the digit <code>3</code>, and just wait for the next digit to be shown.</li>" +
+        "<li>Press the " + spacebar_html + " when you see any digit other than <code>" + jsSART.STIMULI.NO_GO_VALUE + "</code>.</li>" +
+        "<li>Don’t do anything (press no key) when you see the digit <code>" + jsSART.STIMULI.NO_GO_VALUE + "</code>, and just wait for the next digit to be shown.</li>" +
       "<ol>",
 
       "<p>It’s important to be accurate and fast in this study.</p>" +
