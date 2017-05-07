@@ -184,6 +184,9 @@ var jsSART = {
     'NOT_EXTREMELY': [
       "1<br>Not<br>at all", "2", "3", "4", "5", "6", "7<br>Extremely"
     ],
+    'NOT_WELL': [
+      "1<br>Not at all", "2<br>A little", "3<br>Somewhat", "4<br>Well", "5<br>Very well"
+    ],
     'SATISFACTION': [
       "1<br>Not at all<br>satisfied", "2", "3", "4", "5", "6",
       "7<br>Completely<br>satisfied"
@@ -195,6 +198,11 @@ var jsSART = {
     'TRUTH': [
       "1<br>Not at all<br>true", "2", "3", "4", "5", "6",
       "7<br>Very true"
+    ],
+    'AGREE_DISAGREE': [
+      "1<br>Strongly<br>disagree", "2<br>Disagree",
+      "3<br>Somewhat<br>disagree", "4<br>Neutral", "5<br>Somewhat<br>agree",
+      "6<br>Agree", "7<br>Strongly<br>agree"
     ],
   }
 };

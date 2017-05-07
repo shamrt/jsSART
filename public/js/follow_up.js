@@ -28,215 +28,74 @@
   };
 
   // part 1
-  var demographics_1_questions = [
-    {
-      questions: ["Please indicate your gender:"],
-      options: [["Male", "Female", "Other"]]
-    },
-    {
-      questions: ["Which year of university are you currently in?"],
-      options: [[
-        "1st year undergrad", "2nd year undergrad", "3rd year undergrad",
-        "4th year undergrad", "Graduated", "Post-BA/BSc continuing"
-      ]]
-    },
-    {
-      questions: ["What is the highest level of education that you intend to complete?"],
-      options: [[
-        "Bachelor's degree", "Master's degree", "PhD",
-        "Professional degree (e.g., law)"
-      ]]
-    },
-    {
-      questions: ["Is English your first language?"],
-      options: [["Yes", "No"]]
-    },
-    {
-      questions: ["For how many years have you been speaking English?"],
-      options: [[
-        "Less than 1 year", "1–2 years", "3–5 years", "6–10 years",
-        "10+ years", "All my life"
-      ]]
-    },
-    {
-      questions: ["What is your mother’s highest level of education?"],
-      options: [[
-        "Less than high school", "High school", "Some college", "BA/BSc degree",
-        "MA/MSc degree", "PhD", "Professional degree (e.g., law)",
-        "Not applicable"
-      ]]
-    }
-  ];
   var demographics_1 = {
     type: 'survey-multi-choice',
-    timeline: demographics_1_questions,
-    required: _.map(demographics_1_questions, function() { return true; })
-  };
-
-  // part 2
-  var demographics_2 = {
-    type: 'survey-text',
-    questions: [
-      ["What is your mother's occupation?"]
-    ]
-  };
-
-  // part 3
-  var demographics_3_questions = [
-    {
-      questions: ["What is your father’s highest level of education?"],
-      options: [
-        ["Less than high school", "High school", "Some college", "BA/BSc degree", "MA/MSc degree", "PhD", "Professional degree (e.g., law)", "Not applicable"]
-      ]
-    },
-  ];
-  var demographics_3 = {
-    type: 'survey-multi-choice',
-    timeline: demographics_3_questions,
-    required: _.map(demographics_3_questions, function() { return true; })
-  };
-
-  // part 4
-  var demographics_4_questions = [
-    ["What is your father's occupation?"],
-    ["What was your final average at the end of high school?<br><em>(percentage; e.g., <code>75%</code>)</em>"],
-    ["Estimate your current university average<br><em>(estimate percentage; e.g., <code>75%</code>)</em>:"],
-  ];
-  var demographics_4 = {
-    type: 'survey-text',
-    timeline: _.map(demographics_4_questions, function(q) {
-      return {questions: q};
-    })
-  };
-
-  // part 5
-  var demographics_5_questions = [
-    {
-      questions: ["How many <u>statistics</u> courses <strong>in university</strong> have you taken (or are currently taking)?"],
-      options: [["None", "1", "2", "3", "4", "5", "More than 5"]],
-    },
-    {
-      questions: ["How many <u>statistics</u> courses did you take <strong>in high school</strong>?"],
-      options: [["None", "1", "2", "3", "4", "5", "More than 5"]],
-    },
-    {
-      questions: ["How many years of <strong>mathematics</strong> (algebra, geometry, calculus, etc.) did you take <strong>in high school</strong>?"],
-      options: [["None", "1", "2", "3", "4", "More than 4"]],
-    },
-    {
-      questions: ["How many <u>mathematics</u> courses <strong>in university</strong> have you taken (or are currently taking)?"],
-      options: [["None", "1", "2", "3", "4", "5", "More than 5"]],
-    },
-    {
-      questions: ["On a scale of 1–7, how much do you like math?"],
-      options: [jsSART.LIKERT.NONE_ALOT],
-    },
-    {
-      questions: ["Have you been previously diagnosed with ADD or AD/HD?"],
-      options: [["Yes", "No"]],
-    },
-  ];
-  var demographics_5 = {
-    type: 'survey-multi-choice',
-    timeline: demographics_5_questions,
-    required: _.map(demographics_5_questions, function() { return true; }),
-    horizontal: true
-  };
-
-  // part 6
-  var demographics_6 = {
-    type: 'survey-text',
-    questions: [
-      ["Please indicate what your current (or intended) university major is:"]
-    ]
-  };
-
-  // extended questions
-  var lead_in_question = "When using <strong>computers and/or electronic media</strong>, do you ";
-  var extended_questions = [
-        lead_in_question + "open attachments in emails that are sent by someone you don’t know?",
-        lead_in_question + "backup important work and documents on your computer?",
-        lead_in_question + "have time limits on how much recreational time you spend using those electronic media at home?",
-        lead_in_question + "use the privacy settings on social networking sites, such as Facebook and Twitter, to protect your personal information and privacy?",
-        "Do you have anti-virus software on your home computer(s)?",
-        "Have you ever had a computer virus?",
-      ];
-  var extended_questions_1 = {
-    type: 'survey-multi-choice',
-    timeline: _.map(extended_questions, function(q) {
-      return {
-        questions: [q],
-        options: [["Yes", "No"]],
-        required: [true]
-      };
-    }),
-  };
-  var extended_questions_2 = {
-    type: 'survey-text',
-    questions: [
-      ["How many times have you had a computer virus?"]
-    ]
-  };
-
-  // behavioural survey preamble
-  var behav_survey_preamble = "For these next items, please indicate how the emotional or behavioural problems listed might have affected you <strong><u>in the last month</u></strong>.";
-  var behav_survey_notice = createTextBlock(behav_survey_preamble);
-
-  // behavioural survey
-  var lead_in_school = "<strong>At school</strong>, have you had ";
-  var lead_in_life = "<strong>In general</strong>, have you ";
-  var behav_survey_questions = [
-    lead_in_school + "problems taking notes?",
-    lead_in_school + "problems completing assignments?",
-    lead_in_school + "problems getting your work done efficiently ?",
-    lead_in_school + "problems with instructors?",
-    lead_in_school + "problems meeting minimum requirements to stay in school?",
-    lead_in_school + "problems with attendance?",
-    lead_in_school + "problems with being late?",
-    lead_in_school + "problems with working to your potential?",
-    lead_in_school + "problems with inconsistent grades?",
-    lead_in_life + "made excessive or inappropriate use of internet, video games or TV?",
-    lead_in_life + "had problems getting ready to leave the house?",
-    lead_in_life + "had problems getting to bed?",
-    lead_in_life + "had problems with eating junk food?",
-    lead_in_life + "gotten hurt or injured?",
-    lead_in_life + "been avoiding exercise?",
-    lead_in_life + "had problems attending regular appointments, such as doctor/dentist?",
-    lead_in_life + "had problems managing chores at home?",
-    lead_in_life + "had problems managing money?"
-  ];
-  var behav_survey_likert = [
-    "0<br>Never or<br>not at all",
-    "1<br>Sometimes<br>or somewhat",
-    "2<br>Often or<br>very much",
-    "3<br>Very often<br>or very much",
-    "N/A"
-  ];
-  var behavioural_survey = {
-    type: 'survey-multi-choice',
-    timeline: _.map(behav_survey_questions, function(q) {
-      return {
-        questions: [q],
-        options: [behav_survey_likert],
-        required: [true]
-      };
-    }),
-    horizontal: true,
-    randomize_order: true
+    timeline: [
+      {
+        questions: ["Please indicate your gender:"],
+        options: [["Male", "Female", "Other"]]
+      },
+    ],
+    required: [true]
   };
 
   follow_up.push(
     demographics_age,
-    demographics_1,
-    demographics_2,
-    demographics_3,
-    demographics_4,
-    demographics_5,
-    demographics_6,
-    extended_questions_1,
-    extended_questions_2,
-    behav_survey_notice,
-    behavioural_survey
+    demographics_1
+  );
+
+
+  // Behavioural survey questions
+  // -------------
+
+  // SMS scale
+  var sms_scale_notice = createTextBlock("Next you will be presented with a list of statements.</p><p>Please use the accompanying rating scale to indicate how well each statement describes your experiences in the past 15 minutes.")
+  var sms_questions = [
+    "I was aware of different emotions that arose in me",
+    "I tried to pay attention to pleasant and unpleasant sensations",
+    "I found some of my experiences interesting",
+    "I noticed many small details of my experience",
+    "I felt aware of what was happening inside of me",
+    "I noticed pleasant and unpleasant emotions",
+    "I actively explored my experience in the moment",
+    "I clearly physically felt what was going on in my body",
+    "I changed my body posture and paid attention to the physical process of moving",
+    "I felt that I was experiencing the present moment fully",
+    "I noticed pleasant and unpleasant thoughts",
+    "I noticed emotions come and go",
+    "I noticed various sensations caused by my surroundings (e.g., heat, coolness, the wind on my face)",
+    "I noticed physical sensations come and go",
+    "I had moments when I felt alert and aware",
+    "I felt closely connected to the present moment",
+    "I noticed thoughts come and go",
+    "I felt in contact with my body",
+    "I was aware of what was going on in my mind",
+    "It was interesting to see the patterns of my thinking",
+    "I noticed some pleasant and unpleasant physical sensations",
+  ];
+  var sms_question_set = createScaleQuestionSet(sms_questions, "NOT_WELL");
+  var sms_scale = generateMultiChoiceSurvey(sms_question_set, true);
+
+  // state boredom scale
+  var state_boredom_notice = createTextBlock("<p>For the next series of statements, please indicate how you feel <strong>right now</strong> about yourself and your life, even if it is different from how you usually feel.</p>");
+  var state_boredom_questions = [
+    "I seem to be forced to do thing that have no value to me.",
+    "I feel bored.",
+    "I am wasting time that would be better spent on something else.",
+    "I want something to happen but I am not sure what.",
+    "I feel like I’m sitting around waiting for something to happen.",
+    "I am easily distracted.",
+    "My mind is wandering.",
+    "Time is passing by slower than usual.",
+  ];
+  var state_boredom_question_set = createScaleQuestionSet(state_boredom_questions, "AGREE_DISAGREE");
+  var state_boredom_scale = generateMultiChoiceSurvey(state_boredom_question_set, true);
+
+  follow_up.push(
+    sms_scale_notice,
+    sms_scale,
+    state_boredom_notice,
+    state_boredom_scale
   );
 
 
