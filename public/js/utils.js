@@ -382,6 +382,19 @@ function generatePracticeTrials(condition) {
 }
 
 
+// generate a multi-choice timeline object based on a set of item strings
+// @param {array} questions - Array of item/question strings
+// @param {array} likert_scale - Array of Likert scale anchors
+function createTimelineSet(questions, likert_scale) {
+return questions.map(function(question) {
+  return {
+    questions: [question],
+    options: [likert_scale],
+  };
+});
+}
+
+
 // post data to the server using an AJAX call
 function postDataToDb(data, filename, redirect) {
   // remove page reload alert binding

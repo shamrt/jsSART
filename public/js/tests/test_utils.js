@@ -392,12 +392,25 @@ QUnit.test("getPracticeMinCorrect", function(assert) {
 
 
 QUnit.test("generateNoGoItems", function(assert) {
-    assert.deepEqual(generateNoGoItems(3), [3, 3, 3]);
-    assert.deepEqual(generateNoGoItems(5), [3, 3, 3, 3, 3]);
+  assert.deepEqual(generateNoGoItems(3), [3, 3, 3]);
+  assert.deepEqual(generateNoGoItems(5), [3, 3, 3, 3, 3]);
 });
 
 
 QUnit.test("generateGoItems", function(assert) {
-    assert.ok(generateGoItems(100).length === 100);
-    assert.ok(generateGoItems(100).indexOf(3) === -1);
+  assert.ok(generateGoItems(100).length === 100);
+  assert.ok(generateGoItems(100).indexOf(3) === -1);
 });
+
+QUnit.test("createTimelineSet", function(assert) {
+  var likert_scale = ["1", "2", "3"];
+  var questions = ["Foo", "Bar"];
+  var expected = [
+    { questions: ["Foo"], options: [likert_scale], },
+    { questions: ["Bar"], options: [likert_scale], },
+  ];
+
+  var timelineSet = createTimelineSet(questions, likert_scale);
+
+  assert.deepEqual(timelineSet, expected);
+})
