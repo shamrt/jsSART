@@ -369,30 +369,6 @@ function generatePracticeCondition() {
 }
 
 
-// generate practice trials from a random condition
-function generatePracticeTrials(condition) {
-  var trials;
-  switch (condition) {
-    case 'num_trials':
-      // NOTE: Pre-set practice block trials for mirrored number of trials
-      // condition
-      trials = {
-        'BLOCK_1_STIMULI': _.shuffle([9, 1, 3, 5, 6]),
-        'BLOCK_2_STIMULI': _.shuffle(
-          [4, 5, 7, 2, 8, 4, 5, 9, 3, 6, 9, 2, 7, 3, 8]
-        )
-      };
-      break;
-    default:
-      trials = {
-        'BLOCK_1_STIMULI': generateStimuli(29),
-        'BLOCK_2_STIMULI': generateStimuli(72)
-      };
-  }
-  return trials;
-}
-
-
 // post data to the server using an AJAX call
 function postDataToDb(data, filename, redirect) {
   // remove page reload alert binding

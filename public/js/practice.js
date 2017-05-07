@@ -6,7 +6,10 @@
   var practice = [];
   var participant_id = getParticipantId();
   var practice_condition = generatePracticeCondition();
-  var practice_trials = generatePracticeTrials(practice_condition);
+  var practice_trials = {
+    'BLOCK_1_STIMULI': generateStimuli(18, 2),
+    'BLOCK_2_STIMULI': generateStimuli(72, 8)
+  };
 
 
   // baseline evaluation questions
