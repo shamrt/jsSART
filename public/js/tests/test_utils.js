@@ -402,15 +402,15 @@ QUnit.test("generateGoItems", function(assert) {
   assert.ok(generateGoItems(100).indexOf(3) === -1);
 });
 
-QUnit.test("createTimelineSet", function(assert) {
-  var likert_scale = ["1", "2", "3"];
+QUnit.test("createScaleQuestionSet", function(assert) {
+  var likert_scale = "ONE_TWO_THREE";
   var questions = ["Foo", "Bar"];
   var expected = [
-    { questions: ["Foo"], options: [likert_scale], },
-    { questions: ["Bar"], options: [likert_scale], },
+    { question: "Foo", likert_scale: likert_scale },
+    { question: "Bar", likert_scale: likert_scale },
   ];
 
-  var timelineSet = createTimelineSet(questions, likert_scale);
+  var timelineSet = createScaleQuestionSet(questions, likert_scale);
 
   assert.deepEqual(timelineSet, expected);
 })

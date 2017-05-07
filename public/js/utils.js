@@ -208,6 +208,17 @@ function createSartBlock(stimuli, options) {
 }
 
 
+// generate a set of multi-choice questions based on a standard scale (which
+// uses the same likert scale for each item)
+// @param {array} questions - Array of item/question strings
+// @param {array} likert_scale - Array of Likert scale anchors
+function createScaleQuestionSet(questions, likert_scale) {
+return questions.map(function(question) {
+  return { question: question, likert_scale: likert_scale };
+});
+}
+
+
 // generate a multiple choice survey trials object
 function generateMultiChoiceSurvey(questions, randomize_order) {
   // by default, do not randomize order
@@ -379,19 +390,6 @@ function generatePracticeTrials(condition) {
       };
   }
   return trials;
-}
-
-
-// generate a multi-choice timeline object based on a set of item strings
-// @param {array} questions - Array of item/question strings
-// @param {array} likert_scale - Array of Likert scale anchors
-function createTimelineSet(questions, likert_scale) {
-return questions.map(function(question) {
-  return {
-    questions: [question],
-    options: [likert_scale],
-  };
-});
 }
 
 
