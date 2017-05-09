@@ -14,7 +14,7 @@
   var prospective_survey = generateMultiChoiceSurvey(
     jsSART.QUESTIONS.ANTICIPATION, true);  // randomize order
 
-  var realtime_notice = createTextBlock("<p>Throughout the attention task, you will be asked at various time points to report how you feel <strong>at that exact moment</strong>.</p><p>Please report how you feel as accurately as possible, even if your rating is the same as (or higher or lower than) your last rating — we are interested in the accurate reporting of how you feel during the attention task moment by moment.</p>");
+  var realtime_notice = createTextBlock("<p>Throughout the attention task, you will be asked at various time points to report how you feel <strong>at that exact moment</strong>.</p><p>Please report how you feel as accurately as possible, even if your rating is the same as your last rating — we are interested in the accurate reporting of how you feel during the attention task moment by moment.</p>");
 
   experiment.push(
     prospective_survey_notice,

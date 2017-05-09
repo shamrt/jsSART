@@ -361,29 +361,6 @@ QUnit.test("generatePracticeCondition", function(assert) {
 });
 
 
-QUnit.test("generatePracticeTrials, with num_trials condition", function(assert) {
-  function numberOfThreesInList(list) {
-    var counts = _.countBy(list, function(num) { return num === 3; });
-    return counts["true"];
-  }
-
-  var trials = generatePracticeTrials('num_trials');
-
-  assert.ok(trials.BLOCK_1_STIMULI.length === 5);
-  assert.equal(numberOfThreesInList(trials.BLOCK_1_STIMULI), 1);
-
-  assert.ok(trials.BLOCK_2_STIMULI.length === 15);
-  assert.equal(numberOfThreesInList(trials.BLOCK_2_STIMULI), 2);
-});
-
-
-QUnit.test("generatePracticeTrials, with time_duration condition", function(assert) {
-  var trials = generatePracticeTrials('time_duration');
-  assert.ok(trials.BLOCK_1_STIMULI.length === 18);
-  assert.ok(trials.BLOCK_2_STIMULI.length === 18);
-});
-
-
 QUnit.test("getPracticeMinCorrect", function(assert) {
   assert.equal(getPracticeMinCorrect(15, 0.10), 13);
   assert.equal(getPracticeMinCorrect(72, 0.15), 61);

@@ -49,7 +49,7 @@
   // -------------
 
   // SMS scale
-  var sms_scale_notice = createTextBlock("Next you will be presented with a list of statements.</p><p>Please use the accompanying rating scale to indicate how well each statement describes your experiences in the past 15 minutes.")
+  var sms_scale_notice = createTextBlock("Next you will be presented with a list of statements.</p><p>Please use the accompanying rating scale to indicate how well each statement describes your experiences <strong>in the past 15 minutes</strong>.")
   var sms_questions = [
     "I was aware of different emotions that arose in me",
     "I tried to pay attention to pleasant and unpleasant sensations",
