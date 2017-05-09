@@ -8,7 +8,7 @@
   var practice_condition = generatePracticeCondition();
   var practice_trials = {
     'BLOCK_1_STIMULI': generateStimuli(18, 2),
-    'BLOCK_2_STIMULI': generateStimuli(72, 8)
+    'BLOCK_2_STIMULI': generateStimuli(27, 3)
   };
 
 
