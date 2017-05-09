@@ -32,8 +32,8 @@ input, textarea {
     top:0;
     left:0;
     right:0;
-    width: 75%;
-    max-width: 960px;
+    width: 90%;
+    max-width: 1140px;
     height: 100%;
     display: table;
     margin-left: auto;
@@ -45,8 +45,21 @@ input, textarea {
     align-content: center;
 }
 
+.jspsych-display-element {
+    width: 100%;
+}
+
 .jspsych-categorize-stimulus {
     vertical-align: middle
+}
+
+.jspsych-survey-multi-choice-option {
+    text-align: center;
+}
+
+.jspsych-survey-multi-choice-option label input[type="radio"] {
+    display: block;
+    margin: 0 auto;
 }
 
 #jspsych-feedback .correct {
