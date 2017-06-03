@@ -138,10 +138,6 @@ def compile_practice_data(df):
     participant_id_col = df['participant_id'].values
     compiled_data['id'] = participant_id_col[0]
 
-    # participant ID
-    condition_col = df['practice_condition'].values
-    compiled_data['practice_condition'] = condition_col[0]
-
     # baseline evaluation of valence and arousal
     arousal_df = df.ix[1:2]
     mind_body, feeling = _get_arousal_ratings(arousal_df)

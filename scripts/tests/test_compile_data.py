@@ -8,6 +8,9 @@ from scripts import compile_data
 
 TESTS_DIR = os.path.abspath(os.path.join(__file__, '..'))
 MOCK_DATA_DIR = os.path.join(TESTS_DIR, 'mock_data')
+PID_FAIL = '401'
+PID_SUCCESS = '1'
+PID_SUCCESS_2 = '2'
 
 
 def _csv_path(stage, pid):
@@ -16,21 +19,21 @@ def _csv_path(stage, pid):
 
 def test_get_data_file_paths_returns_list_of_paths():
     mock_practice_csvs = compile_data.get_csv_paths(MOCK_DATA_DIR, 'practice')
-    assert len(mock_practice_csvs) == 5
-    assert _csv_path('practice', '003') in mock_practice_csvs
+    assert len(mock_practice_csvs) == 3
+    assert _csv_path('practice', PID_SUCCESS) in mock_practice_csvs
 
 
 def test_extract_sart_blocks_with_2_practice():
     # NOTE: tests out get_csv_as_dataframe() from compile_data
-    csv_path = _csv_path('practice', '003')
+    csv_path = _csv_path('practice', PID_SUCCESS)
     df = compile_data.get_csv_as_dataframe(csv_path)
     blocks = compile_data.extract_sart_blocks(df)
     assert len(blocks) == 2
     for b in blocks:
         assert isinstance(b, compile_data.pd.DataFrame)
     # number of trials
-    assert len(blocks[0].index.values) == 5
-    assert len(blocks[1].index.values) == 15
+    assert len(blocks[0].index.values) == 18
+    assert len(blocks[1].index.values) == 27
 
 
 def get_csv_as_df(stage, pid):
@@ -42,16 +45,18 @@ def get_csv_as_df(stage, pid):
     return df
 
 
-def test_extract_sart_blocks_with_4_practice():
-    df = get_csv_as_df('practice', 'fail1')
+def test_extract_sart_blocks_with_4_practices():
+    """Examine blocks performed by participant who failed practice
+    """
+    df = get_csv_as_df('practice', PID_FAIL)
     blocks = compile_data.extract_sart_blocks(df)
     assert len(blocks) == 4
 
     # number of trials
-    assert len(blocks[0].index.values) == 29
-    assert len(blocks[1].index.values) == 72
-    assert len(blocks[2].index.values) == 72
-    assert len(blocks[3].index.values) == 72
+    assert len(blocks[0].index.values) == 18
+    assert len(blocks[1].index.values) == 27
+    assert len(blocks[2].index.values) == 27
+    assert len(blocks[3].index.values) == 27
 
     for b in blocks:
         # class
@@ -92,36 +97,33 @@ def test_extract_sart_blocks_with_4_practice_and_survey():
     assert b7.ix[b7_last_idx]['trial_type'] == trial_type_mc
 
 
-def test_passing_compile_practice_data():
-    df = get_csv_as_df('practice', '003')
+def test_compile_practice_with_passing_data():
+    df = get_csv_as_df('practice', PID_SUCCESS)
     data = compile_data.compile_practice_data(df)
-    assert data['id'] == "003"
-    assert data['practice_condition'] == 'num_trials'
+    assert data['id'] == PID_SUCCESS
     assert data['num_practice_blk2s'] == 1
-    assert data['passed_practice'] == True
-    assert data['time_practice_blk1_ms'] == 6030
-    assert data['time_practice_blk2_1_ms'] == 16165
-    assert data['time_practice_ms'] == 67198
+    assert data['passed_practice'] is True
+    assert data['time_practice_blk1_ms'] == 25851
+    assert data['time_practice_blk2_1_ms'] == 29900
+    assert data['time_practice_ms'] == 134626
 
 
-def test_failing_compile_practice_data():
-    pid = "fail1"
-    df = get_csv_as_df('practice', pid)
+def test_compile_practice_with_failing_data():
+    df = get_csv_as_df('practice', PID_FAIL)
     data = compile_data.compile_practice_data(df)
-    assert data['id'] == pid
-    assert data['practice_condition'] == 'time_duration'
+    assert data['id'] == PID_FAIL
     assert data['num_practice_blk2s'] == 3
-    assert data['passed_practice'] == False
-    assert data['time_practice_blk1_ms'] == 42198
-    assert data['time_practice_blk2_1_ms'] == 120397
-    assert data['time_practice_blk2_2_ms'] == 140798
-    assert data['time_practice_blk2_3_ms'] == 125869
+    assert data['passed_practice'] is False
+    assert data['time_practice_blk1_ms'] == 25572
+    assert data['time_practice_blk2_1_ms'] == 29968
+    assert data['time_practice_blk2_2_ms'] == 29962
+    assert data['time_practice_blk2_3_ms'] == 29964
 
     # baseline evaluation of valence and arousal
+    assert data['arousal_baseline_feeling'] == '1'
     assert data['arousal_baseline_mind_body'] == '2'
-    assert data['arousal_baseline_feeling'] == '6'
 
-    assert data['time_practice_ms'] == 469892
+    assert data['time_practice_ms'] == 152517
 
 
 def test_get_response_from_json():
