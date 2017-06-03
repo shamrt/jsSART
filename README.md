@@ -80,4 +80,8 @@ Unit tests for the data compilation code (along with mock data) can be run with 
 
     py.test scripts
 
+To watch tests (using `pytest-watch`):
+
+    ptw scripts
+
 And for JavaScript unit testing, go to `/testing` in the browser.
