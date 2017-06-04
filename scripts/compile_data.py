@@ -73,6 +73,7 @@ def extract_sart_blocks(df, with_survey=False):
     Return list of pandas data frames.
     """
     blocks = []
+    NUM_SURVEY_QUESTIONS = 3
 
     # the type of trial(s) to target
     mc_trial_type = "survey-multi-choice"
@@ -86,15 +87,15 @@ def extract_sart_blocks(df, with_survey=False):
     num_mc_trials = 0
     for index, series in df.iterrows():
         if not first_trial_idx and series['trial_type'] == mc_trial_type:
-            # skip if first trial type is a survey
+            # skip if first trial type is a survey (NOTE: should only be last)
             continue
         elif series['trial_type'] in block_trial_types and \
-                num_mc_trials < 2:
+                num_mc_trials < NUM_SURVEY_QUESTIONS:
             if not first_trial_idx:
                 first_trial_idx = index
             last_trial_idx = index
 
-            # NOTE: limit to 2 survey trials, as per experiment specs
+            # limit number of survey trials, as per experiment specs
             if series['trial_type'] == mc_trial_type:
                 num_mc_trials += 1
         else:
@@ -364,19 +365,16 @@ def summarize_sart_chunk(df):
     summary.update(performance)
 
     # affective ratings
-    survey_trials = df.loc[df['trial_type'] == 'survey-multi-choice'].\
+    survey_questions = df.loc[df['trial_type'] == 'survey-multi-choice'].\
         copy().reset_index()
 
-    effort_rating_json = survey_trials.ix[0]['responses']
-    raw_effort_rating = get_response_from_json(effort_rating_json)
-    summary['effort'] = int(raw_effort_rating[0])
-
-    discomfort_rating_json = survey_trials.ix[1]['responses']
-    raw_discomfort_rating = get_response_from_json(discomfort_rating_json)
-    summary['discomfort'] = int(raw_discomfort_rating[0])
+    for rating_type, i in [('effort', 0), ('discomfort', 1), ('boredom', 2)]:
+        rating_json = survey_questions.ix[i]['responses']
+        raw_rating = get_response_from_json(rating_json)
+        summary[rating_type] = int(raw_rating[0])
 
     # get time elapsed (in minutes) at ratings for later slope calculations
-    ratings_time_min = survey_trials.ix[0]['time_elapsed']
+    ratings_time_min = survey_questions.ix[0]['time_elapsed']
     summary['ratings_time_min'] = round(
         ratings_time_min / 1000 / 60.0, ROUND_NDIGITS)
 
@@ -446,8 +444,7 @@ def compile_experiment_data(df):
         compiled_data[label] = int(resp[0])
 
     # SART accuracy and affective reports
-    effort_ratings = []
-    discomfort_ratings = []
+    realtime_ratings = {'effort': [], 'discomfort': [], 'boredom': []}
     accuracies = []
     rating_times = []
     num_block_trials = []
@@ -460,6 +457,7 @@ def compile_experiment_data(df):
     nogo_next4_avgs = []
     nogo_num_next4_rts = []
     nogo_num_prev4_rts = []
+    realtime_rating_types = ['effort', 'discomfort', 'boredom']
 
     # collect and organize experiment data from experimental blocks
     for i, block in enumerate(blocks, start=1):
@@ -476,8 +474,8 @@ def compile_experiment_data(df):
             compiled_data[blk_key] = blk_summary[key]
 
         # collect data for later averaging
-        effort_ratings.append(blk_summary['effort'])
-        discomfort_ratings.append(blk_summary['discomfort'])
+        for rtype in realtime_rating_types:
+            realtime_ratings[rtype].append(blk_summary[rtype])
         accuracies.append(blk_summary['accuracy'])
         num_block_trials.append(blk_summary['num_trials'])
 
@@ -512,44 +510,42 @@ def compile_experiment_data(df):
                     avg_anticipation_errors)
     compiled_data['avg_accuracy'] = round(avg_accuracy, ROUND_NDIGITS)
 
-    # assign other variables
-    compiled_data['start_effort'] = effort_ratings[0]
-    compiled_data['peak_effort'] = max(effort_ratings)
-    compiled_data['min_effort'] = min(effort_ratings)
-    compiled_data['end_effort'] = effort_ratings[-1]
-    avg_effort = np.mean(effort_ratings)
-    compiled_data['avg_effort'] = round(avg_effort, ROUND_NDIGITS)
+    # assign realtime summary variables
+    for rtype in realtime_rating_types:
+        # descriptive
+        compiled_data['start_{}'.format(rtype)] = realtime_ratings[rtype][0]
+        compiled_data['peak_{}'.format(rtype)] = max(realtime_ratings[rtype])
+        compiled_data['min_{}'.format(rtype)] = min(realtime_ratings[rtype])
+        compiled_data['end_{}'.format(rtype)] = realtime_ratings[rtype][-1]
+        avg_rating = np.mean(realtime_ratings[rtype])
+        compiled_data['avg_{}'.format(rtype)] = round(
+            avg_rating, ROUND_NDIGITS)
 
-    compiled_data['start_discomfort'] = discomfort_ratings[0]
-    compiled_data['peak_discomfort'] = max(discomfort_ratings)
-    compiled_data['min_discomfort'] = min(discomfort_ratings)
-    compiled_data['end_discomfort'] = discomfort_ratings[-1]
-    avg_discomfort = np.mean(discomfort_ratings)
-    compiled_data['avg_discomfort'] = round(avg_discomfort, ROUND_NDIGITS)
+        # proportion of effort and discomfort ratings that increase or decrease
+        props = _calculate_ratings_proportions(realtime_ratings[rtype])
+        compiled_data['prop_{}_ups'.format(rtype)] = props['ups']
+        compiled_data['prop_{}_downs'.format(rtype)] = props['downs']
+        compiled_data['prop_{}_sames'.format(rtype)] = props['sames']
 
+        # area under the curve calculations
+        compiled_data['auc_{}'.format(rtype)] = round(
+            np.trapz(realtime_ratings[rtype]), ROUND_NDIGITS)
+
+    # assign accuracy summary variables
     average_accuracy = np.average(accuracies, weights=num_block_trials)
     compiled_data['avg_blk_accuracy'] = round(average_accuracy, ROUND_NDIGITS)
     compiled_data['max_blk_accuracy'] = max(accuracies)
     compiled_data['min_blk_accuracy'] = min(accuracies)
     compiled_data['start_blk_accuracy'] = accuracies[0]
     compiled_data['end_blk_accuracy'] = accuracies[-1]
-
-    # proportion of effort and discomfort ratings that increase or decrease
-    discomfort_props = _calculate_ratings_proportions(discomfort_ratings)
-    compiled_data['prop_discomfort_ups'] = discomfort_props['ups']
-    compiled_data['prop_discomfort_downs'] = discomfort_props['downs']
-    compiled_data['prop_discomfort_sames'] = discomfort_props['sames']
-
-    effort_props = _calculate_ratings_proportions(effort_ratings)
-    compiled_data['prop_effort_ups'] = effort_props['ups']
-    compiled_data['prop_effort_downs'] = effort_props['downs']
-    compiled_data['prop_effort_sames'] = effort_props['sames']
+    compiled_data['auc_accuracy'] = round(np.trapz(accuracies), ROUND_NDIGITS)
 
     # compute regression variables for blocks
     block_measures = [
         ('accuracy', accuracies),
-        ('effort', effort_ratings),
-        ('discomfort', discomfort_ratings)
+        ('effort', realtime_ratings['effort']),
+        ('discomfort', realtime_ratings['discomfort']),
+        ('boredom', realtime_ratings['boredom']),
     ]
     for measure_name, measure_values in block_measures:
         measure_order = range(1, len(measure_values) + 1)
@@ -560,14 +556,6 @@ def compile_experiment_data(df):
         intercept_key = '{}_intercept'.format(measure_name)
         compiled_data[intercept_key] = round(
             linregress.intercept, ROUND_NDIGITS)
-
-    # area under the curve calculations
-    compiled_data['auc_accuracy'] = round(
-        np.trapz(accuracies), ROUND_NDIGITS)
-    compiled_data['auc_effort'] = round(
-        np.trapz(effort_ratings), ROUND_NDIGITS)
-    compiled_data['auc_discomfort'] = round(
-        np.trapz(discomfort_ratings), ROUND_NDIGITS)
 
     # post-experiment evaluation of valence and arousal
     arousal_df = df.ix[df.last_valid_index()-2:df.last_valid_index()-1]

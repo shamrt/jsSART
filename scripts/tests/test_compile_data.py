@@ -76,7 +76,7 @@ def test_extract_sart_blocks_with_experiment_trials_plus_survey():
         assert isinstance(b, compile_data.pd.DataFrame)
 
     # number of trials + multi-choice survey responses
-    EXPECTED_BLOCK_LENGTH = 227
+    EXPECTED_BLOCK_LENGTH = 228
     assert len(blocks[0].index.values) == EXPECTED_BLOCK_LENGTH
     assert len(blocks[1].index.values) == EXPECTED_BLOCK_LENGTH
     assert len(blocks[2].index.values) == EXPECTED_BLOCK_LENGTH
@@ -91,7 +91,9 @@ def test_extract_sart_blocks_with_experiment_trials_plus_survey():
     b4_last_idx = b4.last_valid_index()
     b4_first_idx = b4.first_valid_index()
     assert b4.ix[b4_first_idx]['trial_type'] == trial_type_msmr
-    # last two trials should be multiple choice
+    assert b4.ix[b4_last_idx-3]['trial_type'] == trial_type_msmr
+    # last three trials should be multiple choice
+    assert b4.ix[b4_last_idx-2]['trial_type'] == trial_type_mc
     assert b4.ix[b4_last_idx-1]['trial_type'] == trial_type_mc
     assert b4.ix[b4_last_idx]['trial_type'] == trial_type_mc
 
@@ -292,8 +294,9 @@ def test_summarize_sart_chunk():
     assert b4s['accuracy'] == 0.88
     assert b4s['effort'] == 7
     assert b4s['discomfort'] == 7
-    assert b4s['ratings_time_min'] == 19.616666667
+    assert b4s['boredom'] == 6
 
+    assert b4s['ratings_time_min'] == 19.616666667
     assert b4s['num_trials'] == 225
 
     assert b4s['nogo_prev4_avg'] == 318.833333333
@@ -306,6 +309,7 @@ def test_summarize_sart_chunk():
     assert b5s['accuracy'] == 0.862222222
     assert b5s['effort'] == 7
     assert b5s['discomfort'] == 7
+    assert b5s['boredom'] == 6
     assert b5s['ratings_time_min'] == 24.183333333
 
     assert b5s['num_trials'] == 225
@@ -346,71 +350,83 @@ def test_complete_compile_experiment_data():
         'effort', 'num_trials', 'discomfort', 'rt_avg', 'nogo_errors',
         'accuracy'
         ]
-    for i in range(1, 9):
+    for i in range(1, (ed['num_blocks'] + 1)):
         blk_key_prefix = "blk{}".format(i)
         blk_keys = [k for k in ed.keys() if k.startswith(blk_key_prefix)]
-        assert len(blk_keys) == 15
+        assert len(blk_keys) == 16
         for k in blk_summary_keys:
             expected_blk_key = "{}_{}".format(blk_key_prefix, k)
             assert expected_blk_key in blk_keys
 
-    # effort and discomfort ratings
-    assert ed['prop_effort_ups'] == 0.428571429  # 3/7
-    assert ed['prop_effort_downs'] == 0.571428571  # 4/7
-    assert ed['prop_effort_sames'] == 0.0  # 0/7
+    # affective ratings
+    assert ed['prop_effort_ups'] == 0.25  # 1/4
+    assert ed['prop_effort_downs'] == 0.0  # 0/4
+    assert ed['prop_effort_sames'] == 0.75  # 3/4
 
-    assert ed['prop_discomfort_ups'] == 0.285714286  # 2/7
-    assert ed['prop_discomfort_downs'] == 0.142857143  # 1/7
-    assert ed['prop_discomfort_sames'] == 0.571428571  # 4/7
+    assert ed['prop_discomfort_ups'] == 0.5  # 2/4
+    assert ed['prop_discomfort_downs'] == 0.0  # 0/4
+    assert ed['prop_discomfort_sames'] == 0.5  # 2/4
+
+    assert ed['prop_boredom_ups'] == 0.5  # 2/4
+    assert ed['prop_boredom_downs'] == 0.0  # 0/4
+    assert ed['prop_boredom_sames'] == 0.5  # 2/4
 
     # go, no-go, and anticipated error variable weighted averages
-    assert ed['nogo_num_errors'] == 43
-    assert ed['nogo_error_prev_rt_avg'] == 346.66257668704293
-    assert ed['nogo_error_next_rt_avg'] == 336.88535031840127
+    assert ed['nogo_num_errors'] == 18
+    assert ed['nogo_error_prev_rt_avg'] == 352.12857142837146
+    assert ed['nogo_error_next_rt_avg'] == 395.67605633805636
 
     # proportion of go, no-go, and anticipated errors across all trials
     # also proportion of trials that were completed accurately
-    assert ed['avg_go_errors'] == 0.035603715
-    assert ed['avg_nogo_errors'] == 0.066563467
-    assert ed['avg_anticipation_errors'] == 0.046439628
-    assert ed['avg_accuracy'] == 0.851393189
+    assert ed['avg_go_errors'] == 0.013333333
+    assert ed['avg_nogo_errors'] == 0.016
+    assert ed['avg_anticipation_errors'] == 0.036444444
+    assert ed['avg_accuracy'] == 0.934222222
 
     # regression variables for blocks
-    assert ed['accuracy_slope'] == 0.002454737
-    assert ed['accuracy_intercept'] == 0.829650186
-    assert ed['effort_slope'] == 0.022726243
-    assert ed['effort_intercept'] == 3.92036912
-    assert ed['discomfort_slope'] == 0.202292011
-    assert ed['discomfort_intercept'] == 3.178529021
+    assert ed['accuracy_slope'] == -0.007162023
+    assert ed['accuracy_intercept'] == 1.040912496
+    assert ed['effort_slope'] == 0.04296334
+    assert ed['effort_intercept'] == 6.15998945
+    assert ed['discomfort_slope'] == 0.107323927
+    assert ed['discomfort_intercept'] == 4.801231237
+    assert ed['boredom_slope'] == 0.107323927
+    assert ed['boredom_intercept'] == 3.801231237
 
     # peak-end calculations
-    assert ed['start_effort'] == 2
+    assert ed['start_effort'] == 6
     assert ed['peak_effort'] == 7
-    assert ed['min_effort'] == 2
-    assert ed['end_effort'] == 3
-    assert ed['avg_effort'] == 4.125
+    assert ed['min_effort'] == 6
+    assert ed['end_effort'] == 7
+    assert ed['avg_effort'] == 6.8
 
-    assert ed['start_discomfort'] == 4
+    assert ed['start_discomfort'] == 5
     assert ed['peak_discomfort'] == 7
-    assert ed['min_discomfort'] == 4
-    assert ed['end_discomfort'] == 6
-    assert ed['avg_discomfort'] == 5
+    assert ed['min_discomfort'] == 5
+    assert ed['end_discomfort'] == 7
+    assert ed['avg_discomfort'] == 6.4
 
-    assert ed['avg_blk_accuracy'] == 0.851393189
-    assert ed['max_blk_accuracy'] == 0.951219512
-    assert ed['min_blk_accuracy'] == 0.62195122
-    assert ed['start_blk_accuracy'] == 0.865853659
-    assert ed['end_blk_accuracy'] == 0.875
+    assert ed['start_boredom'] == 4
+    assert ed['peak_boredom'] == 6
+    assert ed['min_boredom'] == 4
+    assert ed['end_boredom'] == 6
+    assert ed['avg_boredom'] == 5.4
 
-    assert ed['auc_accuracy'] == 5.943597561
-    assert ed['auc_effort'] == 30.5
-    assert ed['auc_discomfort'] == 35.0
+    assert ed['avg_blk_accuracy'] == 0.934222222
+    assert ed['max_blk_accuracy'] == 0.982222222
+    assert ed['min_blk_accuracy'] == 0.862222222
+    assert ed['start_blk_accuracy'] == 0.982222222
+    assert ed['end_blk_accuracy'] == 0.862222222
+
+    assert ed['auc_accuracy'] == 3.748888888
+    assert ed['auc_effort'] == 27.5
+    assert ed['auc_discomfort'] == 26.0
 
     # post-experiment evaluation of valence and arousal
-    assert ed['arousal_post_mind_body'] == '2'
-    assert ed['arousal_post_feeling'] == '5'
+    assert ed['arousal_post_mind_body'] == '3'
+    assert ed['arousal_post_feeling'] == '1'
 
-    assert ed['time_experiment_ms'] == 940644
+    assert ed['time_experiment_ms'] == 1475020
 
 
 def test_complete_demographics_data():
