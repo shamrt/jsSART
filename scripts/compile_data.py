@@ -574,63 +574,19 @@ DEMOGRAPHICS_INDEX = [
     # demographics questions
     ('age', '0.0-1.0-0.0'),
     ('dob', '0.0-1.0-1.0'),
-
     ('sex', '0.0-2.0-0.0'),
-    ('edu_year', '0.0-2.0-1.0'),
-    ('edu_plan', '0.0-2.0-2.0'),
-    ('eng_first_lang', '0.0-2.0-3.0'),
-    ('eng_years', '0.0-2.0-4.0'),
-    ('mother_edu', '0.0-2.0-5.0'),
+]
 
-    ('mother_job', '0.0-3.0'),
-
-    ('father_edu', '0.0-4.0-0.0'),
-
-    ('father_job', '0.0-5.0-0.0'),
-    ('high_school_avg', '0.0-5.0-1.0'),
-    ('uni_avg', '0.0-5.0-2.0'),
-
-    ('num_uni_stats', '0.0-6.0-0.0'),
-    ('num_hs_stats', '0.0-6.0-1.0'),
-    ('num_hs_math', '0.0-6.0-2.0'),
-    ('num_uni_math', '0.0-6.0-3.0'),
-    ('math_enjoy', '0.0-6.0-4.0'),
-    ('adhd_diag', '0.0-6.0-5.0'),
-
-    ('uni_major', '0.0-7.0'),
-
-    # electronics and Internet survey
-    ('elect_survey_1', '0.0-8.0-0.0'),
-    ('elect_survey_2', '0.0-8.0-1.0'),
-    ('elect_survey_3', '0.0-8.0-2.0'),
-    ('elect_survey_4', '0.0-8.0-3.0'),
-    ('elect_survey_5', '0.0-8.0-4.0'),
-    ('elect_survey_6', '0.0-8.0-5.0'),
-    ('elect_survey_7', '0.0-9.0')
+# State Mindfulness Scale (21 items)
+SMS_INDEX = [
+    ('sms_{}'.format(i + 1), '0.0-4.0-{}.0'.format(i))
+    for i in range(21)
     ]
 
-BEHAVIOURAL_SURVEY_INDEX = [
-    # behavioural survey
-    ('behav_survey_1', '0.0-11.0-0.0'),
-    ('behav_survey_2', '0.0-11.0-1.0'),
-    ('behav_survey_3', '0.0-11.0-2.0'),
-    ('behav_survey_4', '0.0-11.0-3.0'),
-    ('behav_survey_5', '0.0-11.0-4.0'),
-    ('behav_survey_6', '0.0-11.0-5.0'),
-    ('behav_survey_7', '0.0-11.0-6.0'),
-    ('behav_survey_8', '0.0-11.0-7.0'),
-    ('behav_survey_9', '0.0-11.0-8.0'),
-    ('behav_survey_10', '0.0-11.0-9.0'),
-    ('behav_survey_11', '0.0-11.0-10.0'),
-    ('behav_survey_12', '0.0-11.0-11.0'),
-    ('behav_survey_13', '0.0-11.0-12.0'),
-    ('behav_survey_14', '0.0-11.0-13.0'),
-    ('behav_survey_15', '0.0-11.0-14.0'),
-    ('behav_survey_16', '0.0-11.0-15.0'),
-    ('behav_survey_17', '0.0-11.0-16.0'),
-    ('behav_survey_18', '0.0-11.0-17.0'),
-
-]
+# State Boredom Scale (8 items)
+STATE_BOREDOM_INDEX = [
+    ('state_boredom_{}'.format(i + 1), '0.0-6.0-{}.0'.format(i))
+    for i in range(8)]
 
 
 def compile_demographic_data(df):
@@ -643,15 +599,20 @@ def compile_demographic_data(df):
     for label, inid in DEMOGRAPHICS_INDEX:
         compiled_data[label] = get_response_via_node_id(df, inid)
 
-    # behavioursal surveys
-    for label, inid in BEHAVIOURAL_SURVEY_INDEX:
-        compiled_data[label] = get_response_via_node_id(
-            df, inid, is_likert=True)
+    # boredom scales
+    for scale_idx in [SMS_INDEX, STATE_BOREDOM_INDEX]:
+        for label, inid in scale_idx:
+            compiled_data[label] = get_response_via_node_id(
+                df, inid, is_likert=True)
 
     # post-working memory task delay
-    if 46 in df.index.values:
-        delay_b4_retrospect_ms = int(df.ix[46]['time_elapsed'])
-        compiled_data['time_delay_b4_retrospect_ms'] = delay_b4_retrospect_ms
+    delay_b4_retrospect_ms = None
+    LAST_NID_B4_RETROSPECTIVE = '0.0-7.0'
+    if LAST_NID_B4_RETROSPECTIVE in df['internal_node_id'].values:
+        delay_b4_retrospect_ms = int(
+            df[df['internal_node_id'] == LAST_NID_B4_RETROSPECTIVE]
+            ['time_elapsed'])
+    compiled_data['time_delay_b4_retrospect_ms'] = delay_b4_retrospect_ms
 
     # time taken for post-working memory task follow-up
     time_follow_up_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])
@@ -660,15 +621,10 @@ def compile_demographic_data(df):
     return compiled_data
 
 
-RETROSPECTIVE_INDEX = [
-    ('retrospective_effort', '0.0-13.0-0.0'),
-    ('retrospective_discomfort', '0.0-13.0-1.0'),
-    ('retrospective_performance', '0.0-13.0-2.0'),
-    ('retrospective_willingtodowmt', '0.0-13.0-3.0'),
-    ('retrospective_fatigue', '0.0-13.0-4.0'),
-    ('retrospective_satisfaction', '0.0-13.0-5.0'),
-    ('retrospective_didmybest', '0.0-13.0-6.0'),
-    ('retrospective_enjoyment', '0.0-13.0-7.0'),
+# NASA TLX scale
+TLX_SCALE_INDEX = [
+    ('tlx_scale_{}'.format(i + 1), '0.0-8.0-{}.0'.format(i))
+    for i in range(13)
 ]
 
 
@@ -679,7 +635,7 @@ def compile_retrospective_data(df):
     responses = list(df['responses'].dropna().values)
 
     # retrospective questions
-    for label, inid in RETROSPECTIVE_INDEX:
+    for label, inid in TLX_SCALE_INDEX:
         compiled_data[label] = get_response_via_node_id(
             df, inid, is_likert=True)
 

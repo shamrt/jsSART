@@ -429,79 +429,121 @@ def test_complete_compile_experiment_data():
     assert ed['time_experiment_ms'] == 1475020
 
 
-def test_complete_demographics_data():
+def test_compile_demographics_data_after_practice_failure():
     pid = PID_FAIL
     df = get_csv_as_df('follow_up', pid)
     data = compile_data.compile_demographic_data(df)
     expected_answers = [
-        ('age', '22'),
-        ('dob', '03/1993'),
+        ('age', '23'),
+        ('dob', '05/1994'),
         ('sex', 'Female'),
-        ('edu_year', 'Graduated'),
-        ('edu_plan', 'PhD'),
-        ('eng_first_lang', 'Yes'),
-        ('eng_years', 'All my life'),
-        ('mother_edu', 'Professional degree (e.g., law)'),
-        ('mother_job', 'lawyer'),
-        ('father_edu', 'MA/MSc degree'),
-        ('father_job', 'computer scientist'),
-        ('high_school_avg', '90'),
-        ('uni_avg', 'n/a'),
-        ('num_uni_stats', '1'),
-        ('num_hs_stats', 'None'),
-        ('num_hs_math', '4'),
-        ('num_uni_math', 'None'),
-        ('math_enjoy', '5'),
-        ('adhd_diag', 'Yes'),
-        ('uni_major', 'n/a'),
 
-        ('elect_survey_1', 'No'),
-        ('elect_survey_2', 'Yes'),
-        ('elect_survey_3', 'Yes'),
-        ('elect_survey_4', 'Yes'),
-        ('elect_survey_5', 'Yes'),
-        ('elect_survey_6', 'Yes'),
-        ('elect_survey_7', '1'),
+        ('sms_1', '1'),
+        ('sms_2', '4'),
+        ('sms_3', '3'),
+        ('sms_4', '4'),
+        ('sms_5', '2'),
+        ('sms_6', '2'),
+        ('sms_7', '4'),
+        ('sms_8', '4'),
+        ('sms_9', '1'),
+        ('sms_10', '4'),
+        ('sms_11', '2'),
+        ('sms_12', '2'),
+        ('sms_13', '5'),
+        ('sms_14', '2'),
+        ('sms_15', '2'),
+        ('sms_16', '4'),
+        ('sms_17', '3'),
+        ('sms_18', '3'),
+        ('sms_19', '3'),
+        ('sms_20', '4'),
+        ('sms_21', '3'),
 
-        ('behav_survey_1', 'N/A'),
-        ('behav_survey_2', 'N/A'),
-        ('behav_survey_3', '2'),
-        ('behav_survey_4', 'N/A'),
-        ('behav_survey_5', '2'),
-        ('behav_survey_6', 'N/A'),
-        ('behav_survey_7', 'N/A'),
-        ('behav_survey_8', 'N/A'),
-        ('behav_survey_9', 'N/A'),
-        ('behav_survey_10', 'N/A'),
-        ('behav_survey_11', 'N/A'),
-        ('behav_survey_12', 'N/A'),
-        ('behav_survey_13', 'N/A'),
-        ('behav_survey_14', 'N/A'),
-        ('behav_survey_15', 'N/A'),
-        ('behav_survey_16', 'N/A'),
-        ('behav_survey_17', 'N/A'),
-        ('behav_survey_18', 'N/A'),
+        ('state_boredom_1', '3'),
+        ('state_boredom_2', '4'),
+        ('state_boredom_3', '3'),
+        ('state_boredom_4', '2'),
+        ('state_boredom_5', '4'),
+        ('state_boredom_6', '3'),
+        ('state_boredom_7', '6'),
+        ('state_boredom_8', '5'),
 
-        ('time_delay_b4_retrospect_ms', 196373),
-        ('time_follow_up_ms', 220848),
+        ('time_delay_b4_retrospect_ms', None),
+        ('time_follow_up_ms', 122441),
+    ]
+    for label, answer in expected_answers:
+        print label
+        assert data[label] == answer
+
+
+def test_compile_demographics_data_after_practice_success():
+    pid = PID_SUCCESS
+    df = get_csv_as_df('follow_up', pid)
+    data = compile_data.compile_demographic_data(df)
+    print data
+    expected_answers = [
+        ('age', '28'),
+        ('dob', '03/1989'),
+        ('sex', 'Female'),
+
+        ('sms_1', '3'),
+        ('sms_2', '3'),
+        ('sms_3', '1'),
+        ('sms_4', '3'),
+        ('sms_5', '3'),
+        ('sms_6', '3'),
+        ('sms_7', '1'),
+        ('sms_8', '2'),
+        ('sms_9', '5'),
+        ('sms_10', '2'),
+        ('sms_11', '3'),
+        ('sms_12', '3'),
+        ('sms_13', '3'),
+        ('sms_14', '4'),
+        ('sms_15', '3'),
+        ('sms_16', '1'),
+        ('sms_17', '3'),
+        ('sms_18', '1'),
+        ('sms_19', '3'),
+        ('sms_20', '3'),
+        ('sms_21', '4'),
+
+        ('state_boredom_1', '2'),
+        ('state_boredom_2', '5'),
+        ('state_boredom_3', '3'),
+        ('state_boredom_4', '2'),
+        ('state_boredom_5', '2'),
+        ('state_boredom_6', '5'),
+        ('state_boredom_7', '6'),
+        ('state_boredom_8', '6'),
+
+        ('time_delay_b4_retrospect_ms', 191192),
+        ('time_follow_up_ms', 252719),
     ]
     for label, answer in expected_answers:
         assert data[label] == answer
 
 
-def test_complete_retrospective_data():
-    pid = PID_FAIL
+def test_compile_retrospective_data_after_practice_success():
+    pid = PID_SUCCESS
     df = get_csv_as_df('follow_up', pid)
     data = compile_data.compile_retrospective_data(df)
+    print data
     expected_answers = [
-        ('retrospective_effort', '4'),
-        ('retrospective_discomfort', '4'),
-        ('retrospective_performance', '4'),
-        ('retrospective_willingtodowmt', '4'),
-        ('retrospective_fatigue', '4'),
-        ('retrospective_satisfaction', '4'),
-        ('retrospective_didmybest', '4'),
-        ('retrospective_enjoyment', '7'),
+        ('tlx_scale_1', '7'),
+        ('tlx_scale_2', '2'),
+        ('tlx_scale_3', '4'),
+        ('tlx_scale_4', '6'),
+        ('tlx_scale_5', '7'),
+        ('tlx_scale_6', '6'),
+        ('tlx_scale_7', '6'),
+        ('tlx_scale_8', '5'),
+        ('tlx_scale_9', '7'),
+        ('tlx_scale_10', '2'),
+        ('tlx_scale_11', '2'),
+        ('tlx_scale_12', '6'),
+        ('tlx_scale_13', '2'),
     ]
     for label, answer in expected_answers:
         assert data[label] == answer
