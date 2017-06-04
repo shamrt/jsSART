@@ -50,7 +50,7 @@ def get_response_from_json(string, question_number=0):
     return resp
 
 
-def get_response_from_node_id(df, inid, is_likert=False):
+def get_response_via_node_id(df, inid, is_likert=False):
     """Take a data frame and internal node ID (inid).
     Return a jsPsych survey response string.
     """
@@ -73,6 +73,7 @@ def extract_sart_blocks(df, with_survey=False):
     Return list of pandas data frames.
     """
     blocks = []
+    NUM_SURVEY_QUESTIONS = 3
 
     # the type of trial(s) to target
     mc_trial_type = "survey-multi-choice"
@@ -86,15 +87,15 @@ def extract_sart_blocks(df, with_survey=False):
     num_mc_trials = 0
     for index, series in df.iterrows():
         if not first_trial_idx and series['trial_type'] == mc_trial_type:
-            # skip if first trial type is a survey
+            # skip if first trial type is a survey (NOTE: should only be last)
             continue
         elif series['trial_type'] in block_trial_types and \
-                num_mc_trials < 2:
+                num_mc_trials < NUM_SURVEY_QUESTIONS:
             if not first_trial_idx:
                 first_trial_idx = index
             last_trial_idx = index
 
-            # NOTE: limit to 2 survey trials, as per experiment specs
+            # limit number of survey trials, as per experiment specs
             if series['trial_type'] == mc_trial_type:
                 num_mc_trials += 1
         else:
@@ -122,9 +123,9 @@ def _get_arousal_ratings(df):
     for i, d in df.iterrows():
         inid = d['internal_node_id']
         if re.match(mind_body_inid_pattern, inid):
-            mind_body = get_response_from_node_id(df, inid, is_likert=True)
+            mind_body = get_response_via_node_id(df, inid, is_likert=True)
         elif re.match(feeling_inid_pattern, inid):
-            feeling = get_response_from_node_id(df, inid, is_likert=True)
+            feeling = get_response_via_node_id(df, inid, is_likert=True)
 
     return mind_body, feeling
 
@@ -137,10 +138,6 @@ def compile_practice_data(df):
     # participant ID
     participant_id_col = df['participant_id'].values
     compiled_data['id'] = participant_id_col[0]
-
-    # participant ID
-    condition_col = df['practice_condition'].values
-    compiled_data['practice_condition'] = condition_col[0]
 
     # baseline evaluation of valence and arousal
     arousal_df = df.ix[1:2]
@@ -265,7 +262,7 @@ def _calculate_nogo_error_rt_avgs(df):
     # find all no-go errors
     nogo_error_rows = []
     for row in df.iterrows():
-        if row[1]['nogo_error'] == True:
+        if row[1]['nogo_error'] is True:
             nogo_error_rows.append(row)
 
     # find all row (trial) RTs before and after no-go error rows
@@ -279,9 +276,9 @@ def _calculate_nogo_error_rt_avgs(df):
         next_row_rts.append(next_nogo_row_rts)
 
     prev4_rts = [rt for sublist in prev_row_rts for rt in sublist]
-    prev4_avg = round(np.mean(prev4_rts), ROUND_NDIGITS)
+    prev4_avg = round(np.mean(prev4_rts), ROUND_NDIGITS) if prev4_rts else None
     next4_rts = [rt for sublist in next_row_rts for rt in sublist]
-    next4_avg = round(np.mean(next4_rts), ROUND_NDIGITS)
+    next4_avg = round(np.mean(next4_rts), ROUND_NDIGITS) if next4_rts else None
 
     return {
         "prev4_avg": prev4_avg,
@@ -368,19 +365,16 @@ def summarize_sart_chunk(df):
     summary.update(performance)
 
     # affective ratings
-    survey_trials = df.loc[df['trial_type'] == 'survey-multi-choice'].\
+    survey_questions = df.loc[df['trial_type'] == 'survey-multi-choice'].\
         copy().reset_index()
 
-    effort_rating_json = survey_trials.ix[0]['responses']
-    raw_effort_rating = get_response_from_json(effort_rating_json)
-    summary['effort'] = int(raw_effort_rating[0])
-
-    discomfort_rating_json = survey_trials.ix[1]['responses']
-    raw_discomfort_rating = get_response_from_json(discomfort_rating_json)
-    summary['discomfort'] = int(raw_discomfort_rating[0])
+    for rating_type, i in [('effort', 0), ('discomfort', 1), ('boredom', 2)]:
+        rating_json = survey_questions.ix[i]['responses']
+        raw_rating = get_response_from_json(rating_json)
+        summary[rating_type] = int(raw_rating[0])
 
     # get time elapsed (in minutes) at ratings for later slope calculations
-    ratings_time_min = survey_trials.ix[0]['time_elapsed']
+    ratings_time_min = survey_questions.ix[0]['time_elapsed']
     summary['ratings_time_min'] = round(
         ratings_time_min / 1000 / 60.0, ROUND_NDIGITS)
 
@@ -432,22 +426,25 @@ def compile_experiment_data(df):
     blocks = extract_sart_blocks(df, with_survey=True)
     compiled_data['num_blocks'] = len(blocks)
 
-    # anticipated questions
+    # anticipated/antecedent questions
     anticipated_questions_index = [
-        ('forecasted_enjoyment', 1),
-        ('forecasted_performance', 2),
-        ('forecasted_effort', 3),
-        ('forecasted_discomfort', 4),
-        ('forecasted_fatigue', 5),
-        ('forecasted_motivation', 6)
+        ('forecasted_enjoyment', 0),
+        ('forecasted_performance', 1),
+        ('forecasted_effort', 2),
+        ('forecasted_discomfort', 3),
+        ('forecasted_fatigue', 4),
+        ('forecasted_motivation', 5),
+        ('antecedent_boredom', 6),
     ]
     for label, i in anticipated_questions_index:
-        response = get_response_from_json(df.ix[i]['responses'])
-        compiled_data[label] = int(response[0])
+        node_id = '0.0-1.0-{}.0'.format(i)
+        resp_json = df[
+            (df['internal_node_id'] == node_id)]['responses'].values[0]
+        resp = get_response_from_json(resp_json)
+        compiled_data[label] = int(resp[0])
 
     # SART accuracy and affective reports
-    effort_ratings = []
-    discomfort_ratings = []
+    realtime_ratings = {'effort': [], 'discomfort': [], 'boredom': []}
     accuracies = []
     rating_times = []
     num_block_trials = []
@@ -460,6 +457,7 @@ def compile_experiment_data(df):
     nogo_next4_avgs = []
     nogo_num_next4_rts = []
     nogo_num_prev4_rts = []
+    realtime_rating_types = ['effort', 'discomfort', 'boredom']
 
     # collect and organize experiment data from experimental blocks
     for i, block in enumerate(blocks, start=1):
@@ -476,25 +474,29 @@ def compile_experiment_data(df):
             compiled_data[blk_key] = blk_summary[key]
 
         # collect data for later averaging
-        effort_ratings.append(blk_summary['effort'])
-        discomfort_ratings.append(blk_summary['discomfort'])
+        for rtype in realtime_rating_types:
+            realtime_ratings[rtype].append(blk_summary[rtype])
         accuracies.append(blk_summary['accuracy'])
         num_block_trials.append(blk_summary['num_trials'])
 
         num_anticipation_errors += blk_summary['anticipated_num_errors']
         num_go_errors += blk_summary['go_num_errors']
         num_nogo_errors += blk_summary['nogo_num_errors']
-        nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
-        nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
-        nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
-        nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
+        if blk_summary['nogo_prev4_avg']:
+            nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
+            nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
+        if blk_summary['nogo_next4_avg']:
+            nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
+            nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
 
     # weighted averages for RTs before and after no-go errors
     compiled_data['nogo_num_errors'] = num_nogo_errors
     compiled_data['nogo_error_prev_rt_avg'] = np.average(
-        nogo_prev4_avgs, weights=nogo_num_prev4_rts)
+        nogo_prev4_avgs,
+        weights=nogo_num_prev4_rts) if nogo_num_prev4_rts else None
     compiled_data['nogo_error_next_rt_avg'] = np.average(
-        nogo_next4_avgs, weights=nogo_num_next4_rts)
+        nogo_next4_avgs,
+        weights=nogo_num_next4_rts) if nogo_num_next4_rts else None
 
     # average of go, no-go, and anticipation errors, as well as accuracy
     avg_go_errors = (num_go_errors / float(num_trials))
@@ -508,44 +510,42 @@ def compile_experiment_data(df):
                     avg_anticipation_errors)
     compiled_data['avg_accuracy'] = round(avg_accuracy, ROUND_NDIGITS)
 
-    # assign other variables
-    compiled_data['start_effort'] = effort_ratings[0]
-    compiled_data['peak_effort'] = max(effort_ratings)
-    compiled_data['min_effort'] = min(effort_ratings)
-    compiled_data['end_effort'] = effort_ratings[-1]
-    avg_effort = np.mean(effort_ratings)
-    compiled_data['avg_effort'] = round(avg_effort, ROUND_NDIGITS)
+    # assign realtime summary variables
+    for rtype in realtime_rating_types:
+        # descriptive
+        compiled_data['start_{}'.format(rtype)] = realtime_ratings[rtype][0]
+        compiled_data['peak_{}'.format(rtype)] = max(realtime_ratings[rtype])
+        compiled_data['min_{}'.format(rtype)] = min(realtime_ratings[rtype])
+        compiled_data['end_{}'.format(rtype)] = realtime_ratings[rtype][-1]
+        avg_rating = np.mean(realtime_ratings[rtype])
+        compiled_data['avg_{}'.format(rtype)] = round(
+            avg_rating, ROUND_NDIGITS)
 
-    compiled_data['start_discomfort'] = discomfort_ratings[0]
-    compiled_data['peak_discomfort'] = max(discomfort_ratings)
-    compiled_data['min_discomfort'] = min(discomfort_ratings)
-    compiled_data['end_discomfort'] = discomfort_ratings[-1]
-    avg_discomfort = np.mean(discomfort_ratings)
-    compiled_data['avg_discomfort'] = round(avg_discomfort, ROUND_NDIGITS)
+        # proportion of effort and discomfort ratings that increase or decrease
+        props = _calculate_ratings_proportions(realtime_ratings[rtype])
+        compiled_data['prop_{}_ups'.format(rtype)] = props['ups']
+        compiled_data['prop_{}_downs'.format(rtype)] = props['downs']
+        compiled_data['prop_{}_sames'.format(rtype)] = props['sames']
 
+        # area under the curve calculations
+        compiled_data['auc_{}'.format(rtype)] = round(
+            np.trapz(realtime_ratings[rtype]), ROUND_NDIGITS)
+
+    # assign accuracy summary variables
     average_accuracy = np.average(accuracies, weights=num_block_trials)
     compiled_data['avg_blk_accuracy'] = round(average_accuracy, ROUND_NDIGITS)
     compiled_data['max_blk_accuracy'] = max(accuracies)
     compiled_data['min_blk_accuracy'] = min(accuracies)
     compiled_data['start_blk_accuracy'] = accuracies[0]
     compiled_data['end_blk_accuracy'] = accuracies[-1]
-
-    # proportion of effort and discomfort ratings that increase or decrease
-    discomfort_props = _calculate_ratings_proportions(discomfort_ratings)
-    compiled_data['prop_discomfort_ups'] = discomfort_props['ups']
-    compiled_data['prop_discomfort_downs'] = discomfort_props['downs']
-    compiled_data['prop_discomfort_sames'] = discomfort_props['sames']
-
-    effort_props = _calculate_ratings_proportions(effort_ratings)
-    compiled_data['prop_effort_ups'] = effort_props['ups']
-    compiled_data['prop_effort_downs'] = effort_props['downs']
-    compiled_data['prop_effort_sames'] = effort_props['sames']
+    compiled_data['auc_accuracy'] = round(np.trapz(accuracies), ROUND_NDIGITS)
 
     # compute regression variables for blocks
     block_measures = [
         ('accuracy', accuracies),
-        ('effort', effort_ratings),
-        ('discomfort', discomfort_ratings)
+        ('effort', realtime_ratings['effort']),
+        ('discomfort', realtime_ratings['discomfort']),
+        ('boredom', realtime_ratings['boredom']),
     ]
     for measure_name, measure_values in block_measures:
         measure_order = range(1, len(measure_values) + 1)
@@ -556,14 +556,6 @@ def compile_experiment_data(df):
         intercept_key = '{}_intercept'.format(measure_name)
         compiled_data[intercept_key] = round(
             linregress.intercept, ROUND_NDIGITS)
-
-    # area under the curve calculations
-    compiled_data['auc_accuracy'] = round(
-        np.trapz(accuracies), ROUND_NDIGITS)
-    compiled_data['auc_effort'] = round(
-        np.trapz(effort_ratings), ROUND_NDIGITS)
-    compiled_data['auc_discomfort'] = round(
-        np.trapz(discomfort_ratings), ROUND_NDIGITS)
 
     # post-experiment evaluation of valence and arousal
     arousal_df = df.ix[df.last_valid_index()-2:df.last_valid_index()-1]
@@ -582,63 +574,19 @@ DEMOGRAPHICS_INDEX = [
     # demographics questions
     ('age', '0.0-1.0-0.0'),
     ('dob', '0.0-1.0-1.0'),
-
     ('sex', '0.0-2.0-0.0'),
-    ('edu_year', '0.0-2.0-1.0'),
-    ('edu_plan', '0.0-2.0-2.0'),
-    ('eng_first_lang', '0.0-2.0-3.0'),
-    ('eng_years', '0.0-2.0-4.0'),
-    ('mother_edu', '0.0-2.0-5.0'),
+]
 
-    ('mother_job', '0.0-3.0'),
-
-    ('father_edu', '0.0-4.0-0.0'),
-
-    ('father_job', '0.0-5.0-0.0'),
-    ('high_school_avg', '0.0-5.0-1.0'),
-    ('uni_avg', '0.0-5.0-2.0'),
-
-    ('num_uni_stats', '0.0-6.0-0.0'),
-    ('num_hs_stats', '0.0-6.0-1.0'),
-    ('num_hs_math', '0.0-6.0-2.0'),
-    ('num_uni_math', '0.0-6.0-3.0'),
-    ('math_enjoy', '0.0-6.0-4.0'),
-    ('adhd_diag', '0.0-6.0-5.0'),
-
-    ('uni_major', '0.0-7.0'),
-
-    # electronics and Internet survey
-    ('elect_survey_1', '0.0-8.0-0.0'),
-    ('elect_survey_2', '0.0-8.0-1.0'),
-    ('elect_survey_3', '0.0-8.0-2.0'),
-    ('elect_survey_4', '0.0-8.0-3.0'),
-    ('elect_survey_5', '0.0-8.0-4.0'),
-    ('elect_survey_6', '0.0-8.0-5.0'),
-    ('elect_survey_7', '0.0-9.0')
+# State Mindfulness Scale (21 items)
+SMS_INDEX = [
+    ('sms_{}'.format(i + 1), '0.0-4.0-{}.0'.format(i))
+    for i in range(21)
     ]
 
-BEHAVIOURAL_SURVEY_INDEX = [
-    # behavioural survey
-    ('behav_survey_1', '0.0-11.0-0.0'),
-    ('behav_survey_2', '0.0-11.0-1.0'),
-    ('behav_survey_3', '0.0-11.0-2.0'),
-    ('behav_survey_4', '0.0-11.0-3.0'),
-    ('behav_survey_5', '0.0-11.0-4.0'),
-    ('behav_survey_6', '0.0-11.0-5.0'),
-    ('behav_survey_7', '0.0-11.0-6.0'),
-    ('behav_survey_8', '0.0-11.0-7.0'),
-    ('behav_survey_9', '0.0-11.0-8.0'),
-    ('behav_survey_10', '0.0-11.0-9.0'),
-    ('behav_survey_11', '0.0-11.0-10.0'),
-    ('behav_survey_12', '0.0-11.0-11.0'),
-    ('behav_survey_13', '0.0-11.0-12.0'),
-    ('behav_survey_14', '0.0-11.0-13.0'),
-    ('behav_survey_15', '0.0-11.0-14.0'),
-    ('behav_survey_16', '0.0-11.0-15.0'),
-    ('behav_survey_17', '0.0-11.0-16.0'),
-    ('behav_survey_18', '0.0-11.0-17.0'),
-
-]
+# State Boredom Scale (8 items)
+STATE_BOREDOM_INDEX = [
+    ('state_boredom_{}'.format(i + 1), '0.0-6.0-{}.0'.format(i))
+    for i in range(8)]
 
 
 def compile_demographic_data(df):
@@ -649,17 +597,22 @@ def compile_demographic_data(df):
 
     # demographics
     for label, inid in DEMOGRAPHICS_INDEX:
-        compiled_data[label] = get_response_from_node_id(df, inid)
+        compiled_data[label] = get_response_via_node_id(df, inid)
 
-    # behavioursal surveys
-    for label, inid in BEHAVIOURAL_SURVEY_INDEX:
-        compiled_data[label] = get_response_from_node_id(
-            df, inid, is_likert=True)
+    # boredom scales
+    for scale_idx in [SMS_INDEX, STATE_BOREDOM_INDEX]:
+        for label, inid in scale_idx:
+            compiled_data[label] = get_response_via_node_id(
+                df, inid, is_likert=True)
 
     # post-working memory task delay
-    if 46 in df.index.values:
-        delay_b4_retrospect_ms = int(df.ix[46]['time_elapsed'])
-        compiled_data['time_delay_b4_retrospect_ms'] = delay_b4_retrospect_ms
+    delay_b4_retrospect_ms = None
+    LAST_NID_B4_RETROSPECTIVE = '0.0-7.0'
+    if LAST_NID_B4_RETROSPECTIVE in df['internal_node_id'].values:
+        delay_b4_retrospect_ms = int(
+            df[df['internal_node_id'] == LAST_NID_B4_RETROSPECTIVE]
+            ['time_elapsed'])
+    compiled_data['time_delay_b4_retrospect_ms'] = delay_b4_retrospect_ms
 
     # time taken for post-working memory task follow-up
     time_follow_up_ms = int(df.ix[df.last_valid_index()]['time_elapsed'])
@@ -668,15 +621,10 @@ def compile_demographic_data(df):
     return compiled_data
 
 
-RETROSPECTIVE_INDEX = [
-    ('retrospective_effort', '0.0-13.0-0.0'),
-    ('retrospective_discomfort', '0.0-13.0-1.0'),
-    ('retrospective_performance', '0.0-13.0-2.0'),
-    ('retrospective_willingtodowmt', '0.0-13.0-3.0'),
-    ('retrospective_fatigue', '0.0-13.0-4.0'),
-    ('retrospective_satisfaction', '0.0-13.0-5.0'),
-    ('retrospective_didmybest', '0.0-13.0-6.0'),
-    ('retrospective_enjoyment', '0.0-13.0-7.0'),
+# NASA TLX scale
+TLX_SCALE_INDEX = [
+    ('tlx_scale_{}'.format(i + 1), '0.0-8.0-{}.0'.format(i))
+    for i in range(13)
 ]
 
 
@@ -687,8 +635,8 @@ def compile_retrospective_data(df):
     responses = list(df['responses'].dropna().values)
 
     # retrospective questions
-    for label, inid in RETROSPECTIVE_INDEX:
-        compiled_data[label] = get_response_from_node_id(
+    for label, inid in TLX_SCALE_INDEX:
+        compiled_data[label] = get_response_via_node_id(
             df, inid, is_likert=True)
 
     return compiled_data
@@ -763,8 +711,12 @@ def main():
             ordered_columns.append(compiled_var_names.pop(var_index))
 
     demographic_columns = []
-    indices = [DEMOGRAPHICS_INDEX, BEHAVIOURAL_SURVEY_INDEX,
-               RETROSPECTIVE_INDEX]
+    indices = [
+        DEMOGRAPHICS_INDEX,
+        SMS_INDEX,
+        STATE_BOREDOM_INDEX,
+        TLX_SCALE_INDEX
+    ]
     for index in indices:
         for var_name, idx in index:
             if var_name in compiled_var_names:
