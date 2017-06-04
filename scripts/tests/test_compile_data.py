@@ -328,16 +328,17 @@ def test_complete_compile_experiment_data():
     df = get_csv_as_df('experiment', pid)
     ed = compile_data.compile_experiment_data(df)
 
-    assert ed['num_trials'] == 646
-    assert ed['trials_per_block'] == 82
-    assert ed['num_blocks'] == 8
+    assert ed['num_trials'] == 1125
+    assert ed['trials_per_block'] == 225
+    assert ed['num_blocks'] == 5
 
-    assert ed['forecasted_enjoyment'] == 5
-    assert ed['forecasted_performance'] == 4
-    assert ed['forecasted_effort'] == 6
-    assert ed['forecasted_discomfort'] == 5
-    assert ed['forecasted_fatigue'] == 2
-    assert ed['forecasted_motivation'] == 4
+    assert ed['forecasted_enjoyment'] == 4
+    assert ed['forecasted_performance'] == 5
+    assert ed['forecasted_effort'] == 4
+    assert ed['forecasted_discomfort'] == 3
+    assert ed['forecasted_fatigue'] == 5
+    assert ed['forecasted_motivation'] == 6
+    assert ed['antecedent_boredom'] == 3
 
     # check keys for each block's real-time data
     blk_summary_keys = [

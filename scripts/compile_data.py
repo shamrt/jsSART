@@ -428,18 +428,22 @@ def compile_experiment_data(df):
     blocks = extract_sart_blocks(df, with_survey=True)
     compiled_data['num_blocks'] = len(blocks)
 
-    # anticipated questions
+    # anticipated/antecedent questions
     anticipated_questions_index = [
-        ('forecasted_enjoyment', 1),
-        ('forecasted_performance', 2),
-        ('forecasted_effort', 3),
-        ('forecasted_discomfort', 4),
-        ('forecasted_fatigue', 5),
-        ('forecasted_motivation', 6)
+        ('forecasted_enjoyment', 0),
+        ('forecasted_performance', 1),
+        ('forecasted_effort', 2),
+        ('forecasted_discomfort', 3),
+        ('forecasted_fatigue', 4),
+        ('forecasted_motivation', 5),
+        ('antecedent_boredom', 6),
     ]
     for label, i in anticipated_questions_index:
-        response = get_response_from_json(df.ix[i]['responses'])
-        compiled_data[label] = int(response[0])
+        node_id = '0.0-1.0-{}.0'.format(i)
+        resp_json = df[
+            (df['internal_node_id'] == node_id)]['responses'].values[0]
+        resp = get_response_from_json(resp_json)
+        compiled_data[label] = int(resp[0])
 
     # SART accuracy and affective reports
     effort_ratings = []
