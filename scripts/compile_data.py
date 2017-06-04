@@ -711,8 +711,12 @@ def main():
             ordered_columns.append(compiled_var_names.pop(var_index))
 
     demographic_columns = []
-    indices = [DEMOGRAPHICS_INDEX, BEHAVIOURAL_SURVEY_INDEX,
-               RETROSPECTIVE_INDEX]
+    indices = [
+        DEMOGRAPHICS_INDEX,
+        SMS_INDEX,
+        STATE_BOREDOM_INDEX,
+        TLX_SCALE_INDEX
+    ]
     for index in indices:
         for var_name, idx in index:
             if var_name in compiled_var_names:
