@@ -67,34 +67,33 @@ def test_extract_sart_blocks_with_4_practices():
             series['trial_type'] == 'multi-stim-multi-response'
 
 
-def test_extract_sart_blocks_with_4_practice_and_survey():
-    df = get_csv_as_df('experiment', '104')
+def test_extract_sart_blocks_with_experiment_trials_plus_survey():
+    df = get_csv_as_df('experiment', PID_SUCCESS)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
     # basic structure
-    assert len(blocks) == 8
+    assert len(blocks) == 5
     for b in blocks:
         assert isinstance(b, compile_data.pd.DataFrame)
 
-    # number of trials
-    assert len(blocks[0].index.values) == 84
-    assert len(blocks[1].index.values) == 84
-    assert len(blocks[2].index.values) == 84
-    assert len(blocks[3].index.values) == 84
-    assert len(blocks[4].index.values) == 84
-    assert len(blocks[5].index.values) == 84
-    assert len(blocks[6].index.values) == 84
-    assert len(blocks[7].index.values) == 74
+    # number of trials + multi-choice survey responses
+    EXPECTED_BLOCK_LENGTH = 227
+    assert len(blocks[0].index.values) == EXPECTED_BLOCK_LENGTH
+    assert len(blocks[1].index.values) == EXPECTED_BLOCK_LENGTH
+    assert len(blocks[2].index.values) == EXPECTED_BLOCK_LENGTH
+    assert len(blocks[3].index.values) == EXPECTED_BLOCK_LENGTH
+    assert len(blocks[4].index.values) == EXPECTED_BLOCK_LENGTH
 
     # trial structure
     trial_type_mc = 'survey-multi-choice'
     trial_type_msmr = 'multi-stim-multi-response'
 
-    b7 = blocks[7]
-    b7_last_idx = b7.last_valid_index()
-    b7_first_idx = b7.first_valid_index()
-    assert b7.ix[b7_first_idx]['trial_type'] == trial_type_msmr
-    assert b7.ix[b7_last_idx-1]['trial_type'] == trial_type_mc
-    assert b7.ix[b7_last_idx]['trial_type'] == trial_type_mc
+    b4 = blocks[4]
+    b4_last_idx = b4.last_valid_index()
+    b4_first_idx = b4.first_valid_index()
+    assert b4.ix[b4_first_idx]['trial_type'] == trial_type_msmr
+    # last two trials should be multiple choice
+    assert b4.ix[b4_last_idx-1]['trial_type'] == trial_type_mc
+    assert b4.ix[b4_last_idx]['trial_type'] == trial_type_mc
 
 
 def test_compile_practice_with_passing_data():
@@ -136,11 +135,11 @@ def test_get_response_from_json():
     assert resp1 == "2<br>Often or<br>very much"
 
 
-def test_get_response_from_node_id():
-    df = get_csv_as_df('follow_up', '003')
-    resp1 = compile_data.get_response_from_node_id(df, '0.0-1.0-0.0')
-    assert resp1 == '22'
-    resp2 = compile_data.get_response_from_node_id(df, '0.0-2.0-0.0')
+def test_get_response_via_node_id():
+    df = get_csv_as_df('follow_up', PID_SUCCESS)
+    resp1 = compile_data.get_response_via_node_id(df, '0.0-1.0-0.0')
+    assert resp1 == '28'
+    resp2 = compile_data.get_response_via_node_id(df, '0.0-2.0-0.0')
     assert resp2 == 'Female'
 
 
@@ -153,7 +152,7 @@ def test__format_rts():
         assert isinstance(rt, int)
 
 
-def get_sart_trial_block(pid, block_index=0):
+def _get_sart_experiment_block(pid, block_index=0):
     df = get_csv_as_df('experiment', pid)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
     b = blocks[block_index]
@@ -162,11 +161,11 @@ def get_sart_trial_block(pid, block_index=0):
 
 
 def test__format_rts_with_data():
-    pid = "011"
-    sart_block = get_sart_trial_block(pid)
+    pid = PID_SUCCESS
+    sart_block = _get_sart_experiment_block(pid)
     rt_strf = compile_data._format_rts(sart_block['rt'])
     assert isinstance(rt_strf, list)
-    assert len(rt_strf) == 59
+    assert len(rt_strf) == 222
     for rt in rt_strf:
         assert isinstance(rt, int)
 
@@ -180,99 +179,101 @@ def test__is_anticipation_error():
 
 
 def test__add_anticipation_errors_to_df():
-    pid = "104"
-    df = get_sart_trial_block(pid)
+    pid = PID_SUCCESS
+    df = _get_sart_experiment_block(pid, 2)
     df_anticip = compile_data._add_anticipation_errors(df)
     assert 'anticipate_error' in df_anticip
     anticipated = list(df_anticip.anticipate_error)
-    assert anticipated.count(True) == 6
+    assert anticipated.count(True) == 2
 
 
 def test___calculate_go_errors():
-    pid = "104"
-    df = get_sart_trial_block(pid)
+    pid = PID_SUCCESS
+    df = _get_sart_experiment_block(pid, 2)
 
     # check known values
-    assert list(df.correct.values).count(False) == 5
+    assert list(df.correct.values).count(False) == 4
 
-    df = compile_data._add_anticipation_errors(df)
+    # add anticipation errors
+    dfa = compile_data._add_anticipation_errors(df)
 
     # check known values
-    assert list(df.anticipate_error.values).count(True) == 6
-    assert list(df.correct.values).count(False) == 11
+    assert list(dfa.anticipate_error.values).count(True) == 2
+    # anticipation errors are added to error count
+    assert list(dfa.correct.values).count(False) == 6
 
-    go_errors = compile_data._calculate_go_errors(df, 'go')
+    go_errors = compile_data._calculate_go_errors(dfa, 'go')
     assert isinstance(go_errors, compile_data.pd.Series)
     assert list(go_errors).count(True) == 1
-    nogo_errors = compile_data._calculate_go_errors(df, 'no_go')
+    nogo_errors = compile_data._calculate_go_errors(dfa, 'no_go')
     assert isinstance(nogo_errors, compile_data.pd.Series)
-    assert list(nogo_errors).count(True) == 4
+    assert list(nogo_errors).count(True) == 3
 
 
-def test__calculate_nogo_error_rt_avgs_104():
-    pid = "104"
-    df = get_sart_trial_block(pid)
+def test__calculate_nogo_error_rt_avgs_blk3():
+    pid = PID_SUCCESS
+    df = _get_sart_experiment_block(pid, 2)
     df = compile_data._add_anticipation_errors(df)
     df['nogo_error'] = compile_data._calculate_go_errors(df, 'no_go')
-    assert list(df['nogo_error']).count(True) == 4
+    assert list(df['nogo_error']).count(True) == 3
 
     adjacent_rts = compile_data._calculate_nogo_error_rt_avgs(df)
-    assert adjacent_rts['prev4_avg'] == 254.4375
-    assert adjacent_rts['num_prev4_rts'] == 16
-    assert adjacent_rts['next4_avg'] == 224.1875
-    assert adjacent_rts['num_next4_rts'] == 16
+    assert adjacent_rts['prev4_avg'] == 371.0
+    assert adjacent_rts['num_prev4_rts'] == 12
+    assert adjacent_rts['next4_avg'] == 435.75
+    assert adjacent_rts['num_next4_rts'] == 12
 
 
-def test__calculate_nogo_error_rt_avgs_011():
-    pid = "011"
-    df = get_sart_trial_block(pid)
+def test__calculate_nogo_error_rt_avgs_blk4():
+    pid = PID_SUCCESS
+    df = _get_sart_experiment_block(pid, 3)
     df = compile_data._add_anticipation_errors(df)
     df['nogo_error'] = compile_data._calculate_go_errors(df, 'no_go')
-    assert list(df['nogo_error']).count(True) == 4
+    assert list(df['nogo_error']).count(True) == 5
 
     adjacent_rts = compile_data._calculate_nogo_error_rt_avgs(df)
-    assert adjacent_rts['prev4_avg'] == 381.444444444
-    assert adjacent_rts['num_prev4_rts'] == 9
-    assert adjacent_rts['next4_avg'] == 391.875
-    assert adjacent_rts['num_next4_rts'] == 8
+    assert adjacent_rts['prev4_avg'] == 318.833333333
+    assert adjacent_rts['num_prev4_rts'] == 18
+    assert adjacent_rts['next4_avg'] == 407.105263158
+    assert adjacent_rts['num_next4_rts'] == 19
 
 
 def test__get_correct_rts_blk1():
-    pid = "104"
-    sart_block = get_sart_trial_block(pid)
+    pid = PID_SUCCESS
+    sart_block = _get_sart_experiment_block(pid)
     df = compile_data._add_anticipation_errors(sart_block)
     rts = compile_data._get_correct_rts(df)
-    assert len(rts) == 71
-    assert compile_data.np.mean(rts) == 288.6056338028169
+    assert len(rts) == 218
+    assert round(compile_data.np.mean(rts), 2) == 364.58
 
 
 def test__get_correct_rts_blk4():
-    pid = "104"
-    sart_block = get_sart_trial_block(pid, 3)
+    pid = PID_SUCCESS
+    sart_block = _get_sart_experiment_block(pid, 3)
     df = compile_data._add_anticipation_errors(sart_block)
     rts = compile_data._get_correct_rts(df)
-    assert len(rts) == 49
-    assert compile_data.np.mean(rts) == 353.36734693877548
+    assert len(rts) == 198
+    assert round(compile_data.np.mean(rts), 2) == 351.56
 
 
-def test_summarize_block_performance():
-    pid = "104"
-    sart_block = get_sart_trial_block(pid)
+def test_summarize_block_performance_blk4():
+    pid = PID_SUCCESS
+    sart_block = _get_sart_experiment_block(pid, 4)
     p = compile_data.summarize_block_performance(sart_block)
-    assert p['num_trials'] == 82
-    assert p['rt_avg'] == 288.605633803
-    assert p['anticipated_num_errors'] == 6
-    assert p['anticipated'] == 0.073170732
-    assert p['go_num_errors'] == 1
-    assert p['go_errors'] == 0.012195122
-    assert p['nogo_num_errors'] == 4
-    assert p['nogo_errors'] == 0.048780488
-    assert p['accuracy'] == 0.865853659  # 71/82
+    assert p['num_trials'] == 225
+    assert p['rt_avg'] == 404.205263158
+    assert p['anticipated_num_errors'] == 25
+    assert p['anticipated'] == 0.111111111
+    assert p['go_num_errors'] == 6
+    assert p['go_errors'] == 0.026666667
+    assert p['nogo_num_errors'] == 0
+    assert p['nogo_errors'] == 0.0
+    assert p['accuracy'] == 0.862222222  # 194/225
     total_error_prop = (p['anticipated'] + p['go_errors'] + p['nogo_errors'])
 
     # average RTs before and after no-go errors
-    assert p['nogo_prev4_avg'] == 254.4375
-    assert p['nogo_next4_avg'] == 224.1875
+    assert p['nogo_prev4_avg'] == None  # no no-go errors
+    assert p['nogo_next4_avg'] == None  # no no-go errors
 
     # ensure that calculations match up
     rnd = compile_data.ROUND_NDIGITS
@@ -280,33 +281,37 @@ def test_summarize_block_performance():
 
 
 def test_summarize_sart_chunk():
-    pid = "011"
+    pid = PID_SUCCESS
     df = get_csv_as_df('experiment', pid)
     blocks = compile_data.extract_sart_blocks(df, with_survey=True)
 
-    # first block
-    b1 = blocks[0]
-    b1s = compile_data.summarize_sart_chunk(b1)
-    assert b1s['anticipated'] == 0.0
-    assert b1s['accuracy'] == 0.731707317
-    assert b1s['effort'] == 4
-    assert b1s['discomfort'] == 5
-    assert b1s['ratings_time_min'] == 26.783333333
+    # fourth block
+    b4 = blocks[3]
+    b4s = compile_data.summarize_sart_chunk(b4)
+    assert b4s['anticipated'] == 0.062222222
+    assert b4s['accuracy'] == 0.88
+    assert b4s['effort'] == 7
+    assert b4s['discomfort'] == 7
+    assert b4s['ratings_time_min'] == 19.616666667
 
-    assert b1s['num_trials'] == 82
+    assert b4s['num_trials'] == 225
 
-    assert b1s['nogo_prev4_avg'] == 381.444444444
-    assert b1s['nogo_next4_avg'] == 391.875
+    assert b4s['nogo_prev4_avg'] == 318.833333333
+    assert b4s['nogo_next4_avg'] == 407.105263158
 
-    # last block
-    lb = blocks[-1]
-    lbs = compile_data.summarize_sart_chunk(lb)
-    assert lbs['num_trials'] == 68
-    assert lbs['anticipated'] == 0.014705882
-    assert lbs['accuracy'] == 0.911764706
-    assert lbs['effort'] == 3
-    assert lbs['discomfort'] == 5
-    assert lbs['ratings_time_min'] == 37.7
+    # last (fifth) block
+    b5 = blocks[-1]
+    b5s = compile_data.summarize_sart_chunk(b5)
+    assert b5s['anticipated'] == 0.111111111
+    assert b5s['accuracy'] == 0.862222222
+    assert b5s['effort'] == 7
+    assert b5s['discomfort'] == 7
+    assert b5s['ratings_time_min'] == 24.183333333
+
+    assert b5s['num_trials'] == 225
+
+    assert b4s['nogo_prev4_avg'] == 318.833333333
+    assert b4s['nogo_next4_avg'] == 407.105263158
 
 
 def test__calculate_ratings_proportions():
@@ -319,7 +324,7 @@ def test__calculate_ratings_proportions():
 
 
 def test_complete_compile_experiment_data():
-    pid = "104"
+    pid = PID_SUCCESS
     df = get_csv_as_df('experiment', pid)
     ed = compile_data.compile_experiment_data(df)
 
@@ -408,7 +413,7 @@ def test_complete_compile_experiment_data():
 
 
 def test_complete_demographics_data():
-    pid = "003"
+    pid = PID_FAIL
     df = get_csv_as_df('follow_up', pid)
     data = compile_data.compile_demographic_data(df)
     expected_answers = [
@@ -468,7 +473,7 @@ def test_complete_demographics_data():
 
 
 def test_complete_retrospective_data():
-    pid = "003"
+    pid = PID_FAIL
     df = get_csv_as_df('follow_up', pid)
     data = compile_data.compile_retrospective_data(df)
     expected_answers = [

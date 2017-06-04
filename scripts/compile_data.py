@@ -50,7 +50,7 @@ def get_response_from_json(string, question_number=0):
     return resp
 
 
-def get_response_from_node_id(df, inid, is_likert=False):
+def get_response_via_node_id(df, inid, is_likert=False):
     """Take a data frame and internal node ID (inid).
     Return a jsPsych survey response string.
     """
@@ -122,9 +122,9 @@ def _get_arousal_ratings(df):
     for i, d in df.iterrows():
         inid = d['internal_node_id']
         if re.match(mind_body_inid_pattern, inid):
-            mind_body = get_response_from_node_id(df, inid, is_likert=True)
+            mind_body = get_response_via_node_id(df, inid, is_likert=True)
         elif re.match(feeling_inid_pattern, inid):
-            feeling = get_response_from_node_id(df, inid, is_likert=True)
+            feeling = get_response_via_node_id(df, inid, is_likert=True)
 
     return mind_body, feeling
 
@@ -261,7 +261,7 @@ def _calculate_nogo_error_rt_avgs(df):
     # find all no-go errors
     nogo_error_rows = []
     for row in df.iterrows():
-        if row[1]['nogo_error'] == True:
+        if row[1]['nogo_error'] is True:
             nogo_error_rows.append(row)
 
     # find all row (trial) RTs before and after no-go error rows
@@ -275,9 +275,9 @@ def _calculate_nogo_error_rt_avgs(df):
         next_row_rts.append(next_nogo_row_rts)
 
     prev4_rts = [rt for sublist in prev_row_rts for rt in sublist]
-    prev4_avg = round(np.mean(prev4_rts), ROUND_NDIGITS)
+    prev4_avg = round(np.mean(prev4_rts), ROUND_NDIGITS) if prev4_rts else None
     next4_rts = [rt for sublist in next_row_rts for rt in sublist]
-    next4_avg = round(np.mean(next4_rts), ROUND_NDIGITS)
+    next4_avg = round(np.mean(next4_rts), ROUND_NDIGITS) if next4_rts else None
 
     return {
         "prev4_avg": prev4_avg,
@@ -480,17 +480,21 @@ def compile_experiment_data(df):
         num_anticipation_errors += blk_summary['anticipated_num_errors']
         num_go_errors += blk_summary['go_num_errors']
         num_nogo_errors += blk_summary['nogo_num_errors']
-        nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
-        nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
-        nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
-        nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
+        if blk_summary['nogo_prev4_avg']:
+            nogo_prev4_avgs.append(blk_summary['nogo_prev4_avg'])
+            nogo_num_prev4_rts.append(blk_summary['nogo_num_prev4_rts'])
+        if blk_summary['nogo_next4_avg']:
+            nogo_next4_avgs.append(blk_summary['nogo_next4_avg'])
+            nogo_num_next4_rts.append(blk_summary['nogo_num_next4_rts'])
 
     # weighted averages for RTs before and after no-go errors
     compiled_data['nogo_num_errors'] = num_nogo_errors
     compiled_data['nogo_error_prev_rt_avg'] = np.average(
-        nogo_prev4_avgs, weights=nogo_num_prev4_rts)
+        nogo_prev4_avgs,
+        weights=nogo_num_prev4_rts) if nogo_num_prev4_rts else None
     compiled_data['nogo_error_next_rt_avg'] = np.average(
-        nogo_next4_avgs, weights=nogo_num_next4_rts)
+        nogo_next4_avgs,
+        weights=nogo_num_next4_rts) if nogo_num_next4_rts else None
 
     # average of go, no-go, and anticipation errors, as well as accuracy
     avg_go_errors = (num_go_errors / float(num_trials))
@@ -645,11 +649,11 @@ def compile_demographic_data(df):
 
     # demographics
     for label, inid in DEMOGRAPHICS_INDEX:
-        compiled_data[label] = get_response_from_node_id(df, inid)
+        compiled_data[label] = get_response_via_node_id(df, inid)
 
     # behavioursal surveys
     for label, inid in BEHAVIOURAL_SURVEY_INDEX:
-        compiled_data[label] = get_response_from_node_id(
+        compiled_data[label] = get_response_via_node_id(
             df, inid, is_likert=True)
 
     # post-working memory task delay
@@ -684,7 +688,7 @@ def compile_retrospective_data(df):
 
     # retrospective questions
     for label, inid in RETROSPECTIVE_INDEX:
-        compiled_data[label] = get_response_from_node_id(
+        compiled_data[label] = get_response_via_node_id(
             df, inid, is_likert=True)
 
     return compiled_data
